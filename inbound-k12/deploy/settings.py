@@ -2,6 +2,9 @@ import os
 
 ORGANIZATION_NAME = "Texas Tech K-12"
 AGENT_NAME = "Grace"
+AGENT_VOICE = "grace"
+AGENT_LANGUAGE = "english"
+AGENT_SECONDARY_LANGUAGES = ["spanish"]
 
 # Destination numbers, from a fresh legacy-platform snapshot (2026-09-02).
 LIVE_NUMBER = os.environ.get("LIVE_NUMBER", "+18067427101")
@@ -58,3 +61,9 @@ FAQ_SPREADSHEET_ID = os.environ.get("FAQ_SPREADSHEET_ID", "")
 # "K12 AH (PRD)") — this rebuild deliberately uses one tab for both, like the other
 # 3 programs.
 FAQ_SHEET_TAB = os.environ.get("FAQ_SHEET_TAB", "K12 FAQs")
+
+PRONUNCIATIONS: dict[str, str] = {
+    "live agents": "lyve agents",
+    "live agent": "lyve agent",
+    "live in": "live in",
+}

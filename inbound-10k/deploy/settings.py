@@ -2,6 +2,9 @@ import os
 
 ORGANIZATION_NAME = "Texas Tech 10K Degree Completion Program"
 AGENT_NAME = "Grace"
+AGENT_VOICE = "grace"
+AGENT_LANGUAGE = "english"
+AGENT_SECONDARY_LANGUAGES = ["spanish"]
 
 # Destination numbers. The call-flow export only
 # wires two outlet nodes for this program (LIVE_NUMBER, ELEVENLABS_NUMBER); the
@@ -34,3 +37,9 @@ FAQ_SPREADSHEET_ID = os.environ.get("FAQ_SPREADSHEET_ID", "")
 # This program's tab within that spreadsheet. Other programs (Online, Grad, K12) use
 # their own tabs in the same spreadsheet, not a shared tab filtered by a program column.
 FAQ_SHEET_TAB = os.environ.get("FAQ_SHEET_TAB", "10K FAQs")
+
+PRONUNCIATIONS: dict[str, str] = {
+    "live agents": "lyve agents",
+    "live agent": "lyve agent",
+    "live in": "live in",
+}

@@ -71,12 +71,15 @@ agent = guava.Agent(
         "(DFW / Fort Worth / El Paso). Help callers reach the right place, or capture "
         "their enrollment interest when a live team member isn't available."
     ),
+    voice=settings.AGENT_VOICE,
+    pronunciations=settings.PRONUNCIATIONS,
 )
 
 
 @agent.on_call_start
 def on_call_start(call: guava.Call):
     logger.info("Call started (session: %s)", call.id)
+    call.set_language_mode(primary=settings.AGENT_LANGUAGE, secondary=settings.AGENT_SECONDARY_LANGUAGES)
 
     call.add_info(
         "Knowledge base scope",
@@ -190,7 +193,7 @@ def _start_enrollment(call: guava.Call):
                 key="phone_number",
                 field_type="text",
                 required=False,
-                description="Only if they're interested. Ask for the best number to reach them at.",
+                description="Only if they're interested. Ask for the best number to reach them at, spell it back to them to confirm you have it right.",
             ),
             guava.Field(
                 key="email",
@@ -199,7 +202,7 @@ def _start_enrollment(call: guava.Call):
                 description=(
                     "Ask for their email — to add to their enrollment info if "
                     "interested, or to send program details if they're not interested "
-                    "but open to receiving info by email."
+                    "but open to receiving info by email. Spell it back to them letter by letter to confirm you have it right."
                 ),
             ),
             guava.Field(
@@ -225,7 +228,7 @@ def _start_enrollment(call: guava.Call):
                 key="location",
                 field_type="multiple_choice",
                 required=False,
-                choices=["Dallas", "Fort Worth", "El Paso"],
+                choices=["Dallas", "Fort Worth", "El Paso","None of those"],
                 description="Only if they're interested. Ask whether they live in Dallas/Fort Worth or El Paso.",
             ),
             guava.Field(

@@ -2,6 +2,9 @@ import os
 
 ORGANIZATION_NAME = "Texas Tech Online"
 AGENT_NAME = "Grace"
+AGENT_VOICE = "grace"
+AGENT_LANGUAGE = "english"
+AGENT_SECONDARY_LANGUAGES = ["spanish"]
 
 # Destination table — from Grace implementation
 SIGNATURE_PLUS_REP_NUMBER = os.environ.get("SIGNATURE_PLUS_REP_NUMBER", "+18067422810")
@@ -48,3 +51,9 @@ FAQ_SPREADSHEET_ID = os.environ.get("FAQ_SPREADSHEET_ID", "")
 # This program's tab within that spreadsheet. Other programs (K12, 10K) use their own
 # tabs in the same spreadsheet, not a shared tab filtered by a program column.
 FAQ_SHEET_TAB = os.environ.get("FAQ_SHEET_TAB", "Online FAQs")
+
+PRONUNCIATIONS: dict[str, str] = {
+    "live agents": "lyve agents",
+    "live agent": "lyve agent",
+    "live in": "live in",
+}

@@ -86,19 +86,15 @@ agent = guava.Agent(
         "Tech's Graduate, K-12, or 10K Degree Completion programs. Answer general "
         "questions about Texas Tech Online from your knowledge base along the way."
     ),
+    voice=settings.AGENT_VOICE,
+    pronunciations=settings.PRONUNCIATIONS,
 )
 
 
-@agent.on_call_start
-def on_call_start(call: guava.Call):
-    logger.info("Call started (session: %s)", call.id)
-
-    call.add_info(
-        "Knowledge base scope",
-        "Lookups cover general Texas Tech Online topics — programs, enrollment, courses, "
-        "and costs — not Grad, K-12, or 10K specifics.",
-    )
-
+def _build_route_task(call: guava.Call, opener: guava.Say | str):
+    """Builds and sets the "route" task's checklist. `opener` is the first checklist
+    item — the initial greeting on a fresh call, or a plain-string "still helping"
+    transition when re-opened after a caller stayed unsure of their program."""
     open_now = is_open()
     holiday = None if open_now else holiday_name()
 
@@ -106,8 +102,13 @@ def on_call_start(call: guava.Call):
         continue_field = guava.Field(
             key="continue_with",
             field_type="multiple_choice",
-            choices=["Be connected to our virtual assistant", "Be transferred to a live team member"],
-            description="Ask whether they'd like to be connected to our virtual assistant or transferred to a live team member.",
+            choices=["Be connected to our virtual assistant", "Be transferred to a queue to talk to a person"],
+            description=(
+                "Only ask this once a specific program is known. Ask whether they'd "
+                "like to be connected to our virtual assistant or transferred to a "
+                "queue to talk to a person."
+            ),
+            required=False,
         )
         closed_notice = None
     else:
@@ -116,9 +117,11 @@ def on_call_start(call: guava.Call):
             field_type="multiple_choice",
             choices=["Be connected to our virtual assistant", "Leave a voicemail"],
             description=(
-                "Let them know our live team isn't available right now, then ask whether "
-                "they'd like to be connected to our virtual assistant or leave a voicemail."
+                "Only ask this once a specific program is known. Let them know our "
+                "live team isn't available right now, then ask whether they'd like to "
+                "be connected to our virtual assistant or leave a voicemail."
             ),
+            required=False,
         )
         if holiday:
             closed_notice = guava.Say(
@@ -136,13 +139,7 @@ def on_call_start(call: guava.Call):
                 key="closed_notice",
             )
 
-    checklist = [
-        guava.Say(
-            f"Thank you for calling Texas Tech Online! My name is {settings.AGENT_NAME}, "
-            "your virtual assistant. Please note that this call may be recorded.",
-            key="greeting",
-        ),
-    ]
+    checklist = [opener]
     if closed_notice is not None:
         checklist.append(closed_notice)
     checklist += [
@@ -168,6 +165,20 @@ def on_call_start(call: guava.Call):
         "them now. This task is now complete.",
     ]
 
+    if open_now:
+        completion_criteria = (
+            "Complete once program is a specific program (Texas Tech Online, Graduate, "
+            "K-12, or 10K Degree Completion) and continue_with is known. If the caller "
+            "remains unsure which program they need, keep answering their questions "
+            "instead — do not ask continue_with and do not complete this task."
+        )
+    else:
+        completion_criteria = (
+            "Complete once program is known. If program is 'Not sure', complete "
+            "immediately — do not ask continue_with. Otherwise, complete once "
+            "continue_with is also known."
+        )
+
     call.set_task(
         "route",
         objective=(
@@ -175,8 +186,27 @@ def on_call_start(call: guava.Call):
             "general Texas Tech Online questions from your knowledge base along the way."
         ),
         checklist=checklist,
-        completion_criteria="Complete once the caller's program and continue_with choice are both known.",
+        completion_criteria=completion_criteria,
     )
+
+
+@agent.on_call_start
+def on_call_start(call: guava.Call):
+    logger.info("Call started (session: %s)", call.id)
+    call.set_language_mode(primary=settings.AGENT_LANGUAGE, secondary=settings.AGENT_SECONDARY_LANGUAGES)
+
+    call.add_info(
+        "Knowledge base scope",
+        "Lookups cover general Texas Tech Online topics — programs, enrollment, courses, "
+        "and costs — not Grad, K-12, or 10K specifics.",
+    )
+
+    greeting = guava.Say(
+        f"Thank you for calling Texas Tech Online! My name is {settings.AGENT_NAME}, "
+        "your virtual assistant. Please note that this call may be recorded.",
+        key="greeting",
+    )
+    _build_route_task(call, greeting)
 
 
 @agent.on_task_complete("route")
@@ -184,7 +214,26 @@ def on_route_complete(call: guava.Call):
     program = call.get_field("program")
     online_service = call.get_field("online_service")
     continue_with = call.get_field("continue_with")
-    dest = destinations.resolve(program, online_service, continue_with)
+
+    if program == "Not sure":
+        if is_open():
+            # No destination exists for "unsure which program, during business hours" —
+            # keep the caller talking to the bot instead of transferring anywhere.
+            logger.info("Caller unsure of program, staying with the bot (session: %s)", call.id)
+            _build_route_task(
+                call,
+                "The caller wasn't sure which program they needed and wants to keep "
+                "talking with you. Let them know that's fine, then keep helping them "
+                "and try again to figure out which program they're calling about.",
+            )
+            return
+        # After hours, an unresolved program always falls back to the Higher Ed
+        # Default voicemail, regardless of continue_with (which isn't asked for this
+        # case at all).
+        dest = destinations.FALLBACK
+    else:
+        dest = destinations.resolve(program, online_service, continue_with)
+
     logger.info(
         "Routing call (session: %s) program=%r online_service=%r continue_with=%r -> %s (%s)",
         call.id, program, online_service, continue_with, dest.number, dest.grace_outcome,

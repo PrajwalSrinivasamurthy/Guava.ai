@@ -2,6 +2,9 @@ import os
 
 ORGANIZATION_NAME = "Texas Tech Graduate School"
 AGENT_NAME = "Grace"
+AGENT_VOICE = "grace"
+AGENT_LANGUAGE = "english"
+AGENT_SECONDARY_LANGUAGES = ["spanish"]
 
 # Destination numbers, confirmed 2026-09-02.
 LIVE_NUMBER = os.environ.get("LIVE_NUMBER", "+18067426441")
@@ -36,8 +39,6 @@ FORCE_HOLIDAY_NAME = os.environ.get("FORCE_HOLIDAY_NAME", "")
 
 SMS_ENABLED = os.environ.get("SMS_ENABLED", "true").lower() != "false"
 
-# Confirmed with Texas Tech (2026-09-03): Grad's own IT service-desk portal — not shared
-# with any other program's portal.
 # Still open: the legacy playbook this was rebuilt from also had a separate RFI-form
 # connector alongside the ServiceNow one (a student-status question branching between
 # the two) — this rebuild only implements the single ServiceNow-style path below;
@@ -53,3 +54,9 @@ FAQ_SPREADSHEET_ID = os.environ.get("FAQ_SPREADSHEET_ID", "")
 # This program's tab within that spreadsheet. Other programs (Online, K12, 10K) use
 # their own tabs in the same spreadsheet, not a shared tab filtered by a program column.
 FAQ_SHEET_TAB = os.environ.get("FAQ_SHEET_TAB", "Grad FAQs")
+
+PRONUNCIATIONS: dict[str, str] = {
+    "live agents": "lyve agents",
+    "live agent": "lyve agent",
+    "live in": "live in",
+}

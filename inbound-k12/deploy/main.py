@@ -73,12 +73,15 @@ agent = guava.Agent(
         "reach the right place — either connect them to our virtual assistant or "
         "to a live team member."
     ),
+    voice=settings.AGENT_VOICE,
+    pronunciations=settings.PRONUNCIATIONS,
 )
 
 
 @agent.on_call_start
 def on_call_start(call: guava.Call):
     logger.info("Call started (session: %s)", call.id)
+    call.set_language_mode(primary=settings.AGENT_LANGUAGE, secondary=settings.AGENT_SECONDARY_LANGUAGES)
 
     call.add_info(
         "Knowledge base scope",
