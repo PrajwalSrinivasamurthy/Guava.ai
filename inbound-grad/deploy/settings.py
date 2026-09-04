@@ -58,5 +58,7 @@ FAQ_SHEET_TAB = os.environ.get("FAQ_SHEET_TAB", "Grad FAQs")
 PRONUNCIATIONS: dict[str, str] = {
     "live agents": "lyve agents",
     "live agent": "lyve agent",
+    "Live agents": "Lyve agents",
+    "Live agent": "Lyve agent",
     "live in": "live in",
 }

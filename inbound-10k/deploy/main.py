@@ -99,7 +99,10 @@ def on_call_start(call: guava.Call):
             key="next_step",
             field_type="multiple_choice",
             choices=["Be connected to our virtual assistant", "Be transferred to a queue to talk to a person"],
-            description="Ask whether they'd like to be connected to our virtual assistant or transferred to a queue to talk to a person.",
+            description=(
+                "Ask whether they'd like to be connected to our virtual assistant "
+                "or transferred to a queue to talk to a person."
+            ),
         )
     else:
         greeting = (
@@ -193,7 +196,10 @@ def _start_enrollment(call: guava.Call):
                 key="phone_number",
                 field_type="text",
                 required=False,
-                description="Only if they're interested. Ask for the best number to reach them at, spell it back to them to confirm you have it right.",
+                description=(
+                    "Only if they're interested. Ask for the best number to reach "
+                    "them at, spell it back to them to confirm you have it right."
+                ),
             ),
             guava.Field(
                 key="email",
@@ -202,7 +208,9 @@ def _start_enrollment(call: guava.Call):
                 description=(
                     "Ask for their email — to add to their enrollment info if "
                     "interested, or to send program details if they're not interested "
-                    "but open to receiving info by email. Spell it back to them letter by letter to confirm you have it right."
+                    "but open to receiving info by email. Ask them to spell it to "
+                    "you. Spell it back to them letter by letter to confirm you have "
+                    "it right."
                 ),
             ),
             guava.Field(
@@ -210,7 +218,10 @@ def _start_enrollment(call: guava.Call):
                 field_type="multiple_choice",
                 required=False,
                 choices=["Email", "Phone call"],
-                description="Only if they're interested. Ask whether they prefer email or a phone call.",
+                description=(
+                    "Only if they're interested. Ask whether they prefer email "
+                    "or a phone call."
+                ),
             ),
             guava.Field(
                 key="start_timing",
@@ -222,14 +233,20 @@ def _start_enrollment(call: guava.Call):
                 key="college_credits",
                 field_type="integer",
                 required=False,
-                description="Only if they're interested. Ask how many college credits they currently have.",
+                description=(
+                    "Only if they're interested. Ask how many college credits "
+                    "they currently have."
+                ),
             ),
             guava.Field(
                 key="location",
                 field_type="multiple_choice",
                 required=False,
-                choices=["Dallas", "Fort Worth", "El Paso","None of those"],
-                description="Only if they're interested. Ask whether they live in Dallas/Fort Worth or El Paso.",
+                choices=["Dallas", "Fort Worth", "El Paso", "None of those"],
+                description=(
+                    "Only if they're interested. Ask whether they live in "
+                    "Dallas/Fort Worth or El Paso."
+                ),
             ),
             guava.Field(
                 key="willing_to_travel",
@@ -246,7 +263,10 @@ def _start_enrollment(call: guava.Call):
             "Thank them for their interest and let them know a team member will "
             "follow up. This task is now complete.",
         ],
-        completion_criteria="Complete once you know whether they're interested and have collected what applies.",
+        completion_criteria=(
+            "Complete once you know whether they're interested and have "
+            "collected what applies."
+        ),
     )
 
 
