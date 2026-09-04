@@ -1,0 +1,9 @@
+project_id = "gp-d97ad484-02c1-4a15-b126-ac23e715f9ca"
+org_id = "6a99b964a707e206efbeb43d"
+name = "inbound-k12"
+call_direction = "inbound"
+base_image = "python-sandbox:3.14"
+phone_number = "+14844819131"
+tier = "guava-seed"
+replicas = 1
+enable_healthcheck = true

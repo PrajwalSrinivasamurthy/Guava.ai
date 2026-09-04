@@ -1,0 +1,9 @@
+project_id = "gp-43d205cf-1f33-410c-9333-33145ba6b7c8"
+org_id = "6a99b964a707e206efbeb43d"
+name = "inbound-10k"
+call_direction = "inbound"
+base_image = "python-sandbox:3.14"
+phone_number = "+14844819713"
+tier = "guava-seed"
+replicas = 1
+enable_healthcheck = true

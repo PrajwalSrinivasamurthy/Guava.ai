@@ -1,0 +1,80 @@
+{
+  "saved_at": "2026-09-02T17:44:01.537291",
+  "faqs": [
+    {
+      "category": "Proctorio and Online Exams",
+      "question": "What online proctoring service does TTU K-12 use, and what are the requirements to use it?",
+      "answer": "All courses and most Credit by Exams utilize Proctorio. To use Proctorio properly, students must use the Google Chrome browser and install the Proctorio Extension. Instructions are available on the Proctorio Student FAQ page."
+    },
+    {
+      "category": "Technical Requirements",
+      "question": "Which web browsers and operating systems are supported for TTU K-12?",
+      "answer": "TTU K-12 strongly recommends the Google Chrome browser. Chromebooks and Chrome OS are NOT supported due to Java usage in Blackboard. Safari for Windows is outdated (version 5.1.7 was the final release) and no longer supported by Apple or TTU K-12, so Windows users should select another browser. Students can use the Browser Checker to verify system compatibility."
+    },
+    {
+      "category": "Program Overview and Enrollment",
+      "question": "How do new students create an account and complete the enrollment application in the Focus Portal?",
+      "answer": "First-time students click the 'Apply' button to create an account and fill out the multi-page application:\n- Page 1: Displays required fields to submit student information.\n- Page 2: Describes different TTU K-12 program options.\n- Page 3: Asks for student personal information.\n- Page 4: Asks for student demographic information.\n- Page 5: Asks for socio-economic information.\n- Page 6: Gathers parent/guardian mailing address and contact information.\n- Page 7: Asks which school the student currently attends.\n- Page 8: Asks how the student heard about the program.\nUpon completion, a notification will display confirming application submission."
+    },
+    {
+      "category": "Portal Navigation",
+      "question": "How do students log into the TTU K-12 Focus Portal?",
+      "answer": "Access the Focus Login Portal Screen and enter your assigned username and password."
+    },
+    {
+      "category": "Portal Navigation",
+      "question": "What features and information are accessible on the Focus Portal Dashboard?",
+      "answer": "After logging into the Focus Portal, you are taken to the Dashboard showing 'My Active Courses'. The dashboard serves as the central hub for managing your profile, accessing courses, reviewing the course catalog, utilizing forms and downloads, and contacting TTU K-12."
+    },
+    {
+      "category": "Portal Navigation",
+      "question": "What biographic and contact information is displayed via My Profile on the TTU K-12 portal?",
+      "answer": "Clicking 'My Information' on the left menu displays contact details including home address, business address, and other addresses with corresponding phone numbers and email addresses. Authorized contacts who can view the profile are listed under 'Linked Users', and new contacts can be requested via the 'New Contact' button. Note that the Texas Education Agency requires TTU K-12 to collect and report basic student demographic data."
+    },
+    {
+      "category": "Portal Navigation",
+      "question": "What information is contained under each tab in My Profile on the Focus Portal?",
+      "answer": "The profile tabs provide the following information:\n- Primary Info: Displays student name, student ID number, and username.\n- Accommodations: Lists approved student accommodations.\n- Address & Contacts: Displays current address; updates can be submitted via 'New Address' and 'New Contacts'.\n- Advisor: Lists the external school selected at registration (updates require TTU K-12 staff approval).\n- Blackboard Progress Report: Displays overall course progress (updated nightly).\n- Demographics: Displays basic demographics; updates to external school or email require staff approval.\n- Enrollment: Displays current grade level and allows requests for updates.\n- PEIMS: Displays unique state ID (for full-time students only).\n- Student Application Information: Displays basic application details.\n- Student Schedule: Lists current enrollments with start date (Enrolled), end date (Dropped), and enrollment status."
+    },
+    {
+      "category": "Support and Communication",
+      "question": "How do students communicate with teachers and TTU K-12 staff?",
+      "answer": "The Communications tab in the Focus Portal allows students to send emails to their teachers and receive messages from TTU K-12 staff."
+    },
+    {
+      "category": "Portal Navigation",
+      "question": "How do students manage change requests, preferences, passwords, and notifications?",
+      "answer": "Within the Focus Portal:\n- Change Requests Tab: Allows students to view submitted requests or cancel them if details were entered incorrectly.\n- Preferences - Display Options: Allows updating portal display preferences.\n- Preferences - Password: Allows password updates. Passwords must be at least 9 characters long, include uppercase and lowercase letters, at least 1 numeric character, and at least 1 special character.\n- Preferences - Notifications: Allows setting notification frequency (TTU K-12 recommends setting this to 'Daily')."
+    },
+    {
+      "category": "Portal Navigation",
+      "question": "How do students view their class schedule, and which fields can be ignored?",
+      "answer": "Clicking 'Class Schedule' on the left menu displays active courses and teacher details. Fields including Meeting Days, Room, Term, Attended Hours, and Print Reauthorization are not currently used by TTU K-12 and can be ignored."
+    },
+    {
+      "category": "Grading and Exams",
+      "question": "How do I find my Final Course Grade?",
+      "answer": "There are two ways to view overall course grades: access the course grade directly on the portal page, or select 'Grades' to see a list of completed courses with options to print grade reports."
+    },
+    {
+      "category": "Purchasing and Payments",
+      "question": "How do students purchase courses and pay for enrollments?",
+      "answer": "Navigate to the 'Purchase & Pay' tab, add courses to the shopping cart, select 'Checkout', confirm enrollments, click 'continue' to proceed to the payment screen, complete payment, and receive payment confirmation and a receipt."
+    },
+    {
+      "category": "Purchasing and Payments",
+      "question": "How do I print out a receipt from the Focus Portal?",
+      "answer": "After logging into Focus, click 'Customer Ledger' on the menu to view the student's ledger on the right. From this screen, students can print a copy for their records or export the ledger to Excel."
+    },
+    {
+      "category": "Forms and Requests",
+      "question": "What forms are available in the Focus Portal and how are they accessed?",
+      "answer": "Expand 'Forms' or 'Forms Summary' on the left menu to access:\n- Student Accommodation Request Form\n- Student Course Drop/Transfer Refund Request\n- Student Grievance/Grade Appeal Form\n- Student Program/Withdrawal/Change Request\nSelecting a form automatically redirects you to a page with full details."
+    },
+    {
+      "category": "Blackboard LMS",
+      "question": "How do I access the course within the Learning Management System (Blackboard) and navigate it?",
+      "answer": "Click 'sign into Blackboard' on the portal page. Inside Blackboard:\n- Activity Stream: Displays recent news and graded assignments.\n- Courses: Lists currently enrolled courses.\n- Course Home Page: Provides access to the syllabus, lessons, final exam, and grades.\n- Lessons/Units: Provides access to individual lesson assignments.\n- Final Exam: Provides access to the course final exam.\n- My Grades: Displays individual assignment grades.\n- Messages: Allows messaging teachers regarding classes or assignments.\n- Navigation: Click the 'X' in the upper left-hand corner to return to the 'Courses' tab."
+    }
+  ]
+}

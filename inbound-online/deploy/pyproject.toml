@@ -1,0 +1,24 @@
+[project]
+name = "inbound-online"
+version = "0.1.0"
+requires-python = "==3.14.*"
+dependencies = [
+    "guava-sdk>=0.41.0",
+    "typing_extensions",
+    "websockets",
+    "google-api-python-client",
+    "google-auth",
+    "google-auth-httplib2",
+    "google-auth-oauthlib",
+    "python-dotenv",
+]
+
+[dependency-groups]
+dev = [
+    "pytest",
+]
+
+[tool.uv.sources]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

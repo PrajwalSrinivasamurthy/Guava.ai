@@ -1,0 +1,10 @@
+[project]
+name = "agent_testing"
+version = "0.1.0"
+description = "Shared white-box test helpers for Guava agents (see gotchas/agent-testing.md)."
+requires-python = "==3.12.*"
+# No deps declared on purpose: this is a dev/test-only helper that runs inside a
+# consuming project's env, so it uses whatever `guava` (and its `websockets`) that
+# project already has. Guava imports are lazy (inside functions) so importing this
+# package never forces a particular SDK version.
+dependencies = []

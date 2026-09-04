@@ -1,0 +1,557 @@
+{
+  "saved_at": "2026-09-04T10:53:38.300249",
+  "faqs": [
+    {
+      "category": "Course Access and Learning Management System",
+      "question": "I need help accessing Canvas, how do I do this?",
+      "answer": "To access the course in the Learning Management System, please click on Canvas under the \"Applications\" tab.\nStudents, please note it may take up to two business days (48 hours) for your course to become available.\nUpon entering Canvas, you will be taken to your Dashboard. The Dashboard is your home to accessing your courses. \nUpon clicking on your course, you will be taken to your course homepage. Your homepage will list any announcements."
+    },
+    {
+      "category": "Course Access and Learning Management System",
+      "question": "What kind of computer do I need?",
+      "answer": "A modern device less than five years old with the following specifications:\nRAM: Minimum 4 gigabytes\nStorage: 250 gigabyte hard drive\nPeripherals: Webcam, microphone, speakers\nSecurity: Updated antivirus software"
+    },
+    {
+      "category": "Course Access and Learning Management System",
+      "question": "What operating systems are supported?",
+      "answer": "Windows 10 or newer \nmacOS 11 or newer \nChrome O S \nLinux"
+    },
+    {
+      "category": "Course Access and Learning Management System",
+      "question": "Which browsers are recommended?",
+      "answer": "TTU K-12 supports the latest versions of Google Chrome (required for online exams), Mozilla Firefox, Microsoft Edge, and Safari (macOS only) \u2014 Internet Explorer is not supported. Supported operating systems are Windows 10 or newer, macOS 11 or newer, ChromeOS, and Linux (Ubuntu 18.04+). That said, mobile devices and Chromebooks aren't recommended as a student's primary device \u2014 a desktop or laptop is required for proctored\n  exams. Safari for Windows is outdated (version 5.1.7 was the final release) and no longer supported by Apple or TTU K-12, so Windows users should select another browser. Students can use the Browser Checker to verify system compatibility."
+    },
+    {
+      "category": "Course Access and Learning Management System",
+      "question": "Are mobile devices like tablets or Chromebooks supported?",
+      "answer": "They are not recommended for primary devices. These may not support all functions. \nA desktop or laptop is required for coursework and mandatory for proctored exams."
+    },
+    {
+      "category": "Course Access and Learning Management System",
+      "question": "Can students share email addresses with parents or other students?",
+      "answer": "No, each student must have a unique email address and cannot be the same as a parents\u2019."
+    },
+    {
+      "category": "Course Access and Learning Management System",
+      "question": "What should I do if I\u2019m not receiving emails from Texas Tech K 12?",
+      "answer": "Check your Junk or Spam folder. If the email is there, move the email to your Inbox to mark the sender as safe."
+    },
+    {
+      "category": "Course Access and Learning Management System",
+      "question": "How do I reset my password?",
+      "answer": "Open a private browser or incognito window and try one more time to login with your credentials. If this still does not work, go to the Focus login page. From there, select Reset Password, and use the email you have on file. If you have any further issues with this, please call back during business hours and our support center will walk you through the process."
+    },
+    {
+      "category": "Textbook",
+      "question": "Do I need a textbook for my course?",
+      "answer": "Yes, you will need a textbook for your course. \nWe recommend that you purchase your textbooks from our bookstore provider M B S Direct at the time that you enroll, unless otherwise stated in the course description, to ensure that you receive the correct edition of the textbook. \nIf you choose to purchase books and or borrow them from other sources, it is your responsibility to obtain the correct edition of each book."
+    },
+    {
+      "category": "Textbook",
+      "question": "Does the cost of an online course include textbooks?",
+      "answer": "The cost of textbooks is not included in the cost of an online course."
+    },
+    {
+      "category": "Textbook",
+      "question": "I purchased my textbook but am unable to access it, what should I do?",
+      "answer": "If you have purchased the book, you should receive the email for access. Sometimes it may take between 48 hours and 72 hours to receive an email. Keep in mind it may take up to two business days for access to be granted for new enrollees.\nIf you have not received the email, you will need to contact the M B S eContent Team at 1-888-886-0772. Prior to calling, please have your order number available to have the login credentials email sent."
+    },
+    {
+      "category": "Textbook",
+      "question": "Does Texas Tomorrow pay for textbooks?",
+      "answer": "Texas Tomorrow only covers tuition and fees for college courses."
+    },
+    {
+      "category": "Student Portal and Account Setup - Focus Portal",
+      "question": "How do I create a student account for the Texas Tech K 12 portal?",
+      "answer": "Visit the Student Registration page. \nYou\u2019ll need a valid email address that is not shared with another student or parent. \nOnce registered, you\u2019ll be able to access courses, track progress, view assignments and grades, and communicate with teachers via the \"Communications\" module in Focus.\n\nTexas Tech K 12 offers several different programs. Based upon your selection, application requirements may be different: \nSupplemental Program:\nFor students remaining enrolled in their local school.\nRequires prior approval from a school counselor.\nAllows enrollment in: \nSupplemental courses\nCredit-by-Examinations (CBEs)\n\nFull-Time Texas Tech K 12 Student:\nFor students withdrawing from their local school district.\nOptions include: \nTuition-Free Full-Time Program (Texas residents)\nTuition-Paid Full-Time Program (Non-Texas residents or Texas residents seeking flexibility)\n\nCollege Preparatory Academy:\nFor Full-Time students.\nOffers dual credit (high school + college) through partnerships with colleges/universities.\n\nUpon getting to the bottom of the page, you will be presented with the following screen. Students that are registering for the Texas Tech K 12 Supplemental Program or the Texas Tech K 12 Full-Time Diploma program should select the \"Texas Tech K 12 Intake Form\".\n\nIf you are a returning student, please click on \"Continue Application\". The system will ask for the email address and your password. You will then be allowed to continue from where you left off."
+    },
+    {
+      "category": "Student Portal and Account Setup - Focus Portal",
+      "question": "How do I select a program?",
+      "answer": "Following the Form Type selection, pressing the \"Begin\" button will take you to the next page to select the program that you are interested in signing your student up for."
+    },
+    {
+      "category": "Student Portal and Account Setup - Focus Portal",
+      "question": "What are the options when selecting a program on the application?",
+      "answer": "Supplemental Individual Student (Part-Time): \nIf you will remain enrolled at your local school and want to take a Texas Tech K 12 course to graduate early or on time, take courses not offered at your local school, make up failed credits, or have an alternative for summer school; you will select the Supplemental/Part-time option. \n\nStudents must receive prior approval from their school counselor before enrolling in any course or CBE. Failure to obtain approval may result in unawarded credit for a course or CBE. Once a student submits an assignment for grading, they are no longer eligible for a refund in the tuition-paid or supplemental programs.  \n\nFull-Time Tuition-Free Diploma Program (Texas Residents Only): \nThe State of Texas has designated Texas Tech K 12 eligible to receive state funds. As a result, beginning in August 2021, we will offer a tuition-free K 12 online academic program available only to Texas Residents!  \n\nNote: You will need to withdraw from your local school district to attend Texas Tech K 12 full-time tuition-free program.\n\nTo apply to this program:\nIt must be consistent with your academic needs\nYou must be a Texas resident under the age of 25 and provide Proof of Residency\nYou must provide a copy of your birth certificate\nYou must be scheduled into at least four semester courses and maintain satisfactory course progress\n\nFull-Time Tuition-Based Diploma Program (Outside of Texas or Texas Residents seeking more flexibility):\n\nTexas Tech K 12 offers a tuition-based option for students who desire the flexibility of a distance education but reside outside of Texas or do not want the additional restrictions of the tuition-free program. \n\nWe offer all courses necessary to meet the requirements to complete a Texas high school graduation plan. \n\nIf you are currently a Texas Tech K 12 student or if you want to withdraw from your local school district to attend Texas Tech K 12 full-time but you do not want the additional restrictions of the tuition-free program, you will select this option. \n\nThere will be a $200.00 non-refundable Admission fee charged to apply to the Full-time Tuition-based Diploma Program. \n\nOnce a student submits an assignment for grading, they are no longer eligible for a refund in the tuition-paid or supplemental programs.  \n\nCollege Preparatory Academy:\nTexas Tech K 12 offers both individual dual credit courses or a comprehensive Texas Tech College Preparatory Academy program. \n\nThe College Preparatory Academy is designed to help students graduate with both a high school diploma and a bachelor's degree in just six years.\n\nIn order to apply for the College Preparatory Academy, you must meet the following criteria:\nMastered STAAR scores\nOne academic recommendation letter (upload file if available)\n3.0 GPA\n\nAfter selecting the program, you will be asked to enter your students\u2019 information. \nWith recent enhancements, Texas Tech K 12 is pleased to offer discounts for those who are connected to the Military and/or are a child of Texas Tech Employees. Please note that if you are Military, you will need to provide a copy of either your Military ID or DD Form 214. Children of Texas Tech Employees will need to provide a copy of the Parents Employee ID."
+    },
+    {
+      "category": "Student Portal and Account Setup - Focus Portal",
+      "question": "How do I log into the Focus Portal?",
+      "answer": "After submitting the application, you should receive an email with your Focus Login information. Upon accessing the Focus Portal, enter your username and password which should take you to your Focus Dashboard.\nIf you have forgotten your password, please click \"Forgot Password\". Please enter your email address to receive your user credentials."
+    },
+    {
+      "category": "Student Portal and Account Setup - Focus Portal",
+      "question": "What is the Focus Dashboard?",
+      "answer": "The dashboard is your starting point into managing your profile, accessing courses, reviewing the course catalog, utilizing forms and downloads, and contacting Texas Tech K 12."
+    },
+    {
+      "category": "Student Portal and Account Setup - Focus Portal",
+      "question": "What is the My Information tab in the Focus Dashboard?",
+      "answer": "Biographic information is displayed to you by clicking on \"My Information\" on the left-hand menu. \nThe \"My Information\" displays contact information such as home address, business address, and other address with corresponding phone numbers and email addresses. \nContacts or authorized users who can view your profile can be displayed here under \"Linked Users,\u201d or you may request an authorized user by clicking on the \"New Contact\" button and entering the required information."
+    },
+    {
+      "category": "Student Portal and Account Setup - Focus Portal",
+      "question": "What is the Primary Information tab in the Focus Dashboard?",
+      "answer": "Under the My Information tab, the Primary Information will display your name, your student id number and your username."
+    },
+    {
+      "category": "Student Portal and Account Setup - Focus Portal",
+      "question": "What is the Accommodations tab in the Focus Dashboard?",
+      "answer": "Under the My Information tab, the Accommodations will list any accommodations that the student has."
+    },
+    {
+      "category": "Student Portal and Account Setup - Focus Portal",
+      "question": "What is the Address and Contacts tab in the Focus Dashboard?",
+      "answer": "Under the My Information tab, the Address & Contacts will allow you to view your current address. \nIf your address or contacts have changed, you may update it via \"New Address\" and \"New Contacts\"."
+    },
+    {
+      "category": "Student Portal and Account Setup - Focus Portal",
+      "question": "What is the Advisor tab in the Focus Dashboard?",
+      "answer": "Under the My Information tab, the Advisor tab will list the external school that was selected at the time of registration. \nIf you have changed schools, you may select the new school. Once submitted, the information will be routed to Texas Tech K 12 staff for approval."
+    },
+    {
+      "category": "Student Portal and Account Setup - Focus Portal",
+      "question": "What is the Demographics tab in the Focus Dashboard?",
+      "answer": "Under the My Information tab, the Demographics page will display your basic demographic information. This is for Full-Time Students Only.\nFrom this page, you may update your external school, and your email address. Once submitted, the changes will be routed to Texas Tech K 12 staff for approval."
+    },
+    {
+      "category": "Student Portal and Account Setup - Focus Portal",
+      "question": "What is the Documentation tab in the Focus Dashboard?",
+      "answer": "Under the My Information tab, the documentation tab will allow you to access any documents that you have uploaded. If you need to upload updated documents, you will be able to do so through this screen."
+    },
+    {
+      "category": "Student Portal and Account Setup - Focus Portal",
+      "question": "What is the Emergent Bilingual tab in the Focus Dashboard?",
+      "answer": "Under the My Information tab, the enrollment tab will display your current grade level as well as the enrollment code. This is for Full-Time Students Only.\nYou may also update your grade level from this page. Once submitted, the request will be routed to Texas Tech K 12 for approval."
+    },
+    {
+      "category": "Student Portal and Account Setup - Focus Portal",
+      "question": "What is the FitnessGram/PFAI tab in the Focus Dashboard?",
+      "answer": "Under the My Information tab, the FitnessGram tab will allow you to enter in the required Fitness information. This is for Full-Time Students Only."
+    },
+    {
+      "category": "Student Portal and Account Setup - Focus Portal",
+      "question": "What is the Graduation tab in the Focus Dashboard?",
+      "answer": "Under the My Information tab, the Graduation tab will allow you to see the graduation plan for your student. This is for Full-Time Students Only."
+    },
+    {
+      "category": "Student Portal and Account Setup - Focus Portal",
+      "question": "What is the PEIMS tab in the Focus Dashboard?",
+      "answer": "Under the My Information tab, the PEIMS tab will contain your students unique state id."
+    },
+    {
+      "category": "Student Portal and Account Setup - Focus Portal",
+      "question": "What is the Progress Report tab in the Focus Dashboard?",
+      "answer": "Under the My Information tab, the Progress Report tab will show the current progress of each of the student's courses. Please note that the report is updated nightly."
+    },
+    {
+      "category": "Student Portal and Account Setup - Focus Portal",
+      "question": "What is the Student Application Information tab in the Focus Dashboard?",
+      "answer": "Under the My Information tab, the student application information tab will list basic information from your application."
+    },
+    {
+      "category": "Student Portal and Account Setup - Focus Portal",
+      "question": "What is the Student Schedule tab in the Focus Dashboard?",
+      "answer": "Under the My Information tab, the student schedule tab will list your current enrollments along with start date (Enrolled), end date (Dropped) and your current enrollment status."
+    },
+    {
+      "category": "Student Portal and Account Setup - Focus Portal",
+      "question": "What is the Communication tab in the Focus Dashboard?",
+      "answer": "The Communications tab will allow you to email your teacher and let you receive messages from Texas Tech K 12 staff."
+    },
+    {
+      "category": "Student Portal and Account Setup - Focus Portal",
+      "question": "What is the Change Requests tab in the Focus Dashboard?",
+      "answer": "The Change Requests tab will allow you to view your change requests. You may also \"cancel\" the request if the information was entered incorrectly."
+    },
+    {
+      "category": "Student Portal and Account Setup - Focus Portal",
+      "question": "What is the Preferences tab in the Focus Dashboard?",
+      "answer": "The preferences tab will allow you to update your display options, change your password and how you receive notifications.\nDisplay Options will allow you to update how you view your student's information.\nThe Password tab will allow you to update your password. Please note that this will not change or update your student's password.\nThe Notifications tab will allow you to update your notifications. Texas Tech K 12 recommends that you set your notifications to \"daily\"."
+    },
+    {
+      "category": "Student Portal and Account Setup - Focus Portal",
+      "question": "What are the requirements for creating a new password?",
+      "answer": "The rules for creating a new password are:\npasswords must be at least 12 characters long\nmust contain a mix of upper and lower-case characters\nhave at least 1 numeric character\nhave at least 1 special character\nThe password-change dialogue will display a warning message in red until the typed-in password meets all the requirements."
+    },
+    {
+      "category": "Student Portal and Account Setup - Focus Portal",
+      "question": "What is the Class Schedule tab in the Focus Dashboard?",
+      "answer": "Students can see what courses they are currently taking by clicking on the Class Schedule menu on the left side. \nIf you would like to view additional details for each course, please select \"class schedule\" which will provide information on current courses and teacher information. \nMeeting Days, Room, Term, Attended Hours, and Print Reauthorization are not currently used by Texas Tech K 12 and can be ignored."
+    },
+    {
+      "category": "Student Portal and Account Setup - Focus Portal",
+      "question": "What is the Grades tab in the Focus Dashboard?",
+      "answer": "The Grades tab will display the final course grade for all courses that have been taken with Texas Tech K 12. \nYou will also have the option to print grade reports for each course. \nGrade reports are specific to each course and are not able to print all courses on one report."
+    },
+    {
+      "category": "Student Portal and Account Setup - Focus Portal",
+      "question": "What is the Grade Requirements tab in the Focus Dashboard?",
+      "answer": "The Grade Requirements will show how many credits you will need to complete your High School Diploma. \nClicking on \"Show Detailed\" will show which classes have been used for the credits."
+    },
+    {
+      "category": "Student Portal and Account Setup - Focus Portal",
+      "question": "What is the Focus Summary tab in the Focus Dashboard?",
+      "answer": "The Forms Summary will allow you to see any forms that have been submitted."
+    },
+    {
+      "category": "Student Portal and Account Setup - Focus Portal",
+      "question": "What is the Purchase and Pay tab in the Focus Dashboard?",
+      "answer": "The Purchase & Pay tab will allow you to purchase and pay for your enrollments with Texas Tech K 12. \nThe catalog gives the parent the ability to search via the subject for the course or CBE.  Please note that students apart of the Texas Tech K 12 Tuition Free program will not have access to Purchase & Pay. \nStudents, please note upon completion of the Purchase & Pay, it may take up to two business days for your course to populate."
+    },
+    {
+      "category": "Student Portal and Account Setup - Focus Portal",
+      "question": "How do I purchase a course in Focus?",
+      "answer": "The Purchase and Pay tab will allow you to purchase and pay for your enrollments with Texas Tech K 12. Once you have found the course that you are enrolling in, please select \"Add to Cart\". The course will show \"Added to Cart\" while the course will appear on the right-hand side.\nOnce all courses have been selected, please press \"Checkout\" which will take you to the Checkout process to complete course payment. \nAfter pressing \"Checkout\", you should receive notification that you are being directed to Touchnet to complete payment information.\nUpon entering payment information, you should receive payment confirmation.\nClicking on continue, you should receive your receipt as well as the option to print it out."
+    },
+    {
+      "category": "Student Portal and Account Setup - Focus Portal",
+      "question": "What is the Customer Ledger tab in the Focus Dashboard?",
+      "answer": "The Customer Ledger tab will allow you to print out a copy of a Focus receipt. You may also select \"Show Details\" under \"Invoice Details\" for more detailed information about the purchase."
+    },
+    {
+      "category": "Student Portal and Account Setup - Focus Portal",
+      "question": "Where can I find my student's Tech ID number?",
+      "answer": "The student's tech ID is shown in the Primary Information section of the \"My Information\" page in the Focus Portal."
+    },
+    {
+      "category": "Student Portal and Account Setup - Focus Portal",
+      "question": "Where can I find my Tech ID number?",
+      "answer": "Your tech ID is shown in the Primary Information section of the \"My Information\" page in the Focus Portal."
+    },
+    {
+      "category": "Course Transfers and Refunds",
+      "question": "I enrolled in the wrong course. Is there an option to transfer to another course?",
+      "answer": "Students that have selected the wrong course are eligible to transfer to another course within the first 30 days of enrollment. To transfer to another course, we ask that you please submit the Student Course Drop/Transfer Refund Request form."
+    },
+    {
+      "category": "Course Transfers and Refunds",
+      "question": "What is the Texas Tech K 12 course refund policy?",
+      "answer": "Partial refund requests are granted within the first 30 days of enrollment. No refunds will be granted after the first 30 days of enrollment. All requests for withdrawals should be submitted inside of Focus using the Course/Drop/Transfer Refund Request Form. Refunds are available for course fees only; credit by exams are nonrefundable.\nThere will be a $40.00 administration fee to process the withdrawal request.\nPlease note that the following items are non-refundable:\nAdmission fee\nShipping fees\nCBEs\nExam retake fee\nPrint surcharge fee\nProctor change fee\nDiploma replacement fee\nTranscript request fee\nMaterial Replacement fee\nWithdrawal fee\nReturned check fee"
+    },
+    {
+      "category": "Course Transfers and Refunds",
+      "question": "How do I get a refund for my textbook?",
+      "answer": "If you have purchased your textbooks from M B S Direct, we ask you please contact M B S Direct. In their help section, please look for \"Returns & Refunds\". \nIf you do not qualify for a refund, you may be eligible to Sell Your Textbooks which will allow you to view the \"current buy back price\"."
+    },
+    {
+      "category": "Course Transfers and Refunds",
+      "question": "I would like to request a withdrawal refund; how do I do this?",
+      "answer": "Students that would like to request a refund, should login to their Focus portal. Underneath the \"Forms\" tab, please select the \"Student Course Drop/Transfer Refund Request\" form. \nAfter selecting the form, you should see your information and an option to select the course. Once you have filled out the information, please select the \"Submit Request\" button for processing. The form will be routed to the Finance team for review and processing."
+    },
+    {
+      "category": "Program Overview and Enrollment",
+      "question": "What is Texas Tech K 12?",
+      "answer": "Texas Tech K 12 is a state-approved online school affiliated with Texas Tech University, offering a rigorous and flexible curriculum for students in kindergarten through 12th grade. Our programs allow students to complete their education at their own pace while meeting state academic requirements.\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Program Overview and Enrollment",
+      "question": "What is K 12?",
+      "answer": "K 12 refers to the educational system that includes kindergarten through 12th grade. In the context of the Texas Tech K 12 Program, it specifically pertains to the online academic programs offered by Texas Tech University for students in this age range. The program includes various options, such as supplemental courses for part-time students and full-time diploma programs for those who wish to withdraw from their local school district. The Texas Tech K 12 Program is designed to meet students' educational needs through a flexible, self-paced online learning environment.\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Program Overview and Enrollment",
+      "question": "Who is eligible to enroll in Texas Tech K 12?",
+      "answer": "Texas Tech K 12 serves a diverse range of students, including: \u2022 Professional Students \u2022 Military families \u2022 Students who travel frequently \u2022 Homeschoolers \u2022 Adults completing high school \u2022 Hospitalized or homebound students \u2022 Students struggling academically or socially \u2022 Students in need of credit recovery\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Program Overview and Enrollment",
+      "question": "What programs does Texas Tech K 12 offer?",
+      "answer": "We offer a variety of programs, including: \u2022 Full-time diploma programs (tuition-free and tuition-paid options) \u2022 Individual courses \u2022 Dual credit and Advanced Placement (AP) courses \u2022 Credit by Exams (CBEs) \u2022 Summer school option\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Program Overview and Enrollment",
+      "question": "How do I enroll in Texas Tech K 12?",
+      "answer": "Enrollment is easy and flexible. You can apply online, and our team will guide you through the process. Whether you are enrolling for full-time education or individual courses, we can assist you with the right program for your needs. Visit our enrollment page to get started.\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Program Overview and Enrollment",
+      "question": "Is Texas Tech K 12 accredited?",
+      "answer": "Yes, Texas Tech K 12 is accredited by Cognia, which ensures that we meet high standards for academic quality, leadership and resource allocation. Additionally, we are approved by the Texas Education Agency, which means our courses meet state requirements for graduation.\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Program Overview and Enrollment",
+      "question": "Can I earn a Texas High School Diploma through Texas Tech K 12?",
+      "answer": "Yes, you can earn a full Texas High School Diploma through our tuition-free and paid full-time programs. Upon successful completion of the program, students are invited to participate in a graduation ceremony on the Texas Tech University campus.\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Program Overview and Enrollment",
+      "question": "Are the courses NCAA approved?",
+      "answer": "Yes, our high school courses are approved by the National Collegiate Athletic Association (NCAA). This ensures that college-bound student athletes can meet the academic requirements to compete in college sports.\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Program Overview and Enrollment",
+      "question": "How flexible is the Texas Tech K 12 curriculum?",
+      "answer": "Our curriculum is designed to be flexible and self-paced. Students can start at any time and adjust their schedule to fit their individual needs. This flexibility makes it ideal for students involved in extracurricular activities, those who need to recover credits, or families who travel frequently.\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Program Overview and Enrollment",
+      "question": "What are the benefits of enrolling in the Texas Tech K 12 program?",
+      "answer": "Accreditation & Quality: Our programs are accredited and approved by Cognia and the Texas Education Agency, ensuring quality education. Flexible Learning: Students can work at their own pace and adjust schedules to fit their lifestyles. Supportive Environment: Our team of dedicated, Texas-certified teachers offers personalized support to help students succeed. Variety of Programs: We provide options for full-time diplomas, individual courses, and adult education, all designed to meet students' needs.\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Program Overview and Enrollment",
+      "question": "What is the graduation process for Texas Tech K 12?",
+      "answer": "Students who complete the full-time diploma program will receive a Texas High School Diploma. Upon completion, they are invited to attend a graduation ceremony on the Texas Tech University campus, celebrating their academic achievement.\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Program Overview and Enrollment",
+      "question": "Can my child take AP or dual-credit courses?",
+      "answer": "Yes, we offer both Advanced Placement courses and dual-credit courses, allowing high school students to earn college credit while completing their high school education.\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Program Overview and Enrollment",
+      "question": "Is there a cost for attending Texas Tech K 12?",
+      "answer": "Texas Tech K 12 offers both tuition-free and paid tuition options for full-time programs. Costs for individual courses and dual-credit programs may vary.\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Program Overview and Enrollment",
+      "question": "How do I track my child\u2019s progress?",
+      "answer": "Parents can monitor their child's progress through our online platform. You will have access to grades, assignments, and reports to ensure your child is on track.\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Program Overview and Enrollment",
+      "question": "Are there special programs for military families?",
+      "answer": "Yes. Texas Tech K 12 is designated as a Purple Star Campus by the Texas Education Agency, recognizing our commitment to supporting military-connected students and their families.\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Program Overview and Enrollment",
+      "question": "What is Title Nine and how does it relate to Texas Tech K 12?",
+      "answer": "Title Nine is a federal law that prohibits discrimination based on sex in educational programs. Texas Tech K 12 adheres to Title Nine regulations, ensuring all students have equal access to education, regardless of sex, gender identity or other protected statuses.\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Program Overview and Enrollment",
+      "question": "What is the Supplemental Part-time program option?",
+      "answer": "Anyone looking to supplement their current school curriculum or home school curriculum can enroll in Texas Tech K 12. Our Texas Tech K 12 Supplemental Program is designed to allow students in elementary, middle and high school that allows students to work at their own pace. We have students who must do their work at home for various reasons, such as travel outside of the U.S. for extended amounts of time, have health issues, are actors, entertainers, and athletes who cannot fit the traditional schooling into their schedule. We have school all year and do not keep a traditional academic schedule, so it is possible to move through our program faster than the typical semester-based programs. This is a self-paced program where all the instructional content is provided. The courses tend to be reading and writing intensive. Online courses require self-discipline and excellent time-management skills. The courses are not virtual classrooms and do not require any interaction with any other students or instructors. Each course has lessons, which are like chapters, and a final exam. The final exam will be proctored online by an online proctoring service. *If you will remain enrolled at your local school and want to take a Texas Tech K 12 course to graduate early or on time, take courses not offered at your local school, make up failed credits, or have an alternative for summer school; you will select the Supplemental Part-time option. Students must receive prior approval from their school counselor before enrolling in any course or Credit By Exam. Failure to obtain approval may result in unawarded credit for a course or Credit By Exam. Once a student submits an assignment for grading, they are no longer eligible for a refund in the tuition-paid or supplemental programs.\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Program Overview and Enrollment",
+      "question": "What are the benefits of the K 12 Supplemental Program?",
+      "answer": "\u2022 Allow students to start with Texas Tech K 12 at anytime \u2022 From the date of enrollment, students have six months (180 days) to complete the course \u2022 Completing the final exam from home with Texas Tech K 12 proctoring service \"Proctorio\". \u2022 Graduate Early or On Time: Stay on track or get ahead with courses that complement your current school curriculum. \u2022 Access Advanced Placement Courses: Challenge yourself with college-level coursework that prepares you for higher education and boosts your college applications. \u2022 Expanded Your Learning Options: Enroll in courses not available at traditional schools to broaden your academic experience. \u2022 Learn on Your Schedule: Our self-paced format fits seamlessly with your existing school schedule and commitments. \u2022 Recover Credits: Retake courses to make up failed credits and stay on track for graduation. \u2022 Replace Summer School: Complete required coursework during the summer without a traditional classroom setting.\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Program Overview and Enrollment",
+      "question": "How is taking a single course different from the Full-Time Diploma Program?",
+      "answer": "To take a single course, students do not need to withdraw from their current school. Students need to obtain approval from their current school Counselor or Principal before enrolling. Students should coordinate with their school Counselor concerning their local school policies and other requirements.\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Program Overview and Enrollment",
+      "question": "When is the enrollment period for K 12?",
+      "answer": "Texas Tech K 12 has an open enrollment window that allow students to start with us at anytime. From the date of enrollment, students have six months (180 days) to complete the enrollment. Please note that extensions are not available.\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Program Overview and Enrollment",
+      "question": "Where do I go to enroll online?",
+      "answer": "Students that are interested in enrolling should select the course from the K 12 course catalog. Once you have selected your course, please click \"enroll now\" which will take you to the intake form to complete the enrollment process. Prior to enrolling, please coordinate with your local school counselor concerning the local school policies and other requirements.\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Program Overview and Enrollment",
+      "question": "Would this school be a good fit for a student with special needs?",
+      "answer": "This is the parent's decision. Of course, you know your child best and you are the best person to determine the environment in which your child will experience the most success. \u2022 Many students with special needs do very well in our online program. Some of these needs that are readily accommodated include: use of a screen reader, need larger font, need highlighting or color exchange functionality, need a learning environment free from distractions, need extended time on exams, have social anxiety, have medical concerns. Our online courses are fully accessible and meet federal web compliance requirements. \u2022 Texas Tech K 12 may not be the most appropriate instructional setting and the least restrictive environment for your child as required by federal law. \u2022 Texas Tech K 12 is a statewide online school district and does not have a physical campus nor a geographic service district. We serve full-time students from across the entire state of Texas. \u2022 We have special educational personnel to ensure and monitor appropriate accommodations identified in the I.E.P or 504 plan. We closely monitor the academic progress of all students and will provide appropriate interventions and services as identified. \u2022 Again, as the parent, you will need to make an individualized analysis. We are happy to share more information about the nature of our coursework if that would be helpful in your decision-making process.\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Program Overview and Enrollment",
+      "question": "What does an asynchronous online program mean?",
+      "answer": "It means that all instruction takes place at your student's own timing and pace. The student will not receive instruction via Zoom or another virtual platform at a predetermined time and date. Our teachers host office hours that allow for students to join them. Office hours are posted inside of the course.\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Program Overview and Enrollment",
+      "question": "What is the Full-time Tuition Free Diploma Program?",
+      "answer": "The State of Texas has designated Texas Tech K 12 as eligible to receive state funds, allowing us to offer a tuition-free K 12 online academic program for students who are full-time Texas residents.\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Program Overview and Enrollment",
+      "question": "Who is eligible for the Full-time Tuition Free Diploma Program?",
+      "answer": "To apply to this program: \u2022 It must be consistent with your academic needs, \u2022 You must have access to computer hardware that meets minimum requirements, as well as reliable internet access. \u2022 You must submit a birth certificate and proof of Texas residency. \u2022 You are required to take the designated S.T.A.A.R. or E.O.C. exams for your grade level. \u2022 You will need a designated Learning Coach. Your parent or guardian, or another responsible adult, will work with your teachers to monitor progress, lesson mastery, and review student work. \u2022 S.T.A.A.R. testing is not a requirement to apply for the tuition free program, but any end of course exam or previous state testing will be taken into consideration in the application process.\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Program Overview and Enrollment",
+      "question": "When can I enroll in the Full-time Tuition Free Diploma Program?",
+      "answer": "If you are applying to Texas Tech K 12's tuition-free program and are a Texas Resident, please note that enrollment is limited. State law requires a lottery system to select students for admission each semester. \u2022 Fall Lottery: Held before the start of the school year (June). \u2022 Spring/Mid-Year Lottery: Held in January for students transferring mid-year. Enrollment will continue until the pre-established cap is reached. In between lotteries, enrollment may open if space becomes available.\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Program Overview and Enrollment",
+      "question": "What do I need to apply to the Full-Time Tuition Free Diploma Program?",
+      "answer": "\u2022 The program must meet your child\u2019s academic needs. \u2022 Your child needs a computer with the required specs and reliable internet. \u2022 Submit a birth certificate and proof of Texas residency. \u2022 Your child must have achieved satisfactory performance on the S.T.A.A.R. assessments.\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Program Overview and Enrollment",
+      "question": "How do I apply to the Full-Time Tuition Free Diploma Program?",
+      "answer": "New students enter a lottery every six months (fall for the new school year and January for mid-year transfers). If not selected, you'll be placed on a waitlist and notified if a spot opens.\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Program Overview and Enrollment",
+      "question": "What if my child is not selected in the lottery for the Full-Time Tuition Free Diploma Program?",
+      "answer": "You will be placed on a waitlist. If a spot opens, you'll be contacted via email or phone. You can also try again in the next lottery.\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Program Overview and Enrollment",
+      "question": "What does the school year start for the Full-Time Tuition Free Diploma Program?",
+      "answer": "Students can apply during the posted lottery window and start courses at the beginning of the fall semester or spring semester of the tuition free program.\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Program Overview and Enrollment",
+      "question": "Can my child receive an extension if they can\u2019t finish their course in time for the Full-Time Tuition Free Diploma Program?",
+      "answer": "No extensions are allowed.\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Program Overview and Enrollment",
+      "question": "What is the Full-time Tuition-Based Diploma Program?",
+      "answer": "Texas Tech K 12 offers a tuition-based option for students who desire the flexibility of a distance education but reside outside of Texas or do not want the additional restrictions of the tuition-free program. We offer all courses necessary to meet the requirements to complete a Texas high school graduation plan. If you are currently a Texas Tech K 12 student or if you want to withdraw from your local school district to attend Texas Tech K 12 full-time but you do not want the additional restrictions of the tuition-free program, you will select this option. There will be a $200.00 non-refundable Admission fee charged to apply to the Full-time Tuition-based Diploma Program.\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Program Overview and Enrollment",
+      "question": "Who is eligible for the Full-time Tuition-Paid Program?",
+      "answer": "This program is open to all students, regardless of residency. It is ideal for: \u2022 Non-Texas residents who wish to attend an accredited K 12 school. \u2022 Students seeking flexibility due to personal, family or academic reasons. \u2022 Homeschool students who want the structure of an accredited online program.\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Program Overview and Enrollment",
+      "question": "What courses are available in the Full-time Tuition-Paid Program?",
+      "answer": "Students have access to a wide range of courses, including: \u2022 Core subjects (English, math science, social studies) \u2022 Electives (art, music, technology, etc.) \u2022 Foreign languages (Spanish, French, etc.) \u2022 Advanced Placement (AP) courses \u2022 Credit recovery and acceleration options.\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Program Overview and Enrollment",
+      "question": "How is the Full-Time Tuition-Paid Program different from the state-funded, tuition-free program?",
+      "answer": "The Full-Time Tuition-Paid Program is for students who: \u2022 Do not meet the eligibility criteria for the tuition-free program. \u2022 Live outside of Texas \u2022 Choose a paid, flexible online learning experience.\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Program Overview and Enrollment",
+      "question": "How do I enroll in the Full-time Tuition-Paid Program?",
+      "answer": "To enroll, follow these steps: 1. Submit an application: Complete the online application form and submit required documents (e.g., birth certificates and previous transcripts, if applicable). 2. Confirmation: Once your application is reviewed and accepted, you will receive confirmation of your enrollment. 3. Course Selection: Meet with an academic adviser to choose your courses based on your grade level, academic goals and interests. 4. Begin Learning: After enrollment, students can start their courses at any time and access all online resources.\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Program Overview and Enrollment",
+      "question": "When can my child start the Full-time Tuition-Paid Program?",
+      "answer": "Enrollment is available year-round, and students can begin courses at any time. The program's flexible schedule allows students to start when it's convenient for them.\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Program Overview and Enrollment",
+      "question": "What Advanced Placement (AP) courses do offer?",
+      "answer": "Texas Tech K 12 is proud to offer the following Advanced Placement (AP) Courses. Prior to enrollment we ask that you please check with your school counselor to ensure that you will receive credit for the course. Calculus - Semester A Calculus - Semester B English Language and Composition - Semester A English Language and Composition - Semester B Environmental Science - Semester A Environmental Science - Semester B Macroeconomics - Semester A Microeconomics - Semester B Psychology Language and Culture - Spanish - Semester A Language and Culture - Spanish - Semester B Statistics - Semester A Statistics - Semester B U.S. Government and Politics United States History - Semester A United States History - Semester B Each AP course has an optional exam offered every May by the College Board. Taking the exam is not required, but it can be a valuable opportunity to earn college credit or advanced placement\u2014depending on your exam score and the policies of the colleges you apply to.\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Parent and Guardian Information",
+      "question": "How do I create a Parent Portal Account for the Texas Tech K 12 portal?",
+      "answer": "Parents, if you have not created your account, please visit our Parent Portal Registration page. The Parent portal will allow you to monitor your child's progress in school by providing timely access to both assignments and grades that are entered by the teacher throughout the grading period. You will also have the ability to contact your student's teacher via the \"Communications\" module inside of Focus. In order to create a Parent Portal account online, you must have a valid email address. Parents and Students cannot share email addresses. For those that do not have an existing account, please click on \"I do not have an Account Registered on the Parent Portal but would like to Create One\". If you do have an existing account, please click on \"I have an Account Registered on the Parent Portal but would like to Add a Child\". The Parent Portal Registration Page will ask you to enter in your First Name, Last Name and email address. You will also be asked to create a unique password. Upon entering your information, you will be directed to the \"Students\" page. From the Students page, you may connect to an existing student(s) account via \"I would like to Add a Child who is already enrolled\", or you may create an application via \"I would like to Apply For Enrollment for a new child\".\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Parent and Guardian Information",
+      "question": "How do I continue an application I have already started?",
+      "answer": "Parents that have already started an application may see the ability to continue their student\u2019s application from within the portal under Alerts. Please note that the student must be linked to your account in order to see this alert. If you need to link your student to your account, please refer to the following section - I would like to Add a Child who is already enrolled. If you do not see the \"Click Here\" alert, you can continue your student's application by clicking on \"Forms\" and then selecting \"Online Application\". You can also find a link to continue your application from the Focus login page. After selecting the link, you will be directed back to the application homepage. Select the \"Continue Application\" tab and enter your username and password to continue.\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Parent and Guardian Information",
+      "question": "How do I view my active students?",
+      "answer": "From the dashboard screen, active students will be listed on the left-hand side. Clicking on the student\u2019s name will allow you to view students\u2019 information, their grades, class schedule and any forms that need to be submitted. If your student is not showing, you will need to connect your student's account via the Parent Portal and select \"I would like to Add a Child who is already enrolled\".\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Parent and Guardian Information",
+      "question": "How do I view my students progress in the Learning Management System?",
+      "answer": "If you need to view your student's progress or view their portal assignment grades, please click on Canvas. You will be taken into the Canvas Learning Management System.\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Grading and Exams",
+      "question": "When will I receive my assignment grade?",
+      "answer": "Teachers have two business days to grade assignments. Plan ahead to ensure your schedule allows for this grading time. Communicate with your Texas Tech K 12 advisor if you are a full-time student or your local campus counselor if you are a supplemental student for us to work with you and help you meet deadlines for graduation, employment, and college. Exams are built behind an adaptive release in Canvas. Therefore, assignments must be completed and graded before the exam will be released.\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Grading and Exams",
+      "question": "How is my course grade calculated?",
+      "answer": "The course grade will be calculated as follows: \u2022 50% coursework average \u2022 50% summative assessment average, including the final exam \u2022 A passing course grade is 70 or higher. \u2022 Students must attempt all assignments in the course. The final exam will not be available until all assignments have been accepted and graded by the teacher. \u2022 Students\u2019 first attempt at the final exam will be Final Exam A. \u2022 Students who score below 70% for the first final exam attempt on Final Exam A will be eligible to retake the final one time which is Final Exam B.\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Grading and Exams",
+      "question": "How do I access my final exam?",
+      "answer": "You may take a final exam once you have completed all course work, including checkpoints. Each assignment requires two business days for grading and processing; therefore, this time will factor in coursework completion. If you require a final course grade to meet a specific deadline, allow five days for the final grade to post after you complete the final exam.\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Grading and Exams",
+      "question": "How do I access my final course grade?",
+      "answer": "Final course grades will be posted to the student's Focus account under \"Grades\". Please note the following: \u00b7 Full-Time Texas Tech K 12 Students: A final grade will be recorded on his/her official Texas Tech K 12 transcript as well as posted in the student's portal. Full-time students may request a copy of their transcript from inside of Focus. \u00b7 Non-Full-Time Texas Tech K 12 Students: Students and parents may view the final course grade on the portal. It is the student\u2019s responsibility to very that the grade is received and recorded on their official school transcript. \u00b7 Homeschool Students: Final grades may be viewed on the portal. Grade Reports may be printed from the portal. Please ensure that you are using Google Chrome and that in your extensions, that the Adobe Acrobat extension is currently enabled. We also ask that you please ensure that your current Adobe setting is set to Covert Current web page to an Adobe PDF File has access to this site. If these settings are not enabled, we ask that you please check with your School or District IT to ensure that the extensions are enabled.\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Grading and Exams",
+      "question": "Why did I fail the course even though I passed the final?",
+      "answer": "It is possible that you had a low lesson average that could have caused you to fail the course.\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Grading and Exams",
+      "question": "How long will it take to receive a grade?",
+      "answer": "Teachers have up to two business days to return a grade. Grade reports are available in the Focus portal once they are posted. If your School Counselor needs a copy of the grade report, they should be able to download a copy from the Focus portal. Students that would like a hard copy should contact Texas Tech K 12 to request one be mailed. Please note that some assignments in Canvas will post grades immediately. Some assignments may require the teacher to post a grade. Please ensure that the teacher has had two business days to post the grade before contacting our office.\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Grading and Exams",
+      "question": "I need my grade as soon as possible. How do I speed up the process?",
+      "answer": "You may ask your instructor to expedite the grading if possible, although they are allowed two business days to return a grade. The best policy is to finish your work well in advance to avoid those type of situations.\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Proctorio and Online Exams",
+      "question": "What is Proctorio?",
+      "answer": "Our remote proctoring solution, Proctorio, allows students to take an online exam anytime, anywhere, once they are ready, on their own schedule. There is no need to secure a proctor, arrange an exam time, and travel to the agreed-upon testing location. Students can take the exam from their home computer at any time.\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Proctorio and Online Exams",
+      "question": "What do I need to take my exam?",
+      "answer": "Find a quiet and distraction-free area where you feel comfortable taking your exam. Prepare to be seated for the entire duration of the exam. A working webcam and microphone are required. Any desktop or laptop computer with a good internet connection with Google Chrome and the Proctorio extension installed should be sufficient. Please note you cannot take exams from mobile devices. You will be asked to hold up your photo ID to document that you are the test taker.\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Proctorio and Online Exams",
+      "question": "I am taking my exam and need live help in Proctorio, what do I do?",
+      "answer": "Proctorio offers twenty-four seven technical support to students via email, or phone at (480) 428-4089 or toll-free (866) 948-9248. Help information can also be found on the Proctorio website.\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Proctorio and Online Exams",
+      "question": "Why am I being prompted for an access code in Proctorio?",
+      "answer": "If being asked for an access code, we recommend the following:\nEnsure that you have the Google Chrome browser and the proctorio extension installed. Sometimes you will need to uninstall and then reinstall the extension.\nClear cache and cookies\nSometimes accessing the exam through a different browser (internet explorer) will allow access.\nDisable all other extensions\nRestart your computer\nConnect with Proctorio via their live chat for assistance\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Proctorio and Online Exams",
+      "question": "This says I need an access code for my exam, but I don't. What do I do?",
+      "answer": "If being asked for an access code, we recommend the following:\nEnsure that you have the Google Chrome browser and the proctorio extension installed. Sometimes you will need to uninstall and then reinstall the extension.\nClear cache and cookies\nSometimes accessing the exam through a different browser (internet explorer) will allow access.\nDisable all other extensions\nRestart your computer\nConnect with Proctorio via their live chat for assistance\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Support and Complaints",
+      "question": "How do I get support while enrolled?",
+      "answer": "Texas Tech K 12 provides robust support for students, parents and guardians. Our team of Texas-certified teachers is available to assist students, and our twenty-four seven student services portal offers online chat, phone assistance, and email support.\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Support and Complaints",
+      "question": "I need technical support, what do I do?",
+      "answer": "For issues accessing the website, along with login and password issues, please contact IT Help Central at 806-742-4357. This also includes login issues with your Microsoft Outlook email.\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Support and Complaints",
+      "question": "I have a complaint, who do I contact?",
+      "answer": "TTU K 12 encourages students and parents to discuss their concerns with the appropriate teacher, principal, or other campus administrator who has the authority to address their concerns. A concern at the informal level is an email or letter in hardcopy, addressed to the corresponding teacher, principal, or appropriate administrator. A student or parent may initiate the formal process by submitting the Parent Grievance or Grade Appeal Form inside of Focus within the prescribed time period of 30 days from the date that a decision or action gave rise to the complaint or grievance.\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Support and Complaints",
+      "question": "I want to submit a grade appeal; how do I do this?",
+      "answer": "Grievance forms may be filed inside of Focus, by hand delivery, or by U.S. mail. Hand-delivered filings shall be filed timely if received by the appropriate administrator or designee by the close of business on the deadline. Filings submitted by electronic communication shall be timely filed if they are received by the close of business on the deadline, as indicated by the date and time shown on the electronic communication. Level One electronic filings need to include the appropriate email address for the administrator who corresponds with the area of concern. Mail filings shall be timely filed if they are postmarked by U.S. mail on or before the deadline and received by the appropriate administrator or designated representative no more than three days after the deadline.\n\nNote: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent."
+    },
+    {
+      "category": "Student Expectations and Policies",
+      "question": "What are the attendance requirements for students in the Texas Tech K 12 Tuition-Free Program?",
+      "answer": "Note: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent.\n\nIn your all-online program, \u201cattendance\u201d will be defined as progress within each semester course. You will have six months (180 days from the date of enrollment) to complete each semester course. You must maintain enrollment in a minimum of four semester courses. You must complete a minimum of 5% of course assignments in every seven-day period. For example, if your course has 20 assignments, you need to complete a minimum of one per week. If your course has 60 assignments, you must average a minimum of three per week. Please note: Completing the minimum number of assignments does not guarantee you will complete within the 6-month time frame. Completing the minimum number of assignments and courses may not maintain your appropriate grade level or anticipated graduation date. If your progress is adequate, your parent may request \u201cvacation\u201d days. These must be requested and approved in advance.\nExtensions are not available, so you must schedule your weekly progress to complete the minimum of four courses during the 6-month period.\nFailure to meet minimum progress requirements may cause Texas Tech K 12 to implement truancy processes and may result in your removal from the program.\nMore information about Tuition-Free Program Policies can be found in our Attendance and Truancy policy."
+    },
+    {
+      "category": "Student Expectations and Policies",
+      "question": "What is the policy of Artificial Intelligence (AI) Use?",
+      "answer": "Note: If a caller requests to speak with a representative or a live person or someone else, please reiterate that it is currently after hours meaning we do not have any live agents at this time. Inform them you can try to answer any questions they might have, or they can call back Monday through Friday from 8:00 AM to 5:00 PM to speak with a live agent.\n\nAll work submitted in this course must be your own. You may not use artificial intelligence tools to complete your assignments in this course. If an instructor suspects that an assignment is not the work of the student, it will receive a score of zero. The instructor will message the student or provide feedback on the assignment indicating the need to schedule a one-on-one video conference, during which the student will be required to demonstrate their skills or knowledge through an alternative or mutually agreed-upon assignment. The grade of the alternate or agreed upon assignment will be determined at the instructor\u2019s discretion with the highest possible score being 70%. The incident will be reported to Texas Tech K 12 Administration and documented in the student\u2019s file. Continued violations of Texas Tech University\u2019s Academic Integrity Policy will result in the removal of the student from the program."
+    }
+  ],
+  "numbers": {
+    "grad_live": "+18067426441",
+    "grad_elevenlabs": "+18883323870",
+    "k12_live": "+18067427101",
+    "k12_elevenlabs": "+18884178511",
+    "tenk_live": "+18067420526",
+    "tenk_elevenlabs": "+18889707775",
+    "online_elevenlabs": "+18882817949",
+    "higher_ed_default": "+18067427227",
+    "flexible_learning": "+18067423714",
+    "signature_plus_rep": "+18067422810"
+  }
+}
