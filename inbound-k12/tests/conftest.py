@@ -14,7 +14,11 @@ import pytest
 
 _ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(_ROOT))
-os.environ.setdefault("GUAVA_API_KEY", "test-key")
+# .env/.env.example name this GUAVA_LOCAL_API_KEY; the vendored SDK's Client only ever
+# reads GUAVA_API_KEY (see guava/client.py), so mirror it across before anything
+# constructs a Client. Falls back to a harmless placeholder so offline tests never need
+# a real key.
+os.environ.setdefault("GUAVA_API_KEY", os.environ.get("GUAVA_LOCAL_API_KEY") or "test-key")
 os.environ.setdefault("GUAVA_AGENT_NUMBER", "+18065154465")
 
 

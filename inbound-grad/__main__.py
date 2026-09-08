@@ -64,6 +64,11 @@ def _get_document_qa() -> DocumentQA | None:
             logger.warning("Could not load %s knowledge base: %s", settings.ORGANIZATION_NAME, exc)
     return _document_qa
 
+# .env/.env.example name this GUAVA_LOCAL_API_KEY; the SDK's Client (constructed below,
+# inside guava.Agent.__init__) only ever reads GUAVA_API_KEY — mirror it across first.
+if os.environ.get("GUAVA_LOCAL_API_KEY") and not os.environ.get("GUAVA_API_KEY"):
+    os.environ["GUAVA_API_KEY"] = os.environ["GUAVA_LOCAL_API_KEY"]
+
 agent = guava.Agent(
     name=settings.AGENT_NAME,
     organization=settings.ORGANIZATION_NAME,

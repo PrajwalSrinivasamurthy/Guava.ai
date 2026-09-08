@@ -120,3 +120,23 @@ def test_after_hours_voicemail_request_reaches_the_live_queue(app, record, monke
     r = record(session, "after_hours_voicemail")
     assert r["termination_reason"] != "bot-failure"
     assert resolved and resolved[-1]["result"].number == app.settings.LIVE_NUMBER
+
+
+def test_after_hours_questions_request_reaches_ava(app, record, monkeypatch):
+    """After hours offers the same 'Be connected to our virtual assistant' choice as
+    daytime, alongside voicemail/text-message instead of the live queue. An unspecific
+    line like 'I just have a question' isn't enough on its own — the agent correctly
+    asks which of the 3 AH options they want instead of guessing, so a scripted
+    single-turn session times out. Ask for the virtual assistant directly, same as the
+    daytime test above."""
+    app.settings.FORCE_HOURS = "after"
+    resolved = spy(monkeypatch, app.destinations, "resolve")
+
+    with app.agent.test() as session:
+        session.wait_for_turn()
+        session.say("Connect me to the virtual assistant.")
+        session.wait_for_end()
+
+    r = record(session, "after_hours_questions")
+    assert r["termination_reason"] != "bot-failure"
+    assert resolved and resolved[-1]["result"].number == app.settings.ELEVENLABS_NUMBER

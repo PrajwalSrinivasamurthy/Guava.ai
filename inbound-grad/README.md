@@ -9,7 +9,7 @@ EL (Production)" / "Grad + EL AH (Production)" playbooks.
 ## Setup
 
 ```bash
-cp .env.example .env   # fill in GUAVA_AGENT_NUMBER, GUAVA_API_KEY
+cp .env.example .env   # fill in GUAVA_AGENT_NUMBER, GUAVA_LOCAL_API_KEY
 uv sync
 ```
 
@@ -46,7 +46,7 @@ uv run --env-file .env python -m pytest tests/ -q
 ```
 
 Live, scripted turn-by-turn tests against the real Dialog Engine (`tests/test_scripted.py`)
-are skipped by default. Run them with a real `GUAVA_API_KEY`:
+are skipped by default. Run them with a real `GUAVA_LOCAL_API_KEY`:
 
 ```bash
 RUN_LIVE=1 uv run --env-file .env python -m pytest tests/test_scripted.py -v

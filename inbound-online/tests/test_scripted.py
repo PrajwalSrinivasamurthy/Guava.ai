@@ -265,6 +265,48 @@ def test_a_caller_who_is_not_sure_falls_back_to_the_higher_ed_default_after_hour
     assert r["termination_reason"] == "bot-transfer"
 
 
+def test_after_hours_voicemail_request_reaches_the_higher_ed_default(app, record, monkeypatch):
+    """destinations.resolve() special-cases 'Leave a voicemail' to always return FALLBACK
+    regardless of which program was named — the one genuinely hours-conditional branch in
+    that function. Naming a specific program (Graduate) first proves the override actually
+    beats the program-specific number, not just that Graduate's own number happens to be
+    unset."""
+    app.settings.FORCE_HOURS = "after"
+    resolved = spy(monkeypatch, app.destinations, "resolve")
+
+    with app.agent.test() as session:
+        session.wait_for_turn()
+        session.say("I'm calling about the Graduate program.")
+        session.wait_for_turn()
+        session.say("I'd like to leave a voicemail.")
+        session.wait_for_end()
+
+    r = record(session, "after_hours_voicemail")
+    assert r["termination_reason"] != "bot-failure"
+    assert resolved and resolved[-1]["result"].number == app.settings.HIGHER_ED_DEFAULT_NUMBER
+
+
+def test_after_hours_k12_program_with_virtual_assistant_choice_routes_to_k12_elevenlabs(
+        app, record, monkeypatch):
+    """Daytime already has 8 program/service tests; after hours had none for a named
+    program (only the 'not sure' fallback). This is a smoke test that the AH task shape —
+    different continue_with choices, closed_notice greeting — still classifies `program`
+    and drives a non-Online destination correctly."""
+    app.settings.FORCE_HOURS = "after"
+    resolved = spy(monkeypatch, app.destinations, "resolve")
+
+    with app.agent.test() as session:
+        session.wait_for_turn()
+        session.say("I'm calling about the K-12 program.")
+        session.wait_for_turn()
+        session.say("Connect me to the virtual assistant.")
+        session.wait_for_end()
+
+    r = record(session, "after_hours_k12_program_virtual_assistant")
+    assert r["termination_reason"] != "bot-failure"
+    assert resolved and resolved[-1]["result"].number == app.settings.K12_ELEVENLABS_NUMBER
+
+
 @_runs
 def test_self_paced_phrasing_never_resolves_to_the_dead_number(app, record, monkeypatch, run):
     """A safety guard, not a preference: this number is confirmed dead in the legacy
