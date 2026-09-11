@@ -1,5 +1,5 @@
 {
-  "saved_at": "2026-09-02T17:59:28.521936",
+  "saved_at": "2026-09-11T09:53:42.706720",
   "faqs": [
     {
       "category": "Online Master of Arts in Communication Studies",
@@ -286,5 +286,17 @@
       "question": "What are the application deadlines?",
       "answer": "Rolling admissions for Fall, Spring, and Summer."
     }
-  ]
+  ],
+  "numbers": {
+    "grad_live": "+18067426441",
+    "grad_elevenlabs": "+18883323870",
+    "k12_live": "+18067427101",
+    "k12_elevenlabs": "+18884178511",
+    "tenk_live": "+18067420526",
+    "tenk_elevenlabs": "+18889707775",
+    "online_elevenlabs": "+18882817949",
+    "higher_ed_default": "+18067427227",
+    "flexible_learning": "+18067423714",
+    "signature_plus_rep": "+18067422810"
+  }
 }

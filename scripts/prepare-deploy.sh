@@ -291,7 +291,7 @@ find "$DEPLOY_DIR" -name __pycache__ -type d -exec rm -rf {} +
 rm -rf "$DEPLOY_DIR/.venv"
 
 echo
-echo "deploy/ rebuilt at $(date -Is)"
+echo "deploy/ rebuilt at $(date "+%Y-%m-%dT%H:%M:%S%z")"
 echo
 echo "Contents of $PROJECT_DIR/$DEPLOY_DIR/:"
 ls -la "$DEPLOY_DIR"
