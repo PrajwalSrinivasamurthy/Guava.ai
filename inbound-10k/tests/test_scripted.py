@@ -156,3 +156,45 @@ def test_declining_enrollment_still_completes_without_a_transfer(app, record, mo
     assert r["termination_reason"] != "bot-failure"
     assert transfers == []
     assert captured[0].get_field("enrollment_interested") == "No"
+
+
+def test_declining_enrollment_and_agreeing_to_receive_an_email(app, record, monkeypatch):
+    app.settings.FORCE_HOURS = "after"
+    captured = capture_call(monkeypatch, app.agent)
+    transfers = spy(monkeypatch, guava.Call, "transfer")
+
+    with app.agent.test() as session:
+        session.wait_for_turn()
+        session.say("I'd like to enroll in the program.")
+        session.wait_for_turn()
+        session.say("Actually, no, I'm not interested right now.")
+        session.wait_for_turn()
+        session.say("Yes, please send me an email. It's jordan.ellis@example.com.")
+        session.wait_for_end()
+
+    r = record(session, "declining_enrollment_agrees_to_email")
+    assert r["termination_reason"] != "bot-failure"
+    assert transfers == []
+    assert captured[0].get_field("enrollment_interested") == "No"
+    assert captured[0].get_field("email") == "jordan.ellis@example.com"
+
+
+def test_declining_enrollment_and_declining_the_email(app, record, monkeypatch):
+    app.settings.FORCE_HOURS = "after"
+    captured = capture_call(monkeypatch, app.agent)
+    transfers = spy(monkeypatch, guava.Call, "transfer")
+
+    with app.agent.test() as session:
+        session.wait_for_turn()
+        session.say("I'd like to enroll in the program.")
+        session.wait_for_turn()
+        session.say("Actually, no, I'm not interested right now.")
+        session.wait_for_turn()
+        session.say("No thanks, I don't need any information sent.")
+        session.wait_for_end()
+
+    r = record(session, "declining_enrollment_declines_email")
+    assert r["termination_reason"] != "bot-failure"
+    assert transfers == []
+    assert captured[0].get_field("enrollment_interested") == "No"
+    assert captured[0].get_field("email") is None

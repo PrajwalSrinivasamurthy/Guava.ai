@@ -64,6 +64,11 @@ def _get_document_qa() -> DocumentQA | None:
             logger.warning("Could not load %s knowledge base: %s", settings.ORGANIZATION_NAME, exc)
     return _document_qa
 
+# .env/.env.example name this GUAVA_LOCAL_API_KEY; the SDK's Client (constructed below,
+# inside guava.Agent.__init__) only ever reads GUAVA_API_KEY — mirror it across first.
+if os.environ.get("GUAVA_LOCAL_API_KEY") and not os.environ.get("GUAVA_API_KEY"):
+    os.environ["GUAVA_API_KEY"] = os.environ["GUAVA_LOCAL_API_KEY"]
+
 agent = guava.Agent(
     name=settings.AGENT_NAME,
     organization=settings.ORGANIZATION_NAME,
@@ -103,7 +108,13 @@ def on_call_start(call: guava.Call):
             key="continue_with",
             field_type="multiple_choice",
             choices=["Be connected to our virtual assistant", "Be transferred to a queue to talk to a person"],
-            description="Ask whether they'd like to be connected to our virtual assistant or transferred to a queue to talk to a person.",
+            description=(
+                "Ask whether they'd like to be connected to our virtual assistant "
+                "or transferred to a queue to talk to a person. If they ask to be "
+                "'transferred' but name the virtual assistant, Ava, the AI, or the "
+                "bot, that still means the virtual assistant choice — only pick the "
+                "queue/person choice when they want a human with no such mention."
+            ),
         )
     else:
         holiday = holiday_name()
@@ -117,7 +128,7 @@ def on_call_start(call: guava.Call):
             )
         else:
             closed_notice = guava.Say(
-                "Our offices are currently closed. Live agents will be available during "
+                "Our offices are currently closed. Representatives will be available during "
                 "business hours. If you have any questions, I will transfer you to our "
                 "virtual assistant. You can also choose to leave a voicemail for the "
                 "team, or receive a text message with the link to submit a ticket.",

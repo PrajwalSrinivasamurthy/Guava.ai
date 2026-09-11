@@ -63,6 +63,11 @@ def _get_document_qa() -> DocumentQA | None:
             logger.warning("Could not load %s knowledge base: %s", settings.ORGANIZATION_NAME, exc)
     return _document_qa
 
+# .env/.env.example name this GUAVA_LOCAL_API_KEY; the SDK's Client (constructed below,
+# inside guava.Agent.__init__) only ever reads GUAVA_API_KEY — mirror it across first.
+if os.environ.get("GUAVA_LOCAL_API_KEY") and not os.environ.get("GUAVA_API_KEY"):
+    os.environ["GUAVA_API_KEY"] = os.environ["GUAVA_LOCAL_API_KEY"]
+
 agent = guava.Agent(
     name=settings.AGENT_NAME,
     organization=settings.ORGANIZATION_NAME,
@@ -101,21 +106,28 @@ def on_call_start(call: guava.Call):
             choices=["Be connected to our virtual assistant", "Be transferred to a queue to talk to a person"],
             description=(
                 "Ask whether they'd like to be connected to our virtual assistant "
-                "or transferred to a queue to talk to a person."
+                "or transferred to a queue to talk to a person. If they ask to be "
+                "'transferred' but name the virtual assistant, Ava, the AI, or the "
+                "bot, that still means the virtual assistant choice — only pick the "
+                "queue/person choice when they want a human with no such mention."
             ),
         )
     else:
         greeting = (
             f"Thank you for calling {settings.ORGANIZATION_NAME}! My name is "
             f"{settings.AGENT_NAME}, your virtual assistant. Please note that this "
-            "call may be recorded. Our offices are currently closed — live agents "
+            "call may be recorded. Our offices are currently closed — representatives "
             "will be available during business hours."
         )
         next_step_field = guava.Field(
             key="next_step",
             field_type="multiple_choice",
             choices=["General information", "Enroll in the program", "Leave a voicemail"],
-            description="Ask what they'd like to do.",
+            description=(
+                "Ask what they'd like to do. If they ask to be transferred to (or "
+                "just to talk to) the virtual assistant, Ava, the AI, or the bot, "
+                "that's 'General information'."
+            ),
         )
 
     call.set_task(
@@ -153,7 +165,7 @@ def on_route_complete(call: guava.Call):
 
 def _start_enrollment(call: guava.Call):
     """Lead-capture funnel — only offered after hours, mirroring the source playbook
-    (daytime hands enrollment straight to a live agent instead). Every path in the
+    (daytime hands enrollment straight to a representative instead). Every path in the
     source playbook converges on the same outcome regardless of credits/travel/location
     answers, so this task always ends in a hangup with a promised callback, never a
     transfer."""

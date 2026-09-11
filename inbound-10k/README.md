@@ -1,7 +1,7 @@
 # inbound-10k
 
 Texas Tech's 10K Degree Completion Program (DFW / Fort Worth / El Paso) inbound line.
-Day: offers a choice between the virtual assistant or a live agent. After hours: general
+Day: offers a choice between the virtual assistant or a representative. After hours: general
 information, an enrollment lead-capture funnel (name, phone, email, program timing,
 credits, location, travel willingness — always ends in a hangup with a promised
 callback, never a transfer), or a voicemail. Matches legacy Grace's single combined
