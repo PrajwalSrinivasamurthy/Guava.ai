@@ -136,6 +136,17 @@ wheels = [
 ]
 
 [[package]]
+name = "chat-notify"
+version = "0.1.0"
+source = { directory = "../patterns/chat_notify" }
+dependencies = [
+    { name = "requests" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "requests" }]
+
+[[package]]
 name = "colorama"
 version = "0.4.6"
 source = { registry = "https://pypi.org/simple" }
@@ -374,6 +385,7 @@ name = "inbound-online"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
+    { name = "chat-notify" },
     { name = "gsheets" },
     { name = "guava-sdk" },
     { name = "python-dotenv" },
@@ -389,6 +401,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "chat-notify", directory = "../patterns/chat_notify" },
     { name = "gsheets", directory = "../patterns/gsheets" },
     { name = "guava-sdk", specifier = ">=0.41.0" },
     { name = "python-dotenv" },

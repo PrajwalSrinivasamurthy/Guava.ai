@@ -9,22 +9,17 @@ import guava
 import websockets
 from guava import logging_utils
 from guava.events import BotSessionEnded
-from guava.helpers.rag import DocumentQA
 
 sys.path.insert(0, os.path.dirname(__file__))
-import config_sheet
+import live_config
 import settings
 
-# Overrides the destination numbers above from the cached "Shared Config" tab (same
-# spreadsheet as the FAQ content, shared by all 4 Texas Tech programs) BEFORE
-# destinations.py builds its routing table below, so an explicit env var still wins
-# but the cache fills in what wasn't set. Cache-only — never touches the network here;
-# it's refreshed at deploy time (scripts/prepare-deploy.sh), not on every process
-# start, so a Sheets outage can never block the agent from starting.
-config_sheet.apply_numbers(settings, {
-    "LIVE_NUMBER": "k12_live",
-    "ELEVENLABS_NUMBER": "k12_elevenlabs",
-})
+# Builds the first FAQ + phone-number snapshot (cache-only — never blocks startup on
+# a Sheets outage) BEFORE destinations.py builds its routing table below, so it has
+# settings.LIVE_NUMBER / settings.ELEVENLABS_NUMBER applied on the first read too.
+# live_config.start_poller() (below, in __main__) re-runs this every
+# settings.CONFIG_POLL_SECONDS so later sheet edits show up without a redeploy.
+live_config.init()
 
 import destinations
 import sms
@@ -32,38 +27,6 @@ import utils
 from utils import is_open
 
 logger = logging.getLogger("texas_tech.inbound_k12")
-
-# Overrides DocumentQA's default instructions, which literally tell the model to
-# say "the answer is not in the provided context" when it can't find one — that
-# leaked to a caller verbatim. This phrasing keeps the caller-facing decline
-# natural and routes them onward instead.
-_DOCUMENT_QA_INSTRUCTIONS = (
-    f"You are a phone agent for {settings.ORGANIZATION_NAME}. Answer the caller's "
-    "question using ONLY the provided document excerpts, in natural spoken "
-    "language — never mention documents, context, or a knowledge base. If the "
-    "answer isn't in the excerpts, say you don't have that information on hand "
-    "and offer to connect them with a live team member. Do not offer any "
-    "follow-ups."
-)
-
-_document_qa: DocumentQA | None = None
-
-
-def _get_document_qa() -> DocumentQA | None:
-    # Built lazily on first use, not at import — constructing DocumentQA eagerly ingests
-    # the corpus via a live network call on every process start.
-    global _document_qa
-    if _document_qa is None:
-        try:
-            faqs = config_sheet.load(settings.FAQ_SPREADSHEET_ID)
-            _document_qa = DocumentQA(
-                documents=config_sheet.render_corpus(faqs),
-                namespace="texas-tech-k12",
-                instructions=_DOCUMENT_QA_INSTRUCTIONS,
-            )
-        except Exception as exc:
-            logger.warning("Could not load %s knowledge base: %s", settings.ORGANIZATION_NAME, exc)
-    return _document_qa
 
 # .env/.env.example name this GUAVA_LOCAL_API_KEY; the SDK's Client (constructed below,
 # inside guava.Agent.__init__) only ever reads GUAVA_API_KEY — mirror it across first.
@@ -229,7 +192,7 @@ def on_text_message_complete(call: guava.Call):
 @agent.on_question
 def on_question(call: guava.Call, question: str) -> str:
     logger.info("Question received: %s", question)
-    document_qa = _get_document_qa()
+    document_qa = live_config.get().document_qa
     if document_qa is not None:
         return document_qa.ask(question)
     return (
@@ -279,4 +242,5 @@ def _run_inbound():
 
 if __name__ == "__main__":
     logging_utils.configure_logging()
+    live_config.start_poller(settings.CONFIG_POLL_SECONDS)
     _run_inbound()

@@ -21,47 +21,56 @@ class Destination:
 # is only relevant when program == "Texas Tech Online" and wants_ai is False (every Online
 # sub-flavor shares one virtual-assistant destination) — every other combination uses
 # online_service=None.
-ROUTES: dict[tuple[str, str | None, bool], Destination] = {
-    ("Graduate", None, True): Destination(
-        "End - Route to Grad ElevenLabs", settings.GRAD_ELEVENLABS_NUMBER, "our virtual assistant"
-    ),
-    ("Graduate", None, False): Destination(
-        "End - Route to Grad", settings.GRAD_NUMBER, "Graduate live queue"
-    ),
-    ("K-12", None, True): Destination(
-        "End - Route to K12 ElevenLabs", settings.K12_ELEVENLABS_NUMBER, "our virtual assistant"
-    ),
-    ("K-12", None, False): Destination(
-        "End - Route to K12", settings.K12_NUMBER, "K-12 live queue"
-    ),
-    ("10K Degree Completion", None, True): Destination(
-        "End - Route to 10K ElevenLabs", settings.TENK_ELEVENLABS_NUMBER, "our virtual assistant"
-    ),
-    ("10K Degree Completion", None, False): Destination(
-        "End - Route to 10K", settings.TENK_NUMBER, "10K Degree Completion live queue"
-    ),
-    ("Texas Tech Online", None, True): Destination(
-        "End - Route to Online ElevenLabs", settings.ONLINE_ELEVENLABS_NUMBER, "our virtual assistant"
-    ),
-    ("Texas Tech Online", "Degree completion / Online Plus", False): Destination(
-        "End - Route to Online Signature Plus Rep", settings.SIGNATURE_PLUS_REP_NUMBER, "Signature Plus Rep line"
-    ),
-    ("Texas Tech Online", "Flexible Learning", False): Destination(
-        "End - Route to Flexible Learning", settings.FLEXIBLE_LEARNING_NUMBER, "Flexible Learning line"
-    ),
-    ("Texas Tech Online", "Microcredentials", False): Destination(
-        "End - Route to Flexible Learning", settings.FLEXIBLE_LEARNING_NUMBER, "Flexible Learning line"
-    ),
-    ("Texas Tech Online", "Career Certificates", False): Destination(
-        "End - Route to Flexible Learning", settings.FLEXIBLE_LEARNING_NUMBER, "Flexible Learning line"
-    ),
-}
+#
+# Built fresh on every resolve()/fallback() call, not once at import — the settings.*
+# number constants are re-applied from the live sheet every settings.CONFIG_POLL_SECONDS
+# by live_config's poller, and a dict built once at import would freeze whatever values
+# were live at process start.
+def _routes() -> dict[tuple[str, str | None, bool], Destination]:
+    return {
+        ("Graduate", None, True): Destination(
+            "End - Route to Grad ElevenLabs", settings.GRAD_ELEVENLABS_NUMBER, "our virtual assistant"
+        ),
+        ("Graduate", None, False): Destination(
+            "End - Route to Grad", settings.GRAD_NUMBER, "Graduate live queue"
+        ),
+        ("K-12", None, True): Destination(
+            "End - Route to K12 ElevenLabs", settings.K12_ELEVENLABS_NUMBER, "our virtual assistant"
+        ),
+        ("K-12", None, False): Destination(
+            "End - Route to K12", settings.K12_NUMBER, "K-12 live queue"
+        ),
+        ("10K Degree Completion", None, True): Destination(
+            "End - Route to 10K ElevenLabs", settings.TENK_ELEVENLABS_NUMBER, "our virtual assistant"
+        ),
+        ("10K Degree Completion", None, False): Destination(
+            "End - Route to 10K", settings.TENK_NUMBER, "10K Degree Completion live queue"
+        ),
+        ("Texas Tech Online", None, True): Destination(
+            "End - Route to Online ElevenLabs", settings.ONLINE_ELEVENLABS_NUMBER, "our virtual assistant"
+        ),
+        ("Texas Tech Online", "Degree completion / Online Plus", False): Destination(
+            "End - Route to Online Signature Plus Rep", settings.SIGNATURE_PLUS_REP_NUMBER, "Signature Plus Rep line"
+        ),
+        ("Texas Tech Online", "Flexible Learning", False): Destination(
+            "End - Route to Flexible Learning", settings.FLEXIBLE_LEARNING_NUMBER, "Flexible Learning line"
+        ),
+        ("Texas Tech Online", "Microcredentials", False): Destination(
+            "End - Route to Flexible Learning", settings.FLEXIBLE_LEARNING_NUMBER, "Flexible Learning line"
+        ),
+        ("Texas Tech Online", "Career Certificates", False): Destination(
+            "End - Route to Flexible Learning", settings.FLEXIBLE_LEARNING_NUMBER, "Flexible Learning line"
+        ),
+    }
 
-# Caller never named a recognizable program (e.g. picked "Not sure"). Matches Grace's
-# "no program named" exit.
-FALLBACK = Destination(
-    "End - Route to Higher Ed Default", settings.HIGHER_ED_DEFAULT_NUMBER, "our general support line"
-)
+
+def fallback() -> Destination:
+    """Caller never named a recognizable program (e.g. picked "Not sure"). Matches
+    Grace's "no program named" exit."""
+    return Destination(
+        "End - Route to Higher Ed Default", settings.HIGHER_ED_DEFAULT_NUMBER, "our general support line"
+    )
+
 
 # Confirmed dead in the legacy graph ("provably unreachable") — kept here, never in
 # ROUTES/settings.py, purely so a test can assert it stays that way.
@@ -73,9 +82,9 @@ def resolve(program: str | None, online_service: str | None, continue_with: str 
     # "Leave a voicemail" is only offered after hours, and per SCENARIOS.md's "What is
     # confirmed NOT reachable after hours", no live-queue/rep-line number is reachable in
     # the legacy AH playbook — only Higher Ed Default and the 4 ElevenLabs numbers. Route
-    # it to FALLBACK instead of falling through to the program's (daytime) live queue.
+    # it to fallback() instead of falling through to the program's (daytime) live queue.
     if continue_with == "Leave a voicemail":
-        return FALLBACK
+        return fallback()
     wants_ai = continue_with == "Be connected to our virtual assistant"
     key_service = online_service if program == "Texas Tech Online" and not wants_ai else None
-    return ROUTES.get((program, key_service, wants_ai), FALLBACK)
+    return _routes().get((program, key_service, wants_ai), fallback())

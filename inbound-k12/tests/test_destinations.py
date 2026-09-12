@@ -1,12 +1,14 @@
 """One test per named Grace destination, plus the hours-gate and greeting guardrails.
 
-See destinations.py. Parametrization iterates destinations.ROUTES directly so this
+See destinations.py. Parametrization iterates destinations._routes() directly so this
 list can never drift from the routing table.
 """
 
 import pytest
 
 import destinations
+
+_ROUTES = destinations._routes()
 
 
 def _transfers(call):
@@ -30,8 +32,8 @@ def _ends_with_transfer_directive(message):
 
 @pytest.mark.parametrize(
     "continue_with,expected",
-    list(destinations.ROUTES.items()),
-    ids=[dest.grace_outcome for dest in destinations.ROUTES.values()],
+    list(_ROUTES.items()),
+    ids=[dest.grace_outcome for dest in _ROUTES.values()],
 )
 def test_route_reaches_its_grace_destination(app, call, continue_with, expected):
     call.set_field("continue_with", continue_with)
@@ -43,8 +45,8 @@ def test_route_reaches_its_grace_destination(app, call, continue_with, expected)
 
 @pytest.mark.parametrize(
     "continue_with,expected",
-    list(destinations.ROUTES.items()),
-    ids=[dest.grace_outcome for dest in destinations.ROUTES.values()],
+    list(_ROUTES.items()),
+    ids=[dest.grace_outcome for dest in _ROUTES.values()],
 )
 def test_transfer_message_carries_an_immediacy_directive(app, call, continue_with, expected):
     call.set_field("continue_with", continue_with)
@@ -162,3 +164,19 @@ def test_text_message_complete_sends_rfi_link_for_non_students(app, call, monkey
     assert not any(type(c).__name__ == "TransferCommand" for c in call._command_queue)
     assert len(sent_calls) == 1
     assert sent_calls[0][1] == app.settings.K12_RFI_FORM_URL
+
+
+def test_routes_reread_settings_after_process_start(app, call):
+    """Regression guard: destinations._routes() must be rebuilt on every resolve() call,
+    not frozen at import — live_config's poller re-applies settings.LIVE_NUMBER on every
+    refresh cycle, and a table built once at import would silently ignore that."""
+    original = app.settings.LIVE_NUMBER
+    try:
+        app.settings.LIVE_NUMBER = "+19995550100"
+        call.set_field("continue_with", "Be transferred to a queue to talk to a person")
+
+        app.on_route_complete(call)
+
+        assert _transfer_numbers(call)[-1] == "+19995550100"
+    finally:
+        app.settings.LIVE_NUMBER = original

@@ -1,12 +1,15 @@
 """One test per named Grace destination, plus the guardrails around it.
 
-See destinations.py — the parametrization below iterates destinations.ROUTES directly
+See destinations.py — the parametrization below iterates destinations._routes() directly
 so this list can never drift from the routing table itself.
 """
 
 import pytest
 
 import destinations
+
+_ROUTES = destinations._routes()
+_FALLBACK = destinations.fallback()
 
 
 def _set_answers(call, program, online_service, continue_with):
@@ -37,8 +40,8 @@ def _ends_with_transfer_directive(message):
 
 @pytest.mark.parametrize(
     "program,online_service,wants_ai,expected",
-    [(*key, dest) for key, dest in destinations.ROUTES.items()],
-    ids=[dest.grace_outcome for dest in destinations.ROUTES.values()],
+    [(*key, dest) for key, dest in _ROUTES.items()],
+    ids=[dest.grace_outcome for dest in _ROUTES.values()],
 )
 def test_route_reaches_its_grace_destination(app, call, program, online_service, wants_ai, expected):
     continue_with = "Be connected to our virtual assistant" if wants_ai else "Be transferred to a live team member"
@@ -51,8 +54,8 @@ def test_route_reaches_its_grace_destination(app, call, program, online_service,
 
 @pytest.mark.parametrize(
     "program,online_service,wants_ai,expected",
-    [(*key, dest) for key, dest in destinations.ROUTES.items()],
-    ids=[dest.grace_outcome for dest in destinations.ROUTES.values()],
+    [(*key, dest) for key, dest in _ROUTES.items()],
+    ids=[dest.grace_outcome for dest in _ROUTES.values()],
 )
 def test_transfer_message_carries_an_immediacy_directive(app, call, program, online_service, wants_ai, expected):
     continue_with = "Be connected to our virtual assistant" if wants_ai else "Be transferred to a live team member"
@@ -75,7 +78,7 @@ def test_unnamed_program_falls_back_to_higher_ed_default_after_hours(app, call):
 
     app.on_route_complete(call)
 
-    assert _transfer_numbers(call)[-1] == destinations.FALLBACK.number
+    assert _transfer_numbers(call)[-1] == _FALLBACK.number
 
 
 def test_fallback_transfer_message_carries_an_immediacy_directive(app, call):
@@ -104,20 +107,20 @@ def test_unsure_program_stays_with_the_bot_during_open_hours(app, call):
 
 @pytest.mark.parametrize(
     "program,online_service",
-    [(key[0], key[1]) for key in destinations.ROUTES if key[2] is False],
+    [(key[0], key[1]) for key in _ROUTES if key[2] is False],
 )
 def test_after_hours_voicemail_reaches_higher_ed_default(program, online_service):
     """SCENARIOS.md: no live-queue/rep-line number is reachable after hours in the
     legacy AH playbook — only Higher Ed Default and the 4 ElevenLabs numbers. "Leave a
     voicemail" (only offered when closed) must not fall through to a program's live queue."""
     dest = destinations.resolve(program, online_service, "Leave a voicemail")
-    assert dest == destinations.FALLBACK
+    assert dest == _FALLBACK
 
 
 def test_self_paced_rep_stays_unreachable():
     """This legacy number has no reachable path — guard against ever accidentally
     re-wiring it."""
-    live_numbers = {dest.number for dest in destinations.ROUTES.values()} | {destinations.FALLBACK.number}
+    live_numbers = {dest.number for dest in _ROUTES.values()} | {_FALLBACK.number}
     assert destinations.UNREACHABLE_SELF_PACED_REP_NUMBER not in live_numbers
 
 
@@ -126,7 +129,7 @@ def test_escalate_transfers_to_live_queue_when_open(app, call):
 
     app.on_escalate_handler(call)
 
-    assert _transfer_numbers(call)[-1] == destinations.ROUTES[("Graduate", None, False)].number
+    assert _transfer_numbers(call)[-1] == _ROUTES[("Graduate", None, False)].number
 
 
 def test_escalate_after_hours_reaches_higher_ed_default(app):
@@ -139,7 +142,7 @@ def test_escalate_after_hours_reaches_higher_ed_default(app):
 
     app.on_escalate_handler(mock)
 
-    assert _transfer_numbers(mock)[-1] == destinations.FALLBACK.number
+    assert _transfer_numbers(mock)[-1] == _FALLBACK.number
 
 
 def _continue_field(call):
@@ -207,3 +210,35 @@ def test_plain_after_hours_has_no_holiday_wording(app):
 
     assert "in observance of" not in say.statement
     assert "currently closed" in say.statement
+
+
+def test_routes_reread_settings_after_process_start(app, call):
+    """Regression guard: destinations._routes() must be rebuilt on every resolve() call,
+    not frozen at import — live_config's poller re-applies settings.GRAD_NUMBER (etc.) on
+    every refresh cycle, and a table built once at import would silently ignore that."""
+    original = app.settings.GRAD_NUMBER
+    try:
+        app.settings.GRAD_NUMBER = "+19995550100"
+        _set_answers(call, "Graduate", None, "Be transferred to a live team member")
+
+        app.on_route_complete(call)
+
+        assert _transfer_numbers(call)[-1] == "+19995550100"
+    finally:
+        app.settings.GRAD_NUMBER = original
+
+
+def test_fallback_rereads_settings_after_process_start(app, call):
+    """Same guard as above, for fallback() — it's built fresh per call too, not frozen
+    at import alongside ROUTES."""
+    original = app.settings.HIGHER_ED_DEFAULT_NUMBER
+    try:
+        app.settings.HIGHER_ED_DEFAULT_NUMBER = "+19995550100"
+        app.settings.FORCE_HOURS = "after"
+        call.set_field("program", "Not sure")
+
+        app.on_route_complete(call)
+
+        assert _transfer_numbers(call)[-1] == "+19995550100"
+    finally:
+        app.settings.HIGHER_ED_DEFAULT_NUMBER = original

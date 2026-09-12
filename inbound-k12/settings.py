@@ -65,3 +65,8 @@ FAQ_SHEET_TAB = os.environ.get("FAQ_SHEET_TAB", "K12 FAQs")
 PRONUNCIATIONS: dict[str, str] = {
     "live in": "live in",
 }
+
+# How often live_config.start_poller() re-pulls FAQs + phone numbers from the live
+# sheet. Set to a large value (or wire up a way to skip start_poller()) to effectively
+# disable polling without a code change.
+CONFIG_POLL_SECONDS = int(os.environ.get("CONFIG_POLL_SECONDS", "60"))

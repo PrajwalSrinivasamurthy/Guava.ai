@@ -16,20 +16,25 @@ class Destination:
     label: str  # spoken/log-facing label
 
 
-ROUTES: dict[str, Destination] = {
-    "Be connected to our virtual assistant": Destination(
-        "End - Route to Grad ElevenLabs", settings.ELEVENLABS_NUMBER, "Graduate ElevenLabs (Ava)"
-    ),
-    "Be transferred to a queue to talk to a person": Destination(
-        "End - Route to Grad", settings.LIVE_NUMBER, "Graduate live queue"
-    ),
-    "Leave a voicemail": Destination(
-        "End - Route to TTU Online Grad (voicemail)", settings.LIVE_NUMBER, "Graduate live queue"
-    ),
-}
+# Built fresh on every resolve() call, not once at import — settings.LIVE_NUMBER /
+# settings.ELEVENLABS_NUMBER are re-applied from the live sheet every
+# settings.CONFIG_POLL_SECONDS by live_config's poller, and a dict built once at import
+# would freeze whatever values were live at process start.
+def _routes() -> dict[str, Destination]:
+    return {
+        "Be connected to our virtual assistant": Destination(
+            "End - Route to Grad ElevenLabs", settings.ELEVENLABS_NUMBER, "Graduate ElevenLabs (Ava)"
+        ),
+        "Be transferred to a queue to talk to a person": Destination(
+            "End - Route to Grad", settings.LIVE_NUMBER, "Graduate live queue"
+        ),
+        "Leave a voicemail": Destination(
+            "End - Route to TTU Online Grad (voicemail)", settings.LIVE_NUMBER, "Graduate live queue"
+        ),
+    }
 
 
 def resolve(continue_with: str | None) -> Destination | None:
     """Returns the Destination for the caller's continue_with answer, or None for a choice
     that doesn't transfer (the text-message path)."""
-    return ROUTES.get(continue_with)
+    return _routes().get(continue_with)

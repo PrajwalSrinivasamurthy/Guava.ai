@@ -23,19 +23,25 @@ class Destination:
 # transferred to a queue to talk to a person" (open) and "Leave a voicemail" (after hours) both
 # reach settings.LIVE_NUMBER under two different Grace outcome names (daytime live transfer vs.
 # after-hours voicemail reuse of the same number). "Enroll in the program" never transfers.
-ROUTES: dict[str, Destination] = {
-    "Be connected to our virtual assistant": Destination(
-        "End - Route to 10K ElevenLabs", settings.ELEVENLABS_NUMBER, "our virtual assistant"
-    ),
-    "General information": Destination(
-        "End - Route to 10K ElevenLabs", settings.ELEVENLABS_NUMBER, "our virtual assistant"
-    ),
-    "Be transferred to a queue to talk to a person": Destination("End - Transfer to Live Agent", settings.LIVE_NUMBER, None),
-    "Leave a voicemail": Destination("End - Route to TTU Online (voicemail)", settings.LIVE_NUMBER, None),
-    "Enroll in the program": Destination("Enrollment lead capture (hangup, no transfer)", None, None),
-}
+#
+# Built fresh on every resolve() call, not once at import — settings.LIVE_NUMBER /
+# settings.ELEVENLABS_NUMBER are re-applied from the live sheet every
+# settings.CONFIG_POLL_SECONDS by live_config's poller, and a dict built once at import
+# would freeze whatever values were live at process start.
+def _routes() -> dict[str, Destination]:
+    return {
+        "Be connected to our virtual assistant": Destination(
+            "End - Route to 10K ElevenLabs", settings.ELEVENLABS_NUMBER, "our virtual assistant"
+        ),
+        "General information": Destination(
+            "End - Route to 10K ElevenLabs", settings.ELEVENLABS_NUMBER, "our virtual assistant"
+        ),
+        "Be transferred to a queue to talk to a person": Destination("End - Transfer to Live Agent", settings.LIVE_NUMBER, None),
+        "Leave a voicemail": Destination("End - Route to TTU Online (voicemail)", settings.LIVE_NUMBER, None),
+        "Enroll in the program": Destination("Enrollment lead capture (hangup, no transfer)", None, None),
+    }
 
 
 def resolve(next_step: str | None) -> Destination | None:
     """Returns the Destination for the caller's next_step answer, or None if unrecognized."""
-    return ROUTES.get(next_step)
+    return _routes().get(next_step)

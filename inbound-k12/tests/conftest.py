@@ -24,6 +24,24 @@ os.environ.setdefault("GUAVA_AGENT_NUMBER", "+18065154465")
 
 def _load():
     sys.path.insert(0, str(_ROOT))
+
+    # __main__.py calls live_config.init() at import time, which (unlike the old lazy
+    # _get_document_qa() singleton) eagerly constructs a DocumentQA — a real RAG-ingestion
+    # network call. Patch it to a fake stand-in *before* __main__.py imports live_config,
+    # so that eager build never leaves the sandbox. Per-test fixtures below still swap in
+    # their own fake for on_question's actual behavior; this only prevents the one-time
+    # network call at import.
+    import live_config as _live_config_module
+
+    class _ImportTimeFakeDocumentQA:
+        def __init__(self, documents, namespace, instructions):
+            pass
+
+        def ask(self, question: str) -> str:
+            return "fake answer"
+
+    _live_config_module.DocumentQA = _ImportTimeFakeDocumentQA
+
     spec = importlib.util.spec_from_file_location("app", _ROOT / "__main__.py")
     module = importlib.util.module_from_spec(spec)
     sys.modules["app"] = module
@@ -49,7 +67,8 @@ def _no_real_document_qa(app, monkeypatch):
         def ask(self, question: str) -> str:
             return "fake answer"
 
-    monkeypatch.setattr(app, "_document_qa", _FakeDocumentQA())
+    fake_config = app.live_config.LiveConfig(document_qa=_FakeDocumentQA())
+    monkeypatch.setattr(app.live_config, "_current", fake_config)
 
 
 @pytest.fixture(autouse=True)

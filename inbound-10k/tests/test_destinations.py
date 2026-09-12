@@ -1,13 +1,15 @@
 """One test per named Grace destination (including the no-transfer enrollment path), plus the
 hours-gate and greeting guardrails.
 
-See destinations.py. Parametrization iterates destinations.ROUTES directly so this
+See destinations.py. Parametrization iterates destinations._routes() directly so this
 list can never drift from the routing table.
 """
 
 import pytest
 
 import destinations
+
+_ROUTES = destinations._routes()
 
 
 def _transfers(call):
@@ -38,8 +40,8 @@ def _set_task_commands(call, task_id=None):
 
 @pytest.mark.parametrize(
     "next_step,expected",
-    [(k, v) for k, v in destinations.ROUTES.items() if v.number is not None],
-    ids=[dest.grace_outcome for dest in destinations.ROUTES.values() if dest.number is not None],
+    [(k, v) for k, v in _ROUTES.items() if v.number is not None],
+    ids=[dest.grace_outcome for dest in _ROUTES.values() if dest.number is not None],
 )
 def test_route_reaches_its_grace_destination(app, call, next_step, expected):
     call.set_field("next_step", next_step)
@@ -51,8 +53,8 @@ def test_route_reaches_its_grace_destination(app, call, next_step, expected):
 
 @pytest.mark.parametrize(
     "next_step,expected",
-    [(k, v) for k, v in destinations.ROUTES.items() if v.number is not None],
-    ids=[dest.grace_outcome for dest in destinations.ROUTES.values() if dest.number is not None],
+    [(k, v) for k, v in _ROUTES.items() if v.number is not None],
+    ids=[dest.grace_outcome for dest in _ROUTES.values() if dest.number is not None],
 )
 def test_transfer_message_carries_an_immediacy_directive(app, call, next_step, expected):
     call.set_field("next_step", next_step)
@@ -109,3 +111,19 @@ def test_greeting_is_the_first_checklist_item(call):
     task = next(c for c in call._command_queue if type(c).__name__ == "SetTaskCommand" and c.task_id == "route")
     assert task.action_items[0].item_type == "say"
     assert task.action_items[0].key == "greeting"
+
+
+def test_routes_reread_settings_after_process_start(app, call):
+    """Regression guard: destinations._routes() must be rebuilt on every resolve() call,
+    not frozen at import — live_config's poller re-applies settings.LIVE_NUMBER on every
+    refresh cycle, and a table built once at import would silently ignore that."""
+    original = app.settings.LIVE_NUMBER
+    try:
+        app.settings.LIVE_NUMBER = "+19995550100"
+        call.set_field("next_step", "Be transferred to a queue to talk to a person")
+
+        app.on_route_complete(call)
+
+        assert _transfer_numbers(call)[-1] == "+19995550100"
+    finally:
+        app.settings.LIVE_NUMBER = original
