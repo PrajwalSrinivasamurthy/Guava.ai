@@ -103,7 +103,9 @@ def on_call_start(call: guava.Call):
             description=(
                 "Let them know our live team isn't available right now, then ask whether "
                 "they'd like to be connected to our virtual assistant, leave a voicemail, or "
-                "receive a text message with a link."
+                "receive a text message with a link. If they ask for the virtual assistant, "
+                "Ava, the AI, or the bot by name, that's 'Be connected to our virtual "
+                "assistant' — don't treat Ava as an unavailable person."
             ),
         )
 
@@ -112,8 +114,7 @@ def on_call_start(call: guava.Call):
         checklist.append(closed_notice)
     checklist += [
         continue_field,
-        "Once you know where the caller needs to go, let them know you're "
-        "connecting them now. This task is now complete.",
+        "This task is now complete once you know where the caller needs to go.",
     ]
 
     call.set_task(

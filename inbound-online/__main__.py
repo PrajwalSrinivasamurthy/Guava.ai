@@ -81,7 +81,10 @@ def _build_route_task(call: guava.Call, opener: guava.Say | str):
             description=(
                 "Only ask this once a specific program is known. Let them know our "
                 "live team isn't available right now, then ask whether they'd like to "
-                "be connected to our virtual assistant or leave a voicemail."
+                "be connected to our virtual assistant or leave a voicemail. If they ask "
+                "for the virtual assistant, Ava, the AI, or the bot by name, that's 'Be "
+                "connected to our virtual assistant' — don't treat Ava as an unavailable "
+                "person."
             ),
             required=False,
         )
@@ -123,8 +126,7 @@ def _build_route_task(call: guava.Call, opener: guava.Say | str):
             required=False,
         ),
         continue_field,
-        "Once you know where the caller needs to go, let them know you're connecting "
-        "them now. This task is now complete.",
+        "This task is now complete once you know where the caller needs to go.",
     ]
 
     if open_now:
