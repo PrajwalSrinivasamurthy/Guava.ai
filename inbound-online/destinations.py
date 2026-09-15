@@ -1,13 +1,12 @@
 """Named call destinations, one row per reachable outcome in Grace's legacy page graph.
 
-settings.py stays the source of truth for the actual phone numbers; this module only
-assembles them into a single, named, keyed table so the routing logic reads as an
-enumerated list (like Grace's own page graph) instead of two implicit dicts + an if/else.
+Numbers are passed in from live_config.get().numbers, not read from settings directly —
+settings.py stays the source of truth for the hardcoded defaults, but the live value
+(refreshed from the sheet every settings.CONFIG_POLL_SECONDS) lives on the LiveConfig
+snapshot.
 """
 
 from dataclasses import dataclass
-
-import settings
 
 
 @dataclass(frozen=True)
@@ -21,54 +20,49 @@ class Destination:
 # is only relevant when program == "Texas Tech Online" and wants_ai is False (every Online
 # sub-flavor shares one virtual-assistant destination) — every other combination uses
 # online_service=None.
-#
-# Built fresh on every resolve()/fallback() call, not once at import — the settings.*
-# number constants are re-applied from the live sheet every settings.CONFIG_POLL_SECONDS
-# by live_config's poller, and a dict built once at import would freeze whatever values
-# were live at process start.
-def _routes() -> dict[tuple[str, str | None, bool], Destination]:
+def _routes(numbers: dict[str, str]) -> dict[tuple[str, str | None, bool], Destination]:
     return {
         ("Graduate", None, True): Destination(
-            "End - Route to Grad ElevenLabs", settings.GRAD_ELEVENLABS_NUMBER, "our virtual assistant"
+            "End - Route to Grad ElevenLabs", numbers["GRAD_ELEVENLABS_NUMBER"], "our virtual assistant"
         ),
         ("Graduate", None, False): Destination(
-            "End - Route to Grad", settings.GRAD_NUMBER, "Graduate live queue"
+            "End - Route to Grad", numbers["GRAD_NUMBER"], "Graduate live queue"
         ),
         ("K-12", None, True): Destination(
-            "End - Route to K12 ElevenLabs", settings.K12_ELEVENLABS_NUMBER, "our virtual assistant"
+            "End - Route to K12 ElevenLabs", numbers["K12_ELEVENLABS_NUMBER"], "our virtual assistant"
         ),
         ("K-12", None, False): Destination(
-            "End - Route to K12", settings.K12_NUMBER, "K-12 live queue"
+            "End - Route to K12", numbers["K12_NUMBER"], "K-12 live queue"
         ),
         ("10K Degree Completion", None, True): Destination(
-            "End - Route to 10K ElevenLabs", settings.TENK_ELEVENLABS_NUMBER, "our virtual assistant"
+            "End - Route to 10K ElevenLabs", numbers["TENK_ELEVENLABS_NUMBER"], "our virtual assistant"
         ),
         ("10K Degree Completion", None, False): Destination(
-            "End - Route to 10K", settings.TENK_NUMBER, "10K Degree Completion live queue"
+            "End - Route to 10K", numbers["TENK_NUMBER"], "10K Degree Completion live queue"
         ),
         ("Texas Tech Online", None, True): Destination(
-            "End - Route to Online ElevenLabs", settings.ONLINE_ELEVENLABS_NUMBER, "our virtual assistant"
+            "End - Route to Online ElevenLabs", numbers["ONLINE_ELEVENLABS_NUMBER"], "our virtual assistant"
         ),
         ("Texas Tech Online", "Degree completion / Online Plus", False): Destination(
-            "End - Route to Online Signature Plus Rep", settings.SIGNATURE_PLUS_REP_NUMBER, "Signature Plus Rep line"
+            "End - Route to Online Signature Plus Rep", numbers["SIGNATURE_PLUS_REP_NUMBER"], "Signature Plus Rep line"
         ),
         ("Texas Tech Online", "Flexible Learning", False): Destination(
-            "End - Route to Flexible Learning", settings.FLEXIBLE_LEARNING_NUMBER, "Flexible Learning line"
+            "End - Route to Flexible Learning", numbers["FLEXIBLE_LEARNING_NUMBER"], "Flexible Learning line"
         ),
         ("Texas Tech Online", "Microcredentials", False): Destination(
-            "End - Route to Flexible Learning", settings.FLEXIBLE_LEARNING_NUMBER, "Flexible Learning line"
+            "End - Route to Flexible Learning", numbers["FLEXIBLE_LEARNING_NUMBER"], "Flexible Learning line"
         ),
         ("Texas Tech Online", "Career Certificates", False): Destination(
-            "End - Route to Flexible Learning", settings.FLEXIBLE_LEARNING_NUMBER, "Flexible Learning line"
+            "End - Route to Flexible Learning", numbers["FLEXIBLE_LEARNING_NUMBER"], "Flexible Learning line"
         ),
     }
 
 
-def fallback() -> Destination:
+def fallback(numbers: dict[str, str]) -> Destination:
     """Caller never named a recognizable program (e.g. picked "Not sure"). Matches
     Grace's "no program named" exit."""
     return Destination(
-        "End - Route to Higher Ed Default", settings.HIGHER_ED_DEFAULT_NUMBER, "our general support line"
+        "End - Route to Higher Ed Default", numbers["HIGHER_ED_DEFAULT_NUMBER"], "our general support line"
     )
 
 
@@ -77,14 +71,14 @@ def fallback() -> Destination:
 UNREACHABLE_SELF_PACED_REP_NUMBER = "+18067424035"
 
 
-def resolve(program: str | None, online_service: str | None, continue_with: str | None) -> Destination:
+def resolve(numbers: dict[str, str], program: str | None, online_service: str | None, continue_with: str | None) -> Destination:
     """Returns the Destination for the caller's resolved program/service/continue_with answers."""
     # "Leave a voicemail" is only offered after hours, and per SCENARIOS.md's "What is
     # confirmed NOT reachable after hours", no live-queue/rep-line number is reachable in
     # the legacy AH playbook — only Higher Ed Default and the 4 ElevenLabs numbers. Route
     # it to fallback() instead of falling through to the program's (daytime) live queue.
     if continue_with == "Leave a voicemail":
-        return fallback()
+        return fallback(numbers)
     wants_ai = continue_with == "Be connected to our virtual assistant"
     key_service = online_service if program == "Texas Tech Online" and not wants_ai else None
-    return _routes().get((program, key_service, wants_ai), fallback())
+    return _routes(numbers).get((program, key_service, wants_ai), fallback(numbers))

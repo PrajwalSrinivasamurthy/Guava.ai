@@ -23,6 +23,7 @@ process.
 import logging
 import threading
 import time
+import types
 from dataclasses import dataclass
 
 import chat_notify
@@ -69,6 +70,7 @@ _DOCUMENT_QA_INSTRUCTIONS = (
 @dataclass(frozen=True)
 class LiveConfig:
     document_qa: DocumentQA | None
+    numbers: dict[str, str]  # {settings attr name: current value}, e.g. {"GRAD_NUMBER": "+1..."}
 
 
 _current: LiveConfig | None = None
@@ -93,15 +95,21 @@ def _build(require_sheet: bool = False) -> LiveConfig:
         if require_sheet:
             raise
         logger.warning("Could not refresh phone numbers from sheet, keeping cached values: %s", exc)
-    # Cache-only, never raises — reads whatever refresh_numbers() just cached above,
-    # or the last good cache (deploy-time seed or a previous poll) on failure.
-    config_sheet.apply_numbers(settings, _NUMBER_MAPPING)
+    # apply_numbers() itself is unchanged — only the object it mutates changes, from the
+    # shared settings module to a disposable local namespace seeded with settings.py's
+    # own hardcoded defaults, so a key missing from the cache still resolves correctly.
+    _numbers_target = types.SimpleNamespace(**{attr: getattr(settings, attr) for attr in _NUMBER_MAPPING})
+    config_sheet.apply_numbers(_numbers_target, _NUMBER_MAPPING)
+    numbers_snapshot = {attr: getattr(_numbers_target, attr) for attr in _NUMBER_MAPPING}
 
     corpus = config_sheet.render_corpus(faqs)
     if _current is not None and corpus == _last_corpus:
-        # Unchanged since the last successful build — skip re-ingesting the corpus
-        # into DocumentQA (a live network call) on every poll tick.
-        return _current
+        # Unchanged since the last successful build — skip re-ingesting the corpus into
+        # DocumentQA (a live network call) on every poll tick. Still return a FRESH
+        # LiveConfig carrying numbers_snapshot: numbers refresh independently of corpus
+        # content, so reusing `_current` wholesale here would freeze numbers at their
+        # last value until the corpus itself next changes.
+        return LiveConfig(document_qa=_current.document_qa, numbers=numbers_snapshot)
 
     document_qa = DocumentQA(
         documents=corpus,
@@ -109,19 +117,24 @@ def _build(require_sheet: bool = False) -> LiveConfig:
         instructions=_DOCUMENT_QA_INSTRUCTIONS,
     )
     _last_corpus = corpus
-    return LiveConfig(document_qa=document_qa)
+    return LiveConfig(document_qa=document_qa, numbers=numbers_snapshot)
 
 
 def init(require_sheet: bool = False) -> None:
     """Build the first snapshot. Never blocks/crashes startup on a Sheets outage:
-    falls back to LiveConfig(document_qa=None) if even the local cache is missing,
-    matching the previous lazy-singleton's graceful degradation."""
+    falls back to LiveConfig(document_qa=None, numbers=<settings.py's hardcoded
+    defaults>) if even the local cache is missing, matching the previous
+    lazy-singleton's graceful degradation — routing must keep working even when the
+    knowledge base fails to load."""
     global _current
     try:
         _current = _build(require_sheet=require_sheet)
     except Exception as exc:
         logger.warning("Could not load Texas Tech Online knowledge base: %s", exc)
-        _current = LiveConfig(document_qa=None)
+        _current = LiveConfig(
+            document_qa=None,
+            numbers={attr: getattr(settings, attr) for attr in _NUMBER_MAPPING},
+        )
 
 
 def start_poller(interval_seconds: int = 60) -> None:

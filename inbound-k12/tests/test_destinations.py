@@ -7,8 +7,11 @@ list can never drift from the routing table.
 import pytest
 
 import destinations
+import live_config
+import settings
 
-_ROUTES = destinations._routes()
+_NUMBERS = {attr: getattr(settings, attr) for attr in live_config._NUMBER_MAPPING}
+_ROUTES = destinations._routes(_NUMBERS)
 
 
 def _transfers(call):
@@ -166,17 +169,19 @@ def test_text_message_complete_sends_rfi_link_for_non_students(app, call, monkey
     assert sent_calls[0][1] == app.settings.K12_RFI_FORM_URL
 
 
-def test_routes_reread_settings_after_process_start(app, call):
-    """Regression guard: destinations._routes() must be rebuilt on every resolve() call,
-    not frozen at import — live_config's poller re-applies settings.LIVE_NUMBER on every
-    refresh cycle, and a table built once at import would silently ignore that."""
-    original = app.settings.LIVE_NUMBER
-    try:
-        app.settings.LIVE_NUMBER = "+19995550100"
-        call.set_field("continue_with", "Be transferred to a queue to talk to a person")
+def test_routes_reread_numbers_after_a_live_config_refresh(app, call, monkeypatch):
+    """Regression guard: destinations._routes() must read numbers from
+    live_config.get().numbers fresh on every resolve() call — the poller replaces
+    live_config._current wholesale on every refresh cycle, and a routing table that
+    captured a stale numbers dict at process start would silently ignore that."""
+    current = app.live_config.get()
+    changed_numbers = {**current.numbers, "LIVE_NUMBER": "+19995550100"}
+    monkeypatch.setattr(
+        app.live_config, "_current",
+        app.live_config.LiveConfig(document_qa=current.document_qa, numbers=changed_numbers),
+    )
+    call.set_field("continue_with", "Be transferred to a queue to talk to a person")
 
-        app.on_route_complete(call)
+    app.on_route_complete(call)
 
-        assert _transfer_numbers(call)[-1] == "+19995550100"
-    finally:
-        app.settings.LIVE_NUMBER = original
+    assert _transfer_numbers(call)[-1] == "+19995550100"

@@ -152,7 +152,7 @@ def on_route_complete(call: guava.Call):
         ))
         return
 
-    dest = destinations.resolve(continue_with)
+    dest = destinations.resolve(live_config.get().numbers, continue_with)
     logger.info(
         "Routing call (session: %s) continue_with=%r -> %s (%s)",
         call.id, continue_with, dest.number, dest.grace_outcome,
@@ -178,7 +178,7 @@ def on_question(call: guava.Call, question: str) -> str:
 @agent.on_session_end
 def on_session_end(call: guava.Call, event: BotSessionEnded):
     transferred = event.termination_reason == "bot-transfer"
-    dest = destinations.resolve(call.get_field("continue_with")) if transferred else None
+    dest = destinations.resolve(live_config.get().numbers, call.get_field("continue_with")) if transferred else None
 
     result = {
         "timestamp": datetime.now().isoformat(),

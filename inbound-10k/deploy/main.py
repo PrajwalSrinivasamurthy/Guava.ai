@@ -124,7 +124,7 @@ def on_route_complete(call: guava.Call):
         _start_enrollment(call)
         return
 
-    dest = destinations.resolve(next_step)
+    dest = destinations.resolve(live_config.get().numbers, next_step)
     call.transfer(
         dest.number,
         instructions=(
@@ -274,7 +274,7 @@ def on_question(call: guava.Call, question: str) -> str:
 @agent.on_session_end
 def on_session_end(call: guava.Call, event: BotSessionEnded):
     transferred = event.termination_reason == "bot-transfer"
-    dest = destinations.resolve(call.get_field("next_step")) if transferred else None
+    dest = destinations.resolve(live_config.get().numbers, call.get_field("next_step")) if transferred else None
 
     result = {
         "timestamp": datetime.now().isoformat(),

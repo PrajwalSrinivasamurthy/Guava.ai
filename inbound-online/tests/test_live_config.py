@@ -76,7 +76,10 @@ def test_build_skips_rebuilding_document_qa_when_corpus_unchanged(app, monkeypat
     second = app.live_config._build(require_sheet=False)
 
     assert len(build_calls) == 1
-    assert second is first
+    # Not `second is first`: _build() always returns a fresh LiveConfig so numbers can
+    # refresh independently of corpus content — only the (expensive) document_qa object
+    # itself is reused when the corpus hasn't changed.
+    assert second.document_qa is first.document_qa
 
 
 def test_init_degrades_to_no_knowledge_base_instead_of_raising(app, monkeypatch):
@@ -92,6 +95,8 @@ def test_init_degrades_to_no_knowledge_base_instead_of_raising(app, monkeypatch)
     app.live_config.init()
 
     assert app.live_config.get().document_qa is None
+    # Routing must keep working even when the knowledge base fails to load.
+    assert app.live_config.get().numbers
 
 
 def test_get_raises_before_init_has_run(app, monkeypatch):
@@ -99,3 +104,22 @@ def test_get_raises_before_init_has_run(app, monkeypatch):
 
     with pytest.raises(RuntimeError):
         app.live_config.get()
+
+
+def test_build_never_mutates_settings_module(app, monkeypatch):
+    """Regression guard for the bug class this refactor fixes: live numbers live on
+    the LiveConfig snapshot, never on the settings module itself."""
+    monkeypatch.setattr(app.live_config, "DocumentQA", _FakeDocumentQA)
+    monkeypatch.setattr(app.live_config.config_sheet, "load", lambda *a, **k: _FAKE_FAQS)
+    monkeypatch.setattr(app.live_config.config_sheet, "refresh_numbers", lambda *a, **k: {})
+    monkeypatch.setattr(app.live_config.config_sheet, "save_cache", lambda *a, **k: None)
+    fake_cache = {key: "+19995550100" for key in app.live_config._NUMBER_MAPPING.values()}
+    monkeypatch.setattr(app.live_config.config_sheet, "load_numbers", lambda: fake_cache)
+    # Do NOT mock apply_numbers here — let the real function run so this test is meaningful.
+
+    before = {attr: getattr(app.settings, attr) for attr in app.live_config._NUMBER_MAPPING}
+    config = app.live_config._build(require_sheet=False)
+    after = {attr: getattr(app.settings, attr) for attr in app.live_config._NUMBER_MAPPING}
+
+    assert after == before, "settings.py's module attributes must never be mutated by _build()"
+    assert all(v == "+19995550100" for v in config.numbers.values())

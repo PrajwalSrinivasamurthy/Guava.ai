@@ -67,7 +67,10 @@ def _no_real_document_qa(app, monkeypatch):
         def ask(self, question: str) -> str:
             return "fake answer"
 
-    fake_config = app.live_config.LiveConfig(document_qa=_FakeDocumentQA())
+    fake_config = app.live_config.LiveConfig(
+        document_qa=_FakeDocumentQA(),
+        numbers={attr: getattr(app.settings, attr) for attr in app.live_config._NUMBER_MAPPING},
+    )
     monkeypatch.setattr(app.live_config, "_current", fake_config)
 
 

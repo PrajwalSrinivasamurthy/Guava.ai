@@ -7,9 +7,12 @@ so this list can never drift from the routing table itself.
 import pytest
 
 import destinations
+import live_config
+import settings
 
-_ROUTES = destinations._routes()
-_FALLBACK = destinations.fallback()
+_NUMBERS = {attr: getattr(settings, attr) for attr in live_config._NUMBER_MAPPING}
+_ROUTES = destinations._routes(_NUMBERS)
+_FALLBACK = destinations.fallback(_NUMBERS)
 
 
 def _set_answers(call, program, online_service, continue_with):
@@ -113,7 +116,7 @@ def test_after_hours_voicemail_reaches_higher_ed_default(program, online_service
     """SCENARIOS.md: no live-queue/rep-line number is reachable after hours in the
     legacy AH playbook — only Higher Ed Default and the 4 ElevenLabs numbers. "Leave a
     voicemail" (only offered when closed) must not fall through to a program's live queue."""
-    dest = destinations.resolve(program, online_service, "Leave a voicemail")
+    dest = destinations.resolve(_NUMBERS, program, online_service, "Leave a voicemail")
     assert dest == _FALLBACK
 
 
@@ -212,33 +215,36 @@ def test_plain_after_hours_has_no_holiday_wording(app):
     assert "currently closed" in say.statement
 
 
-def test_routes_reread_settings_after_process_start(app, call):
-    """Regression guard: destinations._routes() must be rebuilt on every resolve() call,
-    not frozen at import — live_config's poller re-applies settings.GRAD_NUMBER (etc.) on
-    every refresh cycle, and a table built once at import would silently ignore that."""
-    original = app.settings.GRAD_NUMBER
-    try:
-        app.settings.GRAD_NUMBER = "+19995550100"
-        _set_answers(call, "Graduate", None, "Be transferred to a live team member")
+def test_routes_reread_numbers_after_a_live_config_refresh(app, call, monkeypatch):
+    """Regression guard: destinations._routes() must read numbers from
+    live_config.get().numbers fresh on every resolve() call — the poller replaces
+    live_config._current wholesale on every refresh cycle, and a routing table that
+    captured a stale numbers dict at process start would silently ignore that."""
+    current = app.live_config.get()
+    changed_numbers = {**current.numbers, "GRAD_NUMBER": "+19995550100"}
+    monkeypatch.setattr(
+        app.live_config, "_current",
+        app.live_config.LiveConfig(document_qa=current.document_qa, numbers=changed_numbers),
+    )
+    _set_answers(call, "Graduate", None, "Be transferred to a live team member")
 
-        app.on_route_complete(call)
+    app.on_route_complete(call)
 
-        assert _transfer_numbers(call)[-1] == "+19995550100"
-    finally:
-        app.settings.GRAD_NUMBER = original
+    assert _transfer_numbers(call)[-1] == "+19995550100"
 
 
-def test_fallback_rereads_settings_after_process_start(app, call):
-    """Same guard as above, for fallback() — it's built fresh per call too, not frozen
-    at import alongside ROUTES."""
-    original = app.settings.HIGHER_ED_DEFAULT_NUMBER
-    try:
-        app.settings.HIGHER_ED_DEFAULT_NUMBER = "+19995550100"
-        app.settings.FORCE_HOURS = "after"
-        call.set_field("program", "Not sure")
+def test_fallback_rereads_numbers_after_a_live_config_refresh(app, call, monkeypatch):
+    """Same guard as above, for fallback() — it reads live_config.get().numbers fresh
+    per call too, not frozen at import alongside _ROUTES."""
+    current = app.live_config.get()
+    changed_numbers = {**current.numbers, "HIGHER_ED_DEFAULT_NUMBER": "+19995550100"}
+    monkeypatch.setattr(
+        app.live_config, "_current",
+        app.live_config.LiveConfig(document_qa=current.document_qa, numbers=changed_numbers),
+    )
+    app.settings.FORCE_HOURS = "after"
+    call.set_field("program", "Not sure")
 
-        app.on_route_complete(call)
+    app.on_route_complete(call)
 
-        assert _transfer_numbers(call)[-1] == "+19995550100"
-    finally:
-        app.settings.HIGHER_ED_DEFAULT_NUMBER = original
+    assert _transfer_numbers(call)[-1] == "+19995550100"

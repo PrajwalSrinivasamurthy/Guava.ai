@@ -194,9 +194,9 @@ def on_route_complete(call: guava.Call):
         # After hours, an unresolved program always falls back to the Higher Ed
         # Default voicemail, regardless of continue_with (which isn't asked for this
         # case at all).
-        dest = destinations.fallback()
+        dest = destinations.fallback(live_config.get().numbers)
     else:
-        dest = destinations.resolve(program, online_service, continue_with)
+        dest = destinations.resolve(live_config.get().numbers, program, online_service, continue_with)
 
     logger.info(
         "Routing call (session: %s) program=%r online_service=%r continue_with=%r -> %s (%s)",
@@ -212,7 +212,7 @@ def on_route_complete(call: guava.Call):
 def on_escalate_handler(call: guava.Call) -> None:
     logger.info("Escalation triggered (session: %s)", call.id)
     continue_with = "Be transferred to a live team member" if is_open() else "Leave a voicemail"
-    dest = destinations.resolve(call.get_field("program"), call.get_field("online_service"), continue_with)
+    dest = destinations.resolve(live_config.get().numbers, call.get_field("program"), call.get_field("online_service"), continue_with)
     call.transfer(
         dest.number,
         instructions=f"Let the caller know you're connecting them to {dest.label} now, then transfer.",
@@ -235,7 +235,7 @@ def on_question(call: guava.Call, question: str) -> str:
 def on_session_end(call: guava.Call, event: BotSessionEnded):
     transferred = event.termination_reason == "bot-transfer"
     dest = (
-        destinations.resolve(call.get_field("program"), call.get_field("online_service"), call.get_field("continue_with"))
+        destinations.resolve(live_config.get().numbers, call.get_field("program"), call.get_field("online_service"), call.get_field("continue_with"))
         if transferred
         else None
     )
