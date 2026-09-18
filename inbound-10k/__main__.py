@@ -22,6 +22,7 @@ import settings
 live_config.init()
 
 import destinations
+import power_automate
 from utils import is_open
 
 logger = logging.getLogger("texas_tech.inbound_10k")
@@ -254,8 +255,17 @@ def _start_enrollment(call: guava.Call):
     )
 
 
+_ENROLL_FIELD_KEYS = (
+    "marketing_source", "enrollment_interested", "first_name", "last_name", "phone_number",
+    "email", "contact_preference", "college_credits", "location", "willing_to_travel",
+)
+
+
 @agent.on_task_complete("enroll")
 def on_enroll_complete(call: guava.Call):
+    fields = {key: call.get_field(key) for key in _ENROLL_FIELD_KEYS}
+    sent = power_automate.send_lead(call, fields)
+    logger.info("Enrollment lead push (session: %s) sent=%s", call.id, sent)
     call.hangup(final_instructions="Thank the caller warmly and end the call.")
 
 

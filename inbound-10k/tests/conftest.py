@@ -77,6 +77,17 @@ def _no_real_document_qa(app, monkeypatch):
     monkeypatch.setattr(app.live_config, "_current", fake_config)
 
 
+@pytest.fixture(autouse=True)
+def _no_real_power_automate(monkeypatch):
+    """Belt and braces: no test path should ever push a real enrollment lead."""
+    import httpx
+
+    def _fail(*a, **k):
+        pytest.fail("a test tried to send a real Power Automate request")
+
+    monkeypatch.setattr(httpx, "post", _fail)
+
+
 @pytest.fixture
 def call(app):
     """A MockCall with on_call_start already run, so the route task/Fields exist.

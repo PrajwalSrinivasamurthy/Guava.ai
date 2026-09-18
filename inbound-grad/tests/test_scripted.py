@@ -44,13 +44,13 @@ def test_after_hours_text_message_choice_sends_the_portal_link_and_never_transfe
 
     with app.agent.test() as session:
         session.wait_for_turn()
-        session.say("Can you just text me the link to submit a ticket?")
+        session.say("Can you just text me a link?")
         session.wait_for_end()
 
     r = record(session, "after_hours_text_message")
     assert r["termination_reason"] != "bot-failure"
     assert len(sent) == 1, f"expected exactly one text send, got {sent}"
-    assert sent[0][1] == app.settings.GRAD_SERVICENOW_PORTAL_URL
+    assert sent[0][1] == app.settings.GRAD_AH_TEXT_URL
     assert transfers == []
 
 

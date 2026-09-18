@@ -28,13 +28,13 @@ def test_is_open_true_inside_the_afternoon_window(app):
     assert utils.is_open(now) is True
 
 
-def test_is_open_false_during_the_lunch_closure(app):
-    """Practice hours are 8-12 and 13-17 — the gap between is closed."""
+def test_is_open_true_through_lunch(app):
+    """Support center staggers staff lunches, so there's no midday closure."""
     app.settings.FORCE_HOURS = ""
     tz = ZoneInfo(app.settings.PRACTICE_TZ)
     now = datetime(2026, 9, 8, 12, 0, tzinfo=tz)  # Tuesday, noon
 
-    assert utils.is_open(now) is False
+    assert utils.is_open(now) is True
 
 
 def test_is_open_false_just_before_the_open_boundary(app):

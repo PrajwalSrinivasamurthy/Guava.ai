@@ -10,27 +10,47 @@ AGENT_SECONDARY_LANGUAGES = ["spanish"]
 LIVE_NUMBER = os.environ.get("LIVE_NUMBER", "+18067427101")
 ELEVENLABS_NUMBER = os.environ.get("ELEVENLABS_NUMBER", "+18884178511")
 
-# Practice-hours gate. PLACEHOLDER window (Mon-Fri 8am-noon, 1pm-5pm Central) — confirm Texas Tech
-# K-12's actual business hours before going live. Real clock decides in production; see
-# utils.is_open(). Days not present in this dict (Sat/Sun here) are treated as closed.
+# Practice-hours gate. Confirmed with Texas Tech (2026-09-17): the support center staggers
+# staff lunches, so it's continuously open 8am-5pm Central with no midday closure. Real
+# clock decides in production; see utils.is_open(). Days not present in this dict
+# (Sat/Sun here) are treated as closed.
 PRACTICE_TZ = os.environ.get("PRACTICE_TZ", "America/Chicago")
 PRACTICE_HOURS = {
-    0: [("08:00", "12:00"), ("13:00", "17:00")],  # Monday
-    1: [("08:00", "12:00"), ("13:00", "17:00")],
-    2: [("08:00", "12:00"), ("13:00", "17:00")],
-    3: [("08:00", "12:00"), ("13:00", "17:00")],
-    4: [("08:00", "12:00"), ("13:00", "17:00")],
+    0: [("08:00", "17:00")],  # Monday
+    1: [("08:00", "17:00")],
+    2: [("08:00", "17:00")],
+    3: [("08:00", "17:00")],
+    4: [("08:00", "17:00")],
 }
 
 # Test-only override, NOT the production mechanism — utils.is_open() only consults this
 # when set. Forces a branch for live-call testing / the automated test suite.
 FORCE_HOURS = os.environ.get("HOURS", "")
 
-# Legacy Grace's holiday gate ("Time of Day (Holidays/Weekend)" connector) fed in real holiday
-# dates; this export doesn't carry the actual calendar. PLACEHOLDER — empty means the holiday
-# branch is never taken (falls through to the plain after-hours message). Confirm Texas Tech's
-# actual holiday calendar (dates + spoken names) before going live.
-HOLIDAYS: dict[str, str] = {}  # {"2026-11-26": "Thanksgiving", ...}
+# TTU's official holiday schedule (https://www.depts.ttu.edu/hr/empbenefits/holidayschedule.php),
+# pulled 2026-09-17. 2027 only has the dates TTU HR has published so far.
+HOLIDAYS: dict[str, str] = {
+    "2026-01-01": "New Year's Day",
+    "2026-01-02": "New Year's Day",
+    "2026-01-19": "Martin Luther King Jr. Day",
+    "2026-03-20": "Spring Break",
+    "2026-05-25": "Memorial Day",
+    "2026-06-19": "Emancipation Day",
+    "2026-09-07": "Labor Day",
+    "2026-11-26": "Thanksgiving",
+    "2026-11-27": "Thanksgiving",
+    "2026-12-23": "Winter Break",
+    "2026-12-24": "Winter Break",
+    "2026-12-25": "Winter Break",
+    "2026-12-28": "Winter Break",
+    "2026-12-29": "Winter Break",
+    "2026-12-30": "Winter Break",
+    "2026-12-31": "Winter Break",
+    "2027-01-01": "New Year's Day",
+    "2027-01-18": "Martin Luther King Jr. Day",
+    "2027-03-19": "Spring Break",
+    "2027-05-31": "Memorial Day",
+}
 
 # Test-only override, NOT the production mechanism — utils.holiday_name() only consults this
 # when set (and only matters when the real clock/FORCE_HOURS says closed).

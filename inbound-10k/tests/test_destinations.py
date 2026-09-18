@@ -78,11 +78,96 @@ def test_enrollment_path_never_transfers_and_starts_the_enroll_task(app, call):
     assert len(_set_task_commands(call, task_id="enroll")) == 1
 
 
-def test_enroll_complete_hangs_up_without_transferring(app, call):
+def test_enroll_complete_hangs_up_without_transferring(app, call, monkeypatch):
+    monkeypatch.setattr(app.power_automate, "send_lead", lambda *a, **k: True)
+
     app.on_enroll_complete(call)
 
     assert _transfer_numbers(call) == []
     assert any(type(c).__name__ == "SendInstructionCommand" for c in call._command_queue)
+
+
+def test_enroll_complete_pushes_the_collected_fields_to_power_automate(app, call, monkeypatch):
+    call.set_field("first_name", "Jamie")
+    call.set_field("last_name", "Rivera")
+    call.set_field("email", "jamie@example.com")
+    call.set_field("phone_number", "806-555-0100")
+    call.set_field("college_credits", 45)
+    call.set_field("enrollment_interested", "Yes")
+
+    sent = {}
+    monkeypatch.setattr(
+        app.power_automate, "send_lead",
+        lambda call, fields: sent.update(fields) or True,
+    )
+
+    app.on_enroll_complete(call)
+
+    assert sent["first_name"] == "Jamie"
+    assert sent["last_name"] == "Rivera"
+    assert sent["email"] == "jamie@example.com"
+    assert sent["phone_number"] == "806-555-0100"
+    assert sent["college_credits"] == 45
+    assert sent["enrollment_interested"] == "Yes"
+
+
+def test_send_lead_maps_fields_to_the_power_automate_flow_s_expected_keys(app, monkeypatch):
+    from guava.testing import MockCall
+
+    posted = {}
+
+    class _FakeResponse:
+        def raise_for_status(self):
+            pass
+
+    def _fake_post(url, json, headers, timeout):
+        posted["url"] = url
+        posted["json"] = json
+        posted["headers"] = headers
+        return _FakeResponse()
+
+    monkeypatch.setattr(app.power_automate.httpx, "post", _fake_post)
+
+    mock = MockCall()
+    fields = {
+        "marketing_source": "Social media",
+        "enrollment_interested": "Yes",
+        "first_name": "Jamie",
+        "last_name": "Rivera",
+        "phone_number": "806-555-0100",
+        "email": "jamie@example.com",
+        "contact_preference": "Email",
+        "college_credits": 45,
+        "location": "Dallas",
+        "willing_to_travel": "Yes",
+    }
+
+    assert app.power_automate.send_lead(mock, fields) is True
+    assert posted["url"] == app.settings.TENK_POWER_AUTOMATE_URL
+    assert posted["json"] == {
+        "PhoneNumber": mock.call_info.from_number,
+        "MarketingSource": "Social media",
+        "EnrollmentInterest": "Yes",
+        "CallerFirstName": "Jamie",
+        "CallerLastName": "Rivera",
+        "Email": "jamie@example.com",
+        "CollectedNumber": "806-555-0100",
+        "ContactPref": "Email",
+        "CollegeCredits": "45",
+        "Location": "Dallas",
+        "WillingToTravel": "Yes",
+    }
+
+
+def test_send_lead_returns_false_without_raising_on_failure(app, monkeypatch):
+    from guava.testing import MockCall
+
+    def _raise(*a, **k):
+        raise Exception("boom")
+
+    monkeypatch.setattr(app.power_automate.httpx, "post", _raise)
+
+    assert app.power_automate.send_lead(MockCall(), {}) is False
 
 
 def _next_step_field(call):

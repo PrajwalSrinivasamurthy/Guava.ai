@@ -86,7 +86,7 @@ def on_call_start(call: guava.Call):
                 f"Our offices are currently closed in observance of {holiday}. If you have "
                 "any questions, I will transfer you to our virtual assistant. You can "
                 "also choose to leave a voicemail for the team, or receive a text message "
-                "with the link to submit a ticket.",
+                "with a link to explore our programs.",
                 key="closed_notice",
             )
         else:
@@ -94,7 +94,7 @@ def on_call_start(call: guava.Call):
                 "Our offices are currently closed. Representatives will be available during "
                 "business hours. If you have any questions, I will transfer you to our "
                 "virtual assistant. You can also choose to leave a voicemail for the "
-                "team, or receive a text message with the link to submit a ticket.",
+                "team, or receive a text message with a link to explore our programs.",
                 key="closed_notice",
             )
         continue_field = guava.Field(
@@ -104,8 +104,8 @@ def on_call_start(call: guava.Call):
             description=(
                 "Let them know our live team isn't available right now, then ask whether "
                 "they'd like to be connected to our virtual assistant, leave a voicemail, "
-                "or receive a text message with a link to submit a ticket. If they ask for "
-                "the virtual assistant, Ava, the AI, or the bot by name, that's 'Be "
+                "or receive a text message with a link to explore our programs. If they ask "
+                "for the virtual assistant, Ava, the AI, or the bot by name, that's 'Be "
                 "connected to our virtual assistant' — don't treat Ava as an unavailable "
                 "person."
             ),
@@ -138,14 +138,13 @@ def on_route_complete(call: guava.Call):
     if continue_with == "Receive a text message":
         from_number = getattr(call.call_info, "from_number", None)
         sent = sms.send_link(
-            from_number, settings.GRAD_SERVICENOW_PORTAL_URL,
-            f"{settings.ORGANIZATION_NAME} — service portal:",
+            from_number, settings.GRAD_AH_TEXT_URL,
+            f"{settings.ORGANIZATION_NAME} — explore our programs:",
         )
         logger.info("Text-message hand-off (session: %s) sent=%s", call.id, sent)
         call.hangup(final_instructions=(
-            "Let them know you've sent the text with the link to our service portal — if "
-            "they create a ticket they'll typically hear back within 24 business hours, "
-            "then say goodbye."
+            "Let them know you've sent the text with the link to our programs page, then "
+            "say goodbye."
             if sent else
             "Apologize that the text couldn't be sent right now, let them know someone will "
             "follow up, then say goodbye."
