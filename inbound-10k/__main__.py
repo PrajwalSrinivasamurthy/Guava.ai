@@ -63,7 +63,6 @@ def on_call_start(call: guava.Call):
         f"{settings.AGENT_NAME}, your virtual assistant. Please note that this "
         "call may be recorded."
     )
-    closed_notice = None
 
     if open_now:
         next_step_field = guava.Field(
@@ -81,13 +80,14 @@ def on_call_start(call: guava.Call):
     else:
         # Scripted (not model-phrased) so the three options are always spoken verbatim —
         # a generative Field description left this to the model's discretion, and it would
-        # sometimes ask an open "how can I help?" without ever stating the choices.
-        closed_notice = guava.Say(
-            "Our offices are currently closed — representatives will be available "
+        # sometimes ask an open "how can I help?" without ever stating the choices. Folded
+        # into the single greeting Say rather than a second back-to-back Say item — the
+        # checklist should never have two consecutive Say items.
+        greeting += (
+            " Our offices are currently closed — representatives will be available "
             "during business hours. If you have any questions, I can connect you "
             "with our virtual assistant, help you enroll in the program, or take a "
-            "voicemail for the team.",
-            key="closed_notice",
+            "voicemail for the team."
         )
         next_step_field = guava.Field(
             key="next_step",
@@ -100,10 +100,8 @@ def on_call_start(call: guava.Call):
             ),
         )
 
-    checklist = [guava.Say(greeting, key="greeting")]
-    if closed_notice is not None:
-        checklist.append(closed_notice)
-    checklist += [
+    checklist = [
+        guava.Say(greeting, key="greeting"),
         next_step_field,
         "This task is now complete once you know what they need.",
     ]

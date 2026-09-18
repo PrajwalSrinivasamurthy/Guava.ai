@@ -58,14 +58,12 @@ def on_call_start(call: guava.Call):
 
     open_now = is_open()
 
-    greeting = guava.Say(
+    greeting_text = (
         f"Thank you for calling {settings.ORGANIZATION_NAME}! My name is "
         f"{settings.AGENT_NAME}, your virtual assistant. Please note that this "
-        "call may be recorded.",
-        key="greeting",
+        "call may be recorded."
     )
 
-    closed_notice = None
     if open_now:
         continue_field = guava.Field(
             key="continue_with",
@@ -81,21 +79,21 @@ def on_call_start(call: guava.Call):
         )
     else:
         holiday = holiday_name()
+        # Fold into the single greeting Say rather than a second back-to-back Say item —
+        # the checklist should never have two consecutive Say items.
         if holiday:
-            closed_notice = guava.Say(
-                f"Our offices are currently closed in observance of {holiday}. If you have "
+            greeting_text += (
+                f" Our offices are currently closed in observance of {holiday}. If you have "
                 "any questions, I will transfer you to our virtual assistant. You can "
                 "also choose to leave a voicemail for the team, or receive a text message "
-                "with a link to explore our programs.",
-                key="closed_notice",
+                "with a link to explore our programs."
             )
         else:
-            closed_notice = guava.Say(
-                "Our offices are currently closed. Representatives will be available during "
+            greeting_text += (
+                " Our offices are currently closed. Representatives will be available during "
                 "business hours. If you have any questions, I will transfer you to our "
                 "virtual assistant. You can also choose to leave a voicemail for the "
-                "team, or receive a text message with a link to explore our programs.",
-                key="closed_notice",
+                "team, or receive a text message with a link to explore our programs."
             )
         continue_field = guava.Field(
             key="continue_with",
@@ -111,9 +109,7 @@ def on_call_start(call: guava.Call):
             ),
         )
 
-    checklist = [greeting]
-    if closed_notice is not None:
-        checklist.append(closed_notice)
+    checklist = [guava.Say(greeting_text, key="greeting")]
     checklist += [
         continue_field,
         "This task is now complete once you know where the caller needs to go.",

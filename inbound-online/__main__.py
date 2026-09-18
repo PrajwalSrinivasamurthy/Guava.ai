@@ -72,7 +72,7 @@ def _build_route_task(call: guava.Call, opener: guava.Say | str):
             ),
             required=False,
         )
-        closed_notice = None
+        closed_notice_text = None
     else:
         continue_field = guava.Field(
             key="continue_with",
@@ -89,24 +89,32 @@ def _build_route_task(call: guava.Call, opener: guava.Say | str):
             required=False,
         )
         if holiday:
-            closed_notice = guava.Say(
+            closed_notice_text = (
                 f"Our offices are currently closed in observance of {holiday}. If you have "
                 "any questions, I can connect you with our virtual assistant, or I can "
-                "transfer you to our support center to leave a voicemail.",
-                key="closed_notice",
+                "transfer you to our support center to leave a voicemail."
             )
         else:
-            closed_notice = guava.Say(
+            closed_notice_text = (
                 "Our offices are currently closed. Representatives will be available during "
                 "business hours. If you have any questions, I can connect you with our "
                 "virtual assistant, or I can transfer you to our support center to "
-                "leave a voicemail.",
-                key="closed_notice",
+                "leave a voicemail."
             )
 
+    # Fold into the opener rather than a second back-to-back Say item — the checklist
+    # should never have two consecutive Say items. The opener is a plain string (not a
+    # Say) on the "still unsure" loop-back path, which never reaches here with
+    # closed_notice_text set (that loop only runs during open hours) — kept as a
+    # separate checklist item in that hypothetical case since a plain string is a
+    # paraphrasable instruction, not a verbatim statement to merge with.
+    if closed_notice_text and isinstance(opener, guava.Say):
+        opener = guava.Say(f"{opener.statement} {closed_notice_text}", key=opener.key)
+        closed_notice_text = None
+
     checklist = [opener]
-    if closed_notice is not None:
-        checklist.append(closed_notice)
+    if closed_notice_text:
+        checklist.append(closed_notice_text)
     checklist += [
         "If the caller already mentioned what the program they are asking about, fill in program directly.",
         guava.Field(

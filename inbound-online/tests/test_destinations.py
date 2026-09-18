@@ -185,9 +185,9 @@ def test_greeting_is_the_first_checklist_item(call):
     assert task.action_items[0].key == "greeting"
 
 
-def _closed_notice_say(call):
+def _greeting_say(call):
     task = next(c for c in call._command_queue if type(c).__name__ == "SetTaskCommand")
-    return next(item for item in task.action_items if getattr(item, "key", None) == "closed_notice")
+    return next(item for item in task.action_items if getattr(item, "key", None) == "greeting")
 
 
 def test_holiday_after_hours_names_the_holiday(app):
@@ -198,7 +198,7 @@ def test_holiday_after_hours_names_the_holiday(app):
     try:
         mock = MockCall()
         app.on_call_start(mock)
-        assert "in observance of Winter Break" in _closed_notice_say(mock).statement
+        assert "in observance of Winter Break" in _greeting_say(mock).statement
     finally:
         app.settings.FORCE_HOLIDAY_NAME = ""
 
@@ -209,10 +209,28 @@ def test_plain_after_hours_has_no_holiday_wording(app):
     from guava.testing import MockCall
     mock = MockCall()
     app.on_call_start(mock)
-    say = _closed_notice_say(mock)
+    say = _greeting_say(mock)
 
     assert "in observance of" not in say.statement
     assert "currently closed" in say.statement
+
+
+def test_checklist_never_has_two_consecutive_says(app):
+    """Regression guard: a second back-to-back Say item creates a seam a live call can slip
+    an off-script turn into — closed/holiday wording must fold into the single greeting Say."""
+    from guava.testing import MockCall
+
+    for hours, holiday in (("open", ""), ("after", ""), ("after", "Winter Break")):
+        app.settings.FORCE_HOURS = hours
+        app.settings.FORCE_HOLIDAY_NAME = holiday
+        try:
+            mock = MockCall()
+            app.on_call_start(mock)
+            task = next(c for c in mock._command_queue if type(c).__name__ == "SetTaskCommand")
+            says = [item for item in task.action_items if getattr(item, "item_type", None) == "say"]
+            assert len(says) == 1, f"expected exactly one Say (hours={hours!r}, holiday={holiday!r}), got {says}"
+        finally:
+            app.settings.FORCE_HOLIDAY_NAME = ""
 
 
 def test_routes_reread_numbers_after_a_live_config_refresh(app, call, monkeypatch):

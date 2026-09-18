@@ -64,7 +64,6 @@ def on_call_start(call: guava.Call):
         f"{settings.AGENT_NAME}, your virtual assistant. Please note that this "
         "call may be recorded."
     )
-    closed_notice = None
 
     if open_now:
         continue_field = guava.Field(
@@ -81,21 +80,22 @@ def on_call_start(call: guava.Call):
         )
     else:
         holiday = utils.holiday_name()
+        # Fold into the single greeting Say rather than a second back-to-back Say item —
+        # the checklist should never have two consecutive Say items.
         if holiday:
-            closed_notice_text = (
-                f"Our offices are currently closed in observance of {holiday}. If you have "
+            greeting += (
+                f" Our offices are currently closed in observance of {holiday}. If you have "
                 "any questions, I will transfer you to our virtual assistant. You can "
                 "also choose to leave a voicemail for the team, or receive a text message "
                 "with the link to submit a ticket."
             )
         else:
-            closed_notice_text = (
-                "Our offices are currently closed. Representatives will be available during "
+            greeting += (
+                " Our offices are currently closed. Representatives will be available during "
                 "business hours. If you have any questions, I will transfer you to our "
                 "virtual assistant. You can also choose to leave a voicemail for the "
                 "team, or receive a text message with the link to submit a ticket."
             )
-        closed_notice = guava.Say(closed_notice_text, key="closed_notice")
         continue_field = guava.Field(
             key="continue_with",
             field_type="multiple_choice",
@@ -109,10 +109,8 @@ def on_call_start(call: guava.Call):
             ),
         )
 
-    checklist = [guava.Say(greeting, key="greeting")]
-    if closed_notice is not None:
-        checklist.append(closed_notice)
-    checklist += [
+    checklist = [
+        guava.Say(greeting, key="greeting"),
         continue_field,
         "This task is now complete once you know where the caller needs to go.",
     ]
