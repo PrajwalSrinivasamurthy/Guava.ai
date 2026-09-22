@@ -117,6 +117,9 @@ def test_send_lead_maps_fields_to_the_power_automate_flow_s_expected_keys(app, m
     posted = {}
 
     class _FakeResponse:
+        status_code = 200
+        text = "OK"
+
         def raise_for_status(self):
             pass
 
@@ -160,12 +163,15 @@ def test_send_lead_maps_fields_to_the_power_automate_flow_s_expected_keys(app, m
 
 
 def test_send_lead_returns_false_without_raising_on_failure(app, monkeypatch):
+    """Retry/backoff coverage for send_lead() lives in test_power_automate.py; this just
+    checks the outward contract (False, never raises) still holds once every attempt fails."""
     from guava.testing import MockCall
 
     def _raise(*a, **k):
         raise Exception("boom")
 
     monkeypatch.setattr(app.power_automate.httpx, "post", _raise)
+    monkeypatch.setattr(app.power_automate.time, "sleep", lambda seconds: None)
 
     assert app.power_automate.send_lead(MockCall(), {}) is False
 

@@ -39,9 +39,9 @@ FORCE_HOURS = os.environ.get("HOURS", "")
 TENK_POWER_AUTOMATE_URL = os.environ.get(
     "TENK_POWER_AUTOMATE_URL",
     "https://default178a51bf8b2049ffb65556245d5c17.3c.environment.api.powerplatform.com:443/"
-    "powerautomate/automations/direct/workflows/23e40a2d9180416b94828922f7ec9e69/triggers/"
+    "powerautomate/automations/direct/cu/00/workflows/3c61edffc6ae4ed5bc01ece50948f010/triggers/"
     "manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0"
-    "&sig=OkYnrqg668ibLWQ-veeDXVgIVoi85jpDvAgqrhh8Kbg",
+    "&sig=Yk_pkbuv7AoCtuT9fJU-SJYxPgrqibHQ9NtHbs6AVhs",
 )
 TENK_POWER_AUTOMATE_API_KEY = os.environ.get("TENK_POWER_AUTOMATE_API_KEY", "")
 
