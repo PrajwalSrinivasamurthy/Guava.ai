@@ -12,6 +12,7 @@ import settings
 
 _NUMBERS = {attr: getattr(settings, attr) for attr in live_config._NUMBER_MAPPING}
 _ROUTES = destinations._routes(_NUMBERS)
+_FALLBACK = destinations.fallback(_NUMBERS)
 
 
 def _transfers(call):
@@ -171,6 +172,27 @@ def test_text_message_send_failure_still_hangs_up_without_transfer(app, call, mo
 
     assert not any(type(c).__name__ == "TransferCommand" for c in call._command_queue)
     assert any(type(c).__name__ == "SendInstructionCommand" for c in call._command_queue)
+
+
+def test_unrecognized_continue_with_falls_back_to_live_queue(app, call):
+    """continue_with is a fixed-choice field, but the model isn't guaranteed to return an
+    exact match — garbled free text should route to a human instead of crashing the
+    call-handling callback with an AttributeError on a None destination."""
+    call.set_field("continue_with", "some unexpected free-text value")
+
+    app.on_route_complete(call)
+
+    assert _transfer_numbers(call)[-1] == _FALLBACK.number
+
+
+def test_fallback_transfer_message_carries_an_immediacy_directive(app, call):
+    call.set_field("continue_with", "some unexpected free-text value")
+
+    app.on_route_complete(call)
+
+    xfer = _transfers(call)[-1]
+    assert xfer.soft_transfer is True
+    assert _ends_with_transfer_directive(xfer.transfer_message), xfer.transfer_message
 
 
 def test_routes_reread_numbers_after_a_live_config_refresh(app, call, monkeypatch):

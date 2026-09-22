@@ -30,7 +30,19 @@ def _routes(numbers: dict[str, str]) -> dict[str, Destination]:
     }
 
 
-def resolve(numbers: dict[str, str], continue_with: str | None) -> Destination | None:
-    """Returns the Destination for the caller's continue_with answer, or None for a choice
-    that doesn't transfer (the text-message path)."""
-    return _routes(numbers).get(continue_with)
+def fallback(numbers: dict[str, str]) -> Destination:
+    """continue_with didn't match any known choice — e.g. garbled speech-to-text or an
+    unexpected value the model returned outside the field's fixed choices. Default to the
+    live queue (a human) rather than raising or guessing at the caller's intent. Mirrors
+    Grace's own default_route behavior for this playbook family: if nothing else matches,
+    default to the live-transfer number."""
+    return Destination(
+        "End - Route to Grad (fallback)", numbers["LIVE_NUMBER"], "Graduate live queue"
+    )
+
+
+def resolve(numbers: dict[str, str], continue_with: str | None) -> Destination:
+    """Returns the Destination for the caller's continue_with answer, falling back to the
+    live queue for anything unrecognized rather than returning None (the "Receive a text
+    message" choice never reaches here — __main__.py handles it before calling resolve())."""
+    return _routes(numbers).get(continue_with, fallback(numbers))

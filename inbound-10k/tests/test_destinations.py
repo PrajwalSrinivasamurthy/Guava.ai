@@ -13,6 +13,7 @@ import settings
 
 _NUMBERS = {attr: getattr(settings, attr) for attr in live_config._NUMBER_MAPPING}
 _ROUTES = destinations._routes(_NUMBERS)
+_FALLBACK = destinations.fallback(_NUMBERS)
 
 
 def _transfers(call):
@@ -174,6 +175,27 @@ def test_send_lead_returns_false_without_raising_on_failure(app, monkeypatch):
     monkeypatch.setattr(app.power_automate.time, "sleep", lambda seconds: None)
 
     assert app.power_automate.send_lead(MockCall(), {}) is False
+
+
+def test_unrecognized_next_step_falls_back_to_live_queue(app, call):
+    """next_step is a fixed-choice field, but the model isn't guaranteed to return an
+    exact match — garbled free text should route to a human instead of crashing the
+    call-handling callback with an AttributeError on a None destination."""
+    call.set_field("next_step", "some unexpected free-text value")
+
+    app.on_route_complete(call)
+
+    assert _transfer_numbers(call)[-1] == _FALLBACK.number
+
+
+def test_fallback_transfer_message_carries_an_immediacy_directive(app, call):
+    call.set_field("next_step", "some unexpected free-text value")
+
+    app.on_route_complete(call)
+
+    xfer = _transfers(call)[-1]
+    assert xfer.soft_transfer is True
+    assert _ends_with_transfer_directive(xfer.transfer_message), xfer.transfer_message
 
 
 def _next_step_field(call):

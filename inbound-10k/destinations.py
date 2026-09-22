@@ -35,6 +35,19 @@ def _routes(numbers: dict[str, str]) -> dict[str, Destination]:
     }
 
 
-def resolve(numbers: dict[str, str], next_step: str | None) -> Destination | None:
-    """Returns the Destination for the caller's next_step answer, or None if unrecognized."""
-    return _routes(numbers).get(next_step)
+def fallback(numbers: dict[str, str]) -> Destination:
+    """next_step didn't match any known choice — e.g. garbled speech-to-text or an
+    unexpected value the model returned outside the field's fixed choices. Default to the
+    live queue (a human) rather than raising or guessing at the caller's intent — matches
+    the documented default_route behavior across this playbook family: if nothing else
+    matches, default to the live-transfer number."""
+    return Destination(
+        "End - Transfer to Live Agent (fallback)", numbers["LIVE_NUMBER"], None
+    )
+
+
+def resolve(numbers: dict[str, str], next_step: str | None) -> Destination:
+    """Returns the Destination for the caller's next_step answer, falling back to the live
+    queue for anything unrecognized rather than returning None ("Enroll in the program"
+    never reaches here — __main__.py handles it before calling resolve())."""
+    return _routes(numbers).get(next_step, fallback(numbers))
