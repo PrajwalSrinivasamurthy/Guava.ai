@@ -57,7 +57,7 @@ RUN_LIVE=1 uv run --env-file .env python -m pytest tests/test_scripted.py -v
 Build the `deploy/` snapshot this project ships from (run from the repo root):
 
 ```bash
-./scripts/prepare-deploy.sh customers/texas_tech/implementations/inbound-k12
+./scripts/prepare-deploy.sh inbound-k12
 ```
 
 Re-run it any time before `guava deploy up` — it's idempotent and regenerates
@@ -68,5 +68,5 @@ sandboxed shell, e.g. Claude Code — the sandbox denies writes outside allow-li
 dirs), point uv at a writable cache instead:
 
 ```bash
-UV_CACHE_DIR="$TMPDIR/uv-cache" ./scripts/prepare-deploy.sh customers/texas_tech/implementations/inbound-k12
+UV_CACHE_DIR="$TMPDIR/uv-cache" ./scripts/prepare-deploy.sh inbound-k12
 ```

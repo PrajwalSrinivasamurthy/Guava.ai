@@ -42,10 +42,11 @@ fi
 # ── Resolve the shared org_id and validate every agent agrees on it ─────────────
 ORG_ID=""
 for agent in "${AGENTS[@]}"; do
-  TOML="$REPO_ROOT/$agent/guava.toml"
+  TOML="$REPO_ROOT/$agent/deploy/guava.toml"
   if [[ ! -f "$TOML" ]]; then
-    echo "ERROR: $agent/guava.toml not found — this agent has never been deployed." >&2
-    echo "       Run 'guava deploy up $agent' once by hand to create it, then re-run this script." >&2
+    echo "ERROR: $agent/deploy/guava.toml not found — this agent has never been deployed." >&2
+    echo "       Run './scripts/prepare-deploy.sh $agent' then 'guava deploy up $agent/deploy' once" >&2
+    echo "       by hand to create it, commit $agent/deploy/guava.toml, then re-run this script." >&2
     exit 1
   fi
   THIS_ORG="$(sed -n 's/^org_id *= *"\(.*\)".*/\1/p' "$TOML")"
