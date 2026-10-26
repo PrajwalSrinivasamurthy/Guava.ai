@@ -229,18 +229,53 @@ def test_greeting_is_the_first_checklist_item(call):
     assert task.action_items[0].key == "greeting"
 
 
-def test_checklist_never_has_two_consecutive_says(app):
-    """Regression guard: a second back-to-back Say item creates a seam a live call can slip
-    an off-script turn into — closed-hours wording must fold into the single greeting Say."""
+def _greeting_say(call):
+    task = next(c for c in call._command_queue if type(c).__name__ == "SetTaskCommand" and c.task_id == "route")
+    return next(item for item in task.action_items if getattr(item, "key", None) == "greeting")
+
+
+def test_holiday_after_hours_names_the_holiday(app):
     from guava.testing import MockCall
 
-    for hours in ("open", "after"):
-        app.settings.FORCE_HOURS = hours
+    app.settings.FORCE_HOURS = "after"
+    app.settings.FORCE_HOLIDAY_NAME = "Winter Break"
+    try:
         mock = MockCall()
         app.on_call_start(mock)
-        task = next(c for c in mock._command_queue if type(c).__name__ == "SetTaskCommand" and c.task_id == "route")
-        says = [item for item in task.action_items if getattr(item, "item_type", None) == "say"]
-        assert len(says) == 1, f"expected exactly one Say (hours={hours!r}), got {says}"
+        assert "in observance of Winter Break" in _greeting_say(mock).statement
+    finally:
+        app.settings.FORCE_HOLIDAY_NAME = ""
+
+
+def test_plain_after_hours_has_no_holiday_wording(app, monkeypatch):
+    app.settings.FORCE_HOURS = "after"
+    monkeypatch.setattr(app.settings, "HOLIDAYS", {})  # independent of today's real date
+
+    from guava.testing import MockCall
+    mock = MockCall()
+    app.on_call_start(mock)
+    say = _greeting_say(mock)
+
+    assert "in observance of" not in say.statement
+    assert "currently closed" in say.statement
+
+
+def test_checklist_never_has_two_consecutive_says(app):
+    """Regression guard: a second back-to-back Say item creates a seam a live call can slip
+    an off-script turn into — closed/holiday wording must fold into the single greeting Say."""
+    from guava.testing import MockCall
+
+    try:
+        for hours, holiday in (("open", ""), ("after", ""), ("after", "Winter Break")):
+            app.settings.FORCE_HOURS = hours
+            app.settings.FORCE_HOLIDAY_NAME = holiday
+            mock = MockCall()
+            app.on_call_start(mock)
+            task = next(c for c in mock._command_queue if type(c).__name__ == "SetTaskCommand" and c.task_id == "route")
+            says = [item for item in task.action_items if getattr(item, "item_type", None) == "say"]
+            assert len(says) == 1, f"expected exactly one Say (hours={hours!r}, holiday={holiday!r}), got {says}"
+    finally:
+        app.settings.FORCE_HOLIDAY_NAME = ""
 
 
 def test_routes_reread_numbers_after_a_live_config_refresh(app, call, monkeypatch):

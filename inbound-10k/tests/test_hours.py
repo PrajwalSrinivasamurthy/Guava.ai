@@ -1,4 +1,5 @@
-"""Direct coverage of utils.is_open()'s real weekday/time-window branch.
+"""Direct coverage of utils.is_open()'s real weekday/time-window branch and
+utils.holiday_name()'s real calendar lookup.
 
 Every other test in this suite runs under the `_hours_open` autouse fixture, which forces
 FORCE_HOURS to "open" or "after" — so the actual production fallthrough (settings.PRACTICE_HOURS
@@ -68,3 +69,31 @@ def test_is_open_false_on_a_weekend(app):
     now = datetime(2026, 9, 12, 12, 0, tzinfo=tz)  # Saturday
 
     assert utils.is_open(now) is False
+
+
+def test_is_open_false_on_a_weekday_holiday(app, monkeypatch):
+    """A holiday inside normal hours is closed — otherwise the caller gets the open-hours
+    greeting and is offered an unstaffed live queue."""
+    app.settings.FORCE_HOURS = ""
+    monkeypatch.setitem(app.settings.HOLIDAYS, "2026-11-26", "Thanksgiving")
+    tz = ZoneInfo(app.settings.PRACTICE_TZ)
+    now = datetime(2026, 11, 26, 10, 0, tzinfo=tz)  # Thursday, mid-morning
+
+    assert utils.is_open(now) is False
+
+
+def test_holiday_name_looks_up_the_real_calendar(app, monkeypatch):
+    app.settings.FORCE_HOLIDAY_NAME = ""
+    monkeypatch.setitem(app.settings.HOLIDAYS, "2026-11-26", "Thanksgiving")
+    tz = ZoneInfo(app.settings.PRACTICE_TZ)
+    now = datetime(2026, 11, 26, 12, 0, tzinfo=tz)
+
+    assert utils.holiday_name(now) == "Thanksgiving"
+
+
+def test_holiday_name_none_on_an_ordinary_day(app):
+    app.settings.FORCE_HOLIDAY_NAME = ""
+    tz = ZoneInfo(app.settings.PRACTICE_TZ)
+    now = datetime(2026, 9, 8, 12, 0, tzinfo=tz)
+
+    assert utils.holiday_name(now) is None

@@ -13,7 +13,7 @@ ELEVENLABS_NUMBER = os.environ.get("ELEVENLABS_NUMBER", "+18884178511")
 # Practice-hours gate. Confirmed with Texas Tech (2026-09-17): the support center staggers
 # staff lunches, so it's continuously open 8am-5pm Central with no midday closure. Real
 # clock decides in production; see utils.is_open(). Days not present in this dict
-# (Sat/Sun here) are treated as closed.
+# (Sat/Sun here) and dates in HOLIDAYS below are treated as closed.
 PRACTICE_TZ = os.environ.get("PRACTICE_TZ", "America/Chicago")
 PRACTICE_HOURS = {
     0: [("08:00", "17:00")],  # Monday

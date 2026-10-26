@@ -3,7 +3,10 @@
 Day and after-hours logic live in **one** playbook here, unlike Online/Grad/K12's
 separate-playbook pattern. `input_variables: [working_hours]` only — there is no
 `holiday_status`/`holiday_name` variable in this playbook (unlike Online/Grad/K12's
-AH playbooks), so there is no holiday-specific branch here at all.
+AH playbooks), so the legacy flow has no holiday-specific branch. The new agent adds one
+to match the other programs: on a date in `settings.HOLIDAYS` the after-hours greeting
+says the offices are closed in observance of that holiday, then offers the same three
+after-hours choices.
 
 Flow entry: `start_page_id: d7ac69462bc3cfbd` ("Placeholder", unconditional) →
 `3dc805316343afe4` ("Time_of_day", a formula page using the "Time of Day

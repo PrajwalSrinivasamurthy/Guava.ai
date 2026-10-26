@@ -118,8 +118,9 @@ def test_holiday_after_hours_names_the_holiday(app):
         app.settings.FORCE_HOLIDAY_NAME = ""
 
 
-def test_plain_after_hours_has_no_holiday_wording(app):
+def test_plain_after_hours_has_no_holiday_wording(app, monkeypatch):
     app.settings.FORCE_HOURS = "after"
+    monkeypatch.setattr(app.settings, "HOLIDAYS", {})  # independent of today's real date
 
     from guava.testing import MockCall
     mock = MockCall()
