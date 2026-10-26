@@ -27,7 +27,7 @@ run() {
             *) PROJECTS+=("$arg") ;;
         esac
     done
-    [ ${#PROJECTS[@]} -eq 0 ] && PROJECTS=(inbound-10k inbound-grad inbound-k12 inbound-online)
+    [ ${#PROJECTS[@]} -eq 0 ] && PROJECTS=(inbound-10k inbound-cla inbound-grad inbound-k12 inbound-online)
 
     RESULT_NAMES=()
     RESULT_VALUES=()
