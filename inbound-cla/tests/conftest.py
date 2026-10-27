@@ -1,0 +1,136 @@
+"""Shared fixtures. Loads __main__.py as the importable module `app`.
+
+Offline only — no network, no LLM. destinations.py drives every routing decision as a plain
+data lookup, so the whole suite exercises it (and the on_call_start / on_route_complete wiring
+around it) by calling handlers directly on a MockCall.
+"""
+
+import importlib.util
+import os
+import sys
+from pathlib import Path
+
+import pytest
+
+_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(_ROOT))
+# .env/.env.example name this GUAVA_LOCAL_API_KEY; the vendored SDK's Client only ever
+# reads GUAVA_API_KEY (see guava/client.py), so mirror it across before anything
+# constructs a Client. Falls back to a harmless placeholder so offline tests never need
+# a real key.
+os.environ.setdefault("GUAVA_API_KEY", os.environ.get("GUAVA_LOCAL_API_KEY") or "test-key")
+os.environ.setdefault("GUAVA_AGENT_NUMBER", "+18065533554")
+
+# These default to "" in settings.py; set fakes on the module (not via env vars, which
+# would override the sheet cache) so routing is exercisable.
+import settings  # noqa: E402
+
+settings.LIVE_NUMBER = "+15555550100"
+settings.ELEVENLABS_NUMBER = "+15555550101"
+settings.CLA_AH_TEXT_URL = "https://example.com/cla"
+
+
+def _load():
+    sys.path.insert(0, str(_ROOT))
+
+    # __main__.py calls live_config.init() at import time, which (unlike the old lazy
+    # _get_document_qa() singleton) eagerly constructs a DocumentQA — a real RAG-ingestion
+    # network call. Patch it to a fake stand-in *before* __main__.py imports live_config,
+    # so that eager build never leaves the sandbox. Per-test fixtures below still swap in
+    # their own fake for on_question's actual behavior; this only prevents the one-time
+    # network call at import.
+    import live_config as _live_config_module
+
+    class _ImportTimeFakeDocumentQA:
+        def __init__(self, documents, namespace, instructions):
+            pass
+
+        def ask(self, question: str) -> str:
+            return "fake answer"
+
+    _live_config_module.DocumentQA = _ImportTimeFakeDocumentQA
+
+    spec = importlib.util.spec_from_file_location("app", _ROOT / "__main__.py")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules["app"] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+@pytest.fixture(scope="session")
+def app():
+    return _load()
+
+
+@pytest.fixture(autouse=True)
+def _hours_open(app):
+    """Default every test to business-hours-open; individual tests override before
+    calling on_call_start when they need the after-hours branch."""
+    app.settings.FORCE_HOURS = "open"
+    yield
+    app.settings.FORCE_HOURS = "open"
+
+
+@pytest.fixture(autouse=True)
+def _no_real_document_qa(app, monkeypatch):
+    """Belt and braces: no test path should ever reach the real RAG service."""
+    class _FakeDocumentQA:
+        def ask(self, question: str) -> str:
+            return "fake answer"
+
+    fake_config = app.live_config.LiveConfig(
+        document_qa=_FakeDocumentQA(),
+        numbers={attr: getattr(app.settings, attr) for attr in app.live_config._NUMBER_MAPPING},
+    )
+    monkeypatch.setattr(app.live_config, "_current", fake_config)
+
+
+@pytest.fixture(autouse=True)
+def _no_real_sms(monkeypatch, app):
+    """Belt and braces: no test path should ever send a real text message."""
+    import guava
+    monkeypatch.setattr(guava, "Client", lambda *a, **k: pytest.fail("a test tried to send a real SMS"))
+
+
+@pytest.fixture
+def call(app):
+    """A MockCall with on_call_start already run, so the route task/Fields exist."""
+    from guava.testing import MockCall
+    mock = MockCall()
+    app.on_call_start(mock)
+    return mock
+
+
+# ── Live tier (agent.test — scripted turn-by-turn) ────────────────────────────
+#
+# Everything above is offline/MockCall. This tier exercises the real Dialog Engine +
+# LLM with EXACT scripted caller lines (never agent.roleplay()), so it's gated behind
+# RUN_LIVE=1 and a real GUAVA_API_KEY via the `requires_live` skipif below, keeping the
+# default `pytest` run offline and instant.
+#
+#   RUN_LIVE=1 uv run --env-file .env pytest tests/test_scripted.py -v
+
+LIVE = (os.environ.get("RUN_LIVE") == "1"
+        and os.environ.get("GUAVA_API_KEY", "test-key") != "test-key")
+
+requires_live = pytest.mark.skipif(
+    not LIVE, reason="set RUN_LIVE=1 and a real GUAVA_API_KEY to run live agent tests")
+
+LIVE_RUNS = int(os.environ.get("LIVE_RUNS", "1"))  # optional repeat, for drift-checking
+                                                    # a classifier-sensitive scripted line
+
+_TRANSCRIPTS = Path(__file__).resolve().parent / "transcripts"
+
+
+@pytest.fixture
+def record():
+    """Persist a live session's transcript for audit."""
+    def _record(session, name):
+        _TRANSCRIPTS.mkdir(exist_ok=True)
+        transcript = session.get_transcript()
+        reason = getattr(session, "termination_reason", None)
+        (_TRANSCRIPTS / f"{name}.txt").write_text(
+            f"# {name}\n## termination_reason: {reason!r}\n\n{transcript}\n")
+        print(f"\n[{name}] termination_reason={reason!r}")
+        return {"transcript": transcript, "termination_reason": reason}
+    return _record
