@@ -23,7 +23,7 @@ live_config.init()
 
 import destinations
 import power_automate
-from utils import is_open
+from utils import holiday_name, is_open
 
 logger = logging.getLogger("texas_tech.inbound_10k")
 
@@ -83,12 +83,20 @@ def on_call_start(call: guava.Call):
         # sometimes ask an open "how can I help?" without ever stating the choices. Folded
         # into the single greeting Say rather than a second back-to-back Say item — the
         # checklist should never have two consecutive Say items.
-        greeting += (
-            " Our offices are currently closed — representatives will be available "
-            "during business hours. If you have any questions, I can connect you "
-            "with our virtual assistant, help you enroll in the program, or take a "
-            "voicemail for the team."
-        )
+        holiday = holiday_name()
+        if holiday:
+            greeting += (
+                f" Our offices are currently closed in observance of {holiday}. If you "
+                "have any questions, I can connect you with our virtual assistant, help "
+                "you enroll in the program, or take a voicemail for the team."
+            )
+        else:
+            greeting += (
+                " Our offices are currently closed — representatives will be available "
+                "during business hours. If you have any questions, I can connect you "
+                "with our virtual assistant, help you enroll in the program, or take a "
+                "voicemail for the team."
+            )
         next_step_field = guava.Field(
             key="next_step",
             field_type="multiple_choice",

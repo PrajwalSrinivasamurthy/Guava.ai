@@ -16,7 +16,7 @@ ELEVENLABS_NUMBER = os.environ.get("ELEVENLABS_NUMBER", "+18889707775")
 # Practice-hours gate. Confirmed with Texas Tech (2026-09-17): the support center staggers
 # staff lunches, so it's continuously open 8am-5pm Central with no midday closure. Real
 # clock decides in production; see utils.is_open(). Days not present in this dict
-# (Sat/Sun here) are treated as closed.
+# (Sat/Sun here) and dates in HOLIDAYS below are treated as closed.
 PRACTICE_TZ = os.environ.get("PRACTICE_TZ", "America/Chicago")
 PRACTICE_HOURS = {
     0: [("08:00", "17:00")],  # Monday
@@ -29,6 +29,35 @@ PRACTICE_HOURS = {
 # Test-only override, NOT the production mechanism — utils.is_open() only consults this
 # when set. Forces a branch for live-call testing / the automated test suite.
 FORCE_HOURS = os.environ.get("HOURS", "")
+
+# TTU's official holiday schedule (https://www.depts.ttu.edu/hr/empbenefits/holidayschedule.php).
+# 2027 only has the dates TTU HR has published so far.
+HOLIDAYS: dict[str, str] = {
+    "2026-01-01": "New Year's Day",
+    "2026-01-02": "New Year's Day",
+    "2026-01-19": "Martin Luther King Jr. Day",
+    "2026-03-20": "Spring Break",
+    "2026-05-25": "Memorial Day",
+    "2026-06-19": "Emancipation Day",
+    "2026-09-07": "Labor Day",
+    "2026-11-26": "Thanksgiving",
+    "2026-11-27": "Thanksgiving",
+    "2026-12-23": "Winter Break",
+    "2026-12-24": "Winter Break",
+    "2026-12-25": "Winter Break",
+    "2026-12-28": "Winter Break",
+    "2026-12-29": "Winter Break",
+    "2026-12-30": "Winter Break",
+    "2026-12-31": "Winter Break",
+    "2027-01-01": "New Year's Day",
+    "2027-01-18": "Martin Luther King Jr. Day",
+    "2027-03-19": "Spring Break",
+    "2027-05-31": "Memorial Day",
+}
+
+# Test-only override, NOT the production mechanism — utils.holiday_name() only consults this
+# when set (and only matters when the real clock/FORCE_HOURS says closed).
+FORCE_HOLIDAY_NAME = os.environ.get("FORCE_HOLIDAY_NAME", "")
 
 # Legacy "TTU Online -> Power Automate (10K)" connector — pushes captured enrollment leads
 # to this Power Automate flow's HTTP trigger, which then writes them to SharePoint. Carried

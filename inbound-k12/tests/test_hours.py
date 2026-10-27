@@ -72,6 +72,17 @@ def test_is_open_false_on_a_weekend(app):
     assert utils.is_open(now) is False
 
 
+def test_is_open_false_on_a_weekday_holiday(app, monkeypatch):
+    """A holiday inside normal hours is closed — otherwise the caller gets the open-hours
+    greeting and is offered an unstaffed live queue."""
+    app.settings.FORCE_HOURS = ""
+    monkeypatch.setitem(app.settings.HOLIDAYS, "2026-11-26", "Thanksgiving")
+    tz = ZoneInfo(app.settings.PRACTICE_TZ)
+    now = datetime(2026, 11, 26, 10, 0, tzinfo=tz)  # Thursday, mid-morning
+
+    assert utils.is_open(now) is False
+
+
 def test_holiday_name_looks_up_the_real_calendar(app, monkeypatch):
     app.settings.FORCE_HOLIDAY_NAME = ""
     monkeypatch.setitem(app.settings.HOLIDAYS, "2026-11-26", "Thanksgiving")
