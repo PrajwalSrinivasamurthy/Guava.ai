@@ -9,7 +9,7 @@ AGENT_SECONDARY_LANGUAGES = ["spanish"]
 # Destination numbers, set in .env or the "Shared Config" sheet (cla_live / cla_elevenlabs).
 # While empty, on_route_complete skips the transfer and promises a follow-up instead.
 LIVE_NUMBER = os.environ.get("LIVE_NUMBER", "")
-ELEVENLABS_NUMBER = os.environ.get("ELEVENLABS_NUMBER", "")
+ELEVENLABS_NUMBER = os.environ.get("ELEVENLABS_NUMBER", "+18884773057")
 
 # Practice-hours gate. Confirmed with Texas Tech (2026-09-17): the support center staggers
 # staff lunches, so it's continuously open 8am-5pm Central with no midday closure. Real
