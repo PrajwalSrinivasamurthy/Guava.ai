@@ -283,12 +283,19 @@ for f in *.md; do
 done
 shopt -u nullglob
 
-# ── Generate a fresh uv.lock for the deploy package ─────────────────────────
+# ── Generate uv.lock for the deploy package ─────────────────────────────────
 # Shipping uv.lock tells the cloud builder to run `uv sync --frozen`, giving
 # reproducible builds rather than re-resolving each deploy.
-# PREPARE_DEPLOY_SKIP_LOCK=1 skips it (needs network); only the bundle-vs-source
-# test sets it, since it checks file copying and never ships the result.
+# The rewritten pyproject.toml no longer matches the project's uv.lock, so it
+# must be re-locked, but it's seeded from the project's lock first: uv keeps
+# every pin that still applies, so the bundle ships the same versions the tests
+# ran against, and a rollback to an old commit gets that commit's versions.
+# PREPARE_DEPLOY_SKIP_LOCK=1 skips it (needs network), for builds that only
+# check file copying and never ship the result.
 if [[ -z "${PREPARE_DEPLOY_SKIP_LOCK:-}" ]]; then
+  if [[ -f uv.lock ]]; then
+    cp uv.lock "$DEPLOY_DIR/uv.lock"
+  fi
   (cd "$DEPLOY_DIR" && uv lock --quiet)
 fi
 

@@ -106,22 +106,31 @@ jobs:
           fetch-depth: 0
 
       # The deploy tooling always comes from main's copy of the repo (this
-      # workflow's own commit), never from `ref`: a rollback to a tag that
-      # predates scripts/guava_deploy.py would otherwise have no deployer.
-      # `ref` supplies only the code that gets bundled.
+      # workflow's own commit), never from `ref`: a ref that predates
+      # scripts/guava_deploy.py would have no deployer, and one whose
+      # prepare-deploy.sh predates CI can't run on Linux. `ref` supplies only
+      # the code that gets bundled.
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.sha }}
           path: _tooling
-          sparse-checkout: scripts/guava_deploy.py
+          sparse-checkout: |
+            scripts/guava_deploy.py
+            scripts/prepare-deploy.sh
           sparse-checkout-cone-mode: false
+
+      # prepare-deploy.sh finds patterns/ relative to itself, so it's swapped
+      # into the ref checkout rather than run from _tooling: the bundle must
+      # vendor ref's patterns, not main's.
+      - name: Use main's prepare-deploy.sh
+        run: cp _tooling/scripts/prepare-deploy.sh scripts/prepare-deploy.sh
 
       - uses: astral-sh/setup-uv@v5
 
       - name: Run tests
         if: ${{ matrix.tests && (github.event_name == 'push' || inputs.run_tests) }}
         working-directory: ${{ matrix.agent }}
-        run: uv run pytest -v
+        run: uv run --locked pytest -v
 
       - name: Resolve version
         id: version
