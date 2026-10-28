@@ -1,0 +1,188 @@
+name: Deploy agents
+
+# Deploys whitelisted agents on merge to main, and is also the rollback mechanism:
+#   gh workflow run deploy.yml -f agent=inbound-k12 -f ref=deploy/inbound-k12/<tag>
+# Guava has no versioned releases, so a "version" is a git tag and a rollback
+# is a redeploy of that tag's commit. See README.md.
+#
+# Which agents deploy is decided by .github/deploy-agents.json, read from main's
+# copy of the repo (never from `ref`): an agent deploys only if it is listed
+# there with "enabled": true. To add an agent, add an entry and merge it.
+# On push, an agent deploys only if its directory changed; a change under
+# patterns/ or scripts/ redeploys every enabled agent.
+#
+# Disabled until scripts/guava_deploy.py `up` has been proven against
+# production (it was written from a captured CLI run, not yet run live): set
+# the repo variable DEPLOY_ENABLED=true to turn it on.
+#
+# Secrets are plain repository secrets (GitHub environments aren't available),
+# so every job below is guarded to run only from the main branch's copy of this
+# workflow: a dispatch "from" any other branch can't read the secrets.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      agent:
+        description: "Agent directory to deploy (must be enabled in .github/deploy-agents.json)"
+        required: true
+      ref:
+        description: "Git ref to deploy (branch, sha, or a deploy/<agent>/<tag> to roll back to)"
+        default: main
+        required: true
+      run_tests:
+        description: "Run the agent's test suite first (leave off for an emergency rollback)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write # push the deploy tag
+
+jobs:
+  plan:
+    if: github.ref == 'refs/heads/main' && vars.DEPLOY_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+
+      - name: Select agents
+        id: plan
+        env:
+          EVENT: ${{ github.event_name }}
+          INPUT_AGENT: ${{ inputs.agent }}
+          BEFORE: ${{ github.event.before }}
+        run: |
+          cfg=.github/deploy-agents.json
+          enabled=$(jq -c '[to_entries[] | select(.value.enabled == true) | .key]' "$cfg")
+
+          if [ "$EVENT" = workflow_dispatch ]; then
+            if ! jq -e --arg a "$INPUT_AGENT" 'index($a) != null' <<<"$enabled" >/dev/null; then
+              echo "::error::'$INPUT_AGENT' is not enabled in $cfg (enabled: $enabled)"
+              exit 1
+            fi
+            selected=$(jq -c -n --arg a "$INPUT_AGENT" '[$a]')
+          else
+            # Changed files since the previous tip of main; if that can't be
+            # resolved (new branch, force push), treat everything as changed.
+            if [[ "$BEFORE" =~ ^0+$ ]] || ! git cat-file -e "$BEFORE^{commit}" 2>/dev/null; then
+              changed=$'patterns/x'
+            else
+              changed=$(git diff --name-only "$BEFORE" "$GITHUB_SHA")
+            fi
+            if grep -qE '^(patterns|scripts)/' <<<"$changed"; then
+              selected="$enabled"
+            else
+              selected=$(jq -c --argjson changed "$(jq -R . <<<"$changed" | jq -sc .)" \
+                '[.[] | select(. as $a | $changed | any(startswith($a + "/")))]' <<<"$enabled")
+            fi
+          fi
+
+          matrix=$(jq -c --argjson sel "$selected" \
+            '{include: [. as $c | $sel[] | {agent: ., tests: ($c[.].tests // false), secrets: ($c[.].secrets // {})}]}' "$cfg")
+          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
+          echo "Deploying: $selected"
+
+  deploy:
+    needs: plan
+    if: ${{ needs.plan.outputs.matrix != '{"include":[]}' }}
+    runs-on: ubuntu-latest
+    name: deploy ${{ matrix.agent }}
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
+    concurrency:
+      group: deploy-${{ matrix.agent }}
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.sha }}
+          fetch-depth: 0
+
+      # The deploy tooling always comes from main's copy of the repo (this
+      # workflow's own commit), never from `ref`: a rollback to a tag that
+      # predates scripts/guava_deploy.py would otherwise have no deployer.
+      # `ref` supplies only the code that gets bundled.
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          path: _tooling
+          sparse-checkout: scripts/guava_deploy.py
+          sparse-checkout-cone-mode: false
+
+      - uses: astral-sh/setup-uv@v5
+
+      - name: Run tests
+        if: ${{ matrix.tests && (github.event_name == 'push' || inputs.run_tests) }}
+        working-directory: ${{ matrix.agent }}
+        run: uv run pytest -v
+
+      - name: Resolve version
+        id: version
+        run: |
+          SHA=$(git rev-parse --short=7 HEAD)
+          echo "sha=$SHA" >> "$GITHUB_OUTPUT"
+          echo "tag=deploy/${{ matrix.agent }}/$(date -u +%Y%m%d-%H%M)-$SHA" >> "$GITHUB_OUTPUT"
+
+      # prepare-deploy.sh copies .env from the project dir into the bundle.
+      # Secrets aren't versioned by git, so a rollback restores code only.
+      # The one GUAVA_API_KEY secret is also the agent's runtime key. The bundle
+      # must name it GUAVA_LOCAL_API_KEY: Guava Deploy rejects a bundle .env
+      # that sets GUAVA_API_KEY (422, reserved), and main.py promotes
+      # GUAVA_LOCAL_API_KEY into GUAVA_API_KEY at startup.
+      # The agent's extra secrets come from deploy-agents.json as
+      # {"<name in the agent's .env>": "<repository secret name>"}.
+      - name: Write runtime secrets
+        env:
+          ALL_SECRETS: ${{ toJSON(secrets) }}
+          AGENT_SECRETS: ${{ toJSON(matrix.secrets) }}
+        run: |
+          get() { jq -r --arg k "$1" '.[$k] // empty' <<<"$ALL_SECRETS"; }
+          key=$(get GUAVA_API_KEY)
+          if [ -z "$key" ]; then
+            echo "::error::repository secret GUAVA_API_KEY is not set"
+            exit 1
+          fi
+          env_file="${{ matrix.agent }}/.env"
+          printf 'GUAVA_LOCAL_API_KEY=%s\n' "$key" > "$env_file"
+          while IFS=$'\t' read -r name secret; do
+            [ -z "$name" ] && continue
+            value=$(get "$secret")
+            if [ -z "$value" ]; then
+              echo "::error::repository secret $secret (for $name) is not set"
+              exit 1
+            fi
+            echo "::add-mask::$value"
+            printf '%s=%s\n' "$name" "$value" >> "$env_file"
+          done < <(jq -r 'to_entries[] | [.key, .value] | @tsv' <<<"$AGENT_SECRETS")
+
+      - name: Build bundle
+        env:
+          DEPLOY_VERSION: ${{ steps.version.outputs.sha }}
+        run: ./scripts/prepare-deploy.sh ${{ matrix.agent }}
+
+      - name: Deploy
+        env:
+          GUAVA_DEPLOY_API_KEY: ${{ secrets.GUAVA_API_KEY }}
+        run: python3 _tooling/scripts/guava_deploy.py up ${{ matrix.agent }}
+
+      - name: Verify running
+        env:
+          GUAVA_DEPLOY_API_KEY: ${{ secrets.GUAVA_API_KEY }}
+        run: python3 _tooling/scripts/guava_deploy.py status ${{ matrix.agent }} --wait
+
+      # Tag only after the deploy verified, so every tag is a version that ran.
+      # Skip when redeploying an existing tag (rollback): the tag already exists.
+      - name: Tag this version
+        if: ${{ !startsWith(inputs.ref, 'deploy/') }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "${{ steps.version.outputs.tag }}" -m "${{ matrix.agent }} ${{ steps.version.outputs.sha }}"
+          git push origin "${{ steps.version.outputs.tag }}"

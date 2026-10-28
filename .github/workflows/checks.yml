@@ -1,0 +1,42 @@
+name: Checks
+
+on:
+  pull_request:
+    paths:
+      - "inbound-*/**"
+      - "patterns/**"
+      - "scripts/**"
+      - ".github/workflows/**"
+  push:
+    branches: [main]
+    paths:
+      - "inbound-*/**"
+      - "patterns/**"
+      - "scripts/**"
+      - ".github/workflows/**"
+  workflow_call:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: test ${{ matrix.agent }}
+    strategy:
+      fail-fast: false
+      matrix:
+        agent: [inbound-10k, inbound-cla, inbound-grad, inbound-k12, inbound-online]
+    defaults:
+      run:
+        working-directory: ${{ matrix.agent }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - name: "Offline tests (live tier stays off: RUN_LIVE is unset)"
+        run: uv run pytest -v
+
+  # Losing deploy/guava.toml makes a deploy mint a new project and orphan the
+  # live one, so fail loudly if it isn't tracked.
+  identity-file:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: git ls-files --error-unmatch inbound-10k/deploy/guava.toml inbound-grad/deploy/guava.toml inbound-k12/deploy/guava.toml inbound-online/deploy/guava.toml

@@ -1,0 +1,24 @@
+{
+  "inbound-10k": {
+    "enabled": true,
+    "tests": true,
+    "secrets": {
+      "TENK_POWER_AUTOMATE_API_KEY": "TENK_POWER_AUTOMATE_API_KEY"
+    }
+  },
+  "inbound-grad": {
+    "enabled": true,
+    "tests": true,
+    "secrets": {}
+  },
+  "inbound-k12": {
+    "enabled": true,
+    "tests": true,
+    "secrets": {}
+  },
+  "inbound-online": {
+    "enabled": true,
+    "tests": true,
+    "secrets": {}
+  }
+}
