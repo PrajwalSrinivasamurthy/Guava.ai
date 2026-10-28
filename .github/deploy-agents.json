@@ -2,9 +2,7 @@
   "inbound-10k": {
     "enabled": true,
     "tests": true,
-    "secrets": {
-      "TENK_POWER_AUTOMATE_API_KEY": "TENK_POWER_AUTOMATE_API_KEY"
-    }
+    "secrets": {}
   },
   "inbound-grad": {
     "enabled": true,

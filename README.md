@@ -44,10 +44,9 @@ Under Settings → Secrets and variables → Actions:
 | Item | Kind | Notes |
 |---|---|---|
 | `GUAVA_API_KEY` | repository secret | One Guava API key for the org that owns the agents. The deploy workflow uses it to deploy, and also writes it into the bundle as `GUAVA_LOCAL_API_KEY`. Shared across agents. |
-| `TENK_POWER_AUTOMATE_API_KEY` | repository secret | Power Automate key for `inbound-10k`. |
 | `DEPLOY_ENABLED` | repository **variable** | Set to `true` to turn the deploy workflow on. |
 
-The deploy fails early with `repository secret X is not set` if a secret is missing. Because the same key is also the agents' runtime key, rotate it everywhere at once. Secrets are repo-wide, so keep the workflow's `main`-only guard and restrict who can push to `main` (branch protection).
+No agent needs other secrets today: every other runtime value is a default in its `settings.py`, so change those there, not in `.env`. If an agent gains a secret, map it in `.github/deploy-agents.json`; the deploy fails early with `repository secret X is not set` if a mapped secret is missing. Because the same key is also the agents' runtime key, rotate it everywhere at once. Secrets are repo-wide, so keep the workflow's `main`-only guard and restrict who can push to `main` (branch protection).
 
 ## Trying the deploy script locally
 
