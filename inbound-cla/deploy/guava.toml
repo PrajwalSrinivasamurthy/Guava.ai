@@ -1,0 +1,9 @@
+project_id = "gp-d7aa6bbb-7755-4e45-b017-9378b3a11f5c"
+org_id = "6a99b964a707e206efbeb43d"
+name = "inbound-cla"
+call_direction = "inbound"
+base_image = "python-sandbox:3.14"
+phone_number = "+18065533554"
+tier = "guava-fruit"
+replicas = 1
+enable_healthcheck = true
