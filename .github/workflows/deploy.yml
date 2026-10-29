@@ -7,7 +7,8 @@ name: Deploy agents
 #
 # Which agents deploy is decided by .github/deploy-agents.json, read from main's
 # copy of the repo (never from `ref`): an agent deploys only if it is listed
-# there with "enabled": true. To add an agent, add an entry and merge it.
+# there with "enabled": true. Merging a new entry deploys nothing by itself:
+# dispatch the agent's first CI deploy by hand (see README.md).
 # On push, an agent deploys only if its directory changed; a change under
 # patterns/ or scripts/ redeploys every enabled agent.
 #

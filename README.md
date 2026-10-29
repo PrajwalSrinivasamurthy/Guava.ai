@@ -36,6 +36,7 @@ A rollback restores **code, `settings.py` and dependency versions** (the bundle 
 - `scripts/guava_deploy.py` deploys with an API key because the `guava` CLI only supports interactive login. The manual deploy below is the fallback.
 - **Not live yet:** the deploy workflow is off until the repo variable `DEPLOY_ENABLED` is `true`.
 - `up` only **updates** an existing deployment. The first deploy of a new project needs `guava deploy up` once.
+- **Scaling comes from git, not the dashboard:** every deploy sets replicas to `replicas` in the agent's `deploy/guava.toml` (1 if absent) and resources to 1 CPU / 1Gi. A replica count or resource change made in the Guava dashboard is reset by the next deploy of that agent (and a `patterns/` or `scripts/` change redeploys all of them). To scale, edit `replicas` in `deploy/guava.toml` and commit it.
 
 ## Required GitHub setup
 
