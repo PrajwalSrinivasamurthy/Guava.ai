@@ -48,9 +48,14 @@ from pathlib import Path
 
 BASE_URL = os.environ.get("GUAVA_BASE_URL", "https://app.goguava.ai/").rstrip("/")
 
-# Observed in the CLI's update request; guava.toml does not carry them.
-DEFAULT_CPU = "1"
-DEFAULT_MEMORY = "1Gi"
+# guava.toml's `tier` -> (resource_cpu, resource_memory), the same table the
+# CLI (0.49.0) uses to fill these fields. An unknown tier is refused rather than
+# guessed, since sending the wrong resources silently resizes the deployment.
+TIERS = {
+    "guava-seed": ("1", "1Gi"),
+    "guava-fruit": ("2", "2Gi"),
+    "guava-tree": ("4", "4Gi"),
+}
 BUILD_FAILED = {"FAILURE", "INTERNAL_ERROR", "TIMEOUT", "CANCELLED", "EXPIRED"}
 
 
@@ -128,11 +133,15 @@ def make_bundle(project_dir: Path, out: Path) -> str:
 
 
 def deployment_body(project_dir: Path, identity: dict) -> dict:
+    tier = identity.get("tier")
+    if tier not in TIERS:
+        sys.exit(f"unknown or missing tier {tier!r} in deploy/guava.toml (expected one of {', '.join(TIERS)})")
+    cpu, memory = TIERS[tier]
     body = {
         "project_id": identity["project_id"],
         "project_name": identity["name"],
-        "resource_cpu": DEFAULT_CPU,
-        "resource_memory": DEFAULT_MEMORY,
+        "resource_cpu": cpu,
+        "resource_memory": memory,
         "spot": False,
         "replicas": identity.get("replicas", 1),
         "call_direction": identity["call_direction"],
