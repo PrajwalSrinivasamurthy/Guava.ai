@@ -16,9 +16,10 @@ name: Deploy agents
 # production (it was written from a captured CLI run, not yet run live): set
 # the repo variable DEPLOY_ENABLED=true to turn it on.
 #
-# Secrets are plain repository secrets (GitHub environments aren't available),
-# so every job below is guarded to run only from the main branch's copy of this
-# workflow: a dispatch "from" any other branch can't read the secrets.
+# Every job below is guarded to run only from the main branch's copy of this
+# workflow, so a dispatch "from" another branch does nothing. That prevents
+# accidental deploys but does not protect the secrets: plain repository secrets
+# are readable by a workflow on any branch. See "Secret exposure" in README.md.
 
 on:
   push:
