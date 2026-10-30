@@ -1,0 +1,22 @@
+{
+  "inbound-10k": {
+    "enabled": true,
+    "tests": true,
+    "secrets": {}
+  },
+  "inbound-grad": {
+    "enabled": true,
+    "tests": true,
+    "secrets": {}
+  },
+  "inbound-k12": {
+    "enabled": true,
+    "tests": true,
+    "secrets": {}
+  },
+  "inbound-online": {
+    "enabled": true,
+    "tests": true,
+    "secrets": {}
+  }
+}

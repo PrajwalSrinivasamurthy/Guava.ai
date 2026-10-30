@@ -263,8 +263,10 @@ done
 # Comment both out so the bundle doesn't fight the platform.
 if [[ -f "$DEPLOY_DIR/.env" ]]; then
   for key in GUAVA_API_KEY GUAVA_AGENT_NUMBER; do
-    sed -i '' -E "s|^[[:space:]]*((export[[:space:]]+)?${key}[[:space:]]*=.*)\$|# \\1  # (deploy: platform-injected)|" "$DEPLOY_DIR/.env"
+    # -i.bak (not -i '') so this runs on both BSD (macOS) and GNU (CI) sed.
+    sed -i.bak -E "s|^[[:space:]]*((export[[:space:]]+)?${key}[[:space:]]*=.*)\$|# \\1  # (deploy: platform-injected)|" "$DEPLOY_DIR/.env"
   done
+  rm -f "$DEPLOY_DIR/.env.bak"
 fi
 
 # ── Runtime markdown assets (e.g. pet_policy.md for DocumentQA) ─────────────
@@ -281,17 +283,42 @@ for f in *.md; do
 done
 shopt -u nullglob
 
-# ── Generate a fresh uv.lock for the deploy package ─────────────────────────
+# ── Generate uv.lock for the deploy package ─────────────────────────────────
 # Shipping uv.lock tells the cloud builder to run `uv sync --frozen`, giving
 # reproducible builds rather than re-resolving each deploy.
-(cd "$DEPLOY_DIR" && uv lock --quiet)
+# The rewritten pyproject.toml no longer matches the project's uv.lock, so it
+# must be re-locked, but it's seeded from the project's lock first: uv keeps
+# every pin that still applies, so the bundle ships the same versions the tests
+# ran against, and a rollback to an old commit gets that commit's versions.
+# PREPARE_DEPLOY_SKIP_LOCK=1 skips it (needs network), for builds that only
+# check file copying and never ship the result.
+if [[ -z "${PREPARE_DEPLOY_SKIP_LOCK:-}" ]]; then
+  if [[ -f uv.lock ]]; then
+    cp uv.lock "$DEPLOY_DIR/uv.lock"
+  fi
+  (cd "$DEPLOY_DIR" && uv lock --quiet)
+fi
 
 # ── Drop any local-test artifacts ───────────────────────────────────────────
 find "$DEPLOY_DIR" -name __pycache__ -type d -exec rm -rf {} +
 rm -rf "$DEPLOY_DIR/.venv"
 
+# ── Stamp the build with the git commit it came from ────────────────────────
+# Lets a running agent report (and a human verify) which version is live, and
+# is what a rollback to a deploy/<project>/<timestamp>-<sha> tag restores.
+# DEPLOY_VERSION overrides for CI; "-dirty" flags uncommitted local changes.
+if [[ -n "${DEPLOY_VERSION:-}" ]]; then
+  VERSION="$DEPLOY_VERSION"
+else
+  VERSION="$(git -C "$REPO_ROOT" rev-parse --short=7 HEAD 2>/dev/null || echo unknown)"
+  if [[ -n "$(git -C "$REPO_ROOT" status --porcelain -- "$PROJECT_DIR" "$PATTERNS_DIR" 2>/dev/null)" ]]; then
+    VERSION="$VERSION-dirty"
+  fi
+fi
+printf '%s\n' "$VERSION" > "$DEPLOY_DIR/VERSION"
+
 echo
-echo "deploy/ rebuilt at $(date "+%Y-%m-%dT%H:%M:%S%z")"
+echo "deploy/ rebuilt at $(date "+%Y-%m-%dT%H:%M:%S%z") (version $VERSION)"
 echo
 echo "Contents of $PROJECT_DIR/$DEPLOY_DIR/:"
 ls -la "$DEPLOY_DIR"
