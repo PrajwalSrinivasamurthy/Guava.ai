@@ -31,7 +31,8 @@ Flow of `up` (all under /push2prod/v1):
   4. PATCH deployment {project_id, project_name, guava_agent_number, resource_cpu,
         resource_memory, spot, replicas, call_direction, env, enable_healthcheck}
         -> {result: "ok", task_id, build_id}   (POST here creates a NEW task: don't)
-  5. poll GET project/<id>/status until running with ready_replicas == replicas
+  5. poll GET project/<id>/status: wait for the rollout to start (non-running),
+     then for running with ready_replicas == replicas on 3 polls in a row
 """
 
 import hashlib
@@ -56,6 +57,8 @@ TIERS = {
     "guava-fruit": ("2", "2Gi"),
     "guava-tree": ("4", "4Gi"),
 }
+ROLLOUT_START_GRACE = 60  # seconds to wait for a rollout to show as non-running
+STABLE_POLLS = 3          # consecutive healthy polls (10s apart) before success
 BUILD_FAILED = {"FAILURE", "INTERNAL_ERROR", "TIMEOUT", "CANCELLED", "EXPIRED"}
 
 
@@ -202,22 +205,40 @@ def wait_for_build(cloud_build_id: str, timeout: int = 1200) -> None:
     sys.exit(f"build {cloud_build_id} did not finish within {timeout}s")
 
 
-def wait_for_running(project_id: str, replicas: int, task_id: str | None = None, timeout: int = 600) -> None:
-    """Waits for THIS rollout: until the status reports our task_id, the old
-    deployment's "running" would pass the check before the new one starts."""
+def wait_for_running(project_id: str, replicas: int, timeout: int = 600) -> None:
+    """Waits for the rollout the PATCH just started to finish and hold.
+
+    The status carries no build or rollout id (task_id stays the same across
+    deploys), so the old deployment's "running" is indistinguishable from the
+    new one's. Instead: wait to see the rollout begin (any non-running state),
+    then require `running` with all replicas ready on STABLE_POLLS polls in a
+    row, so a pod that passes readiness and then crashes isn't reported as live.
+    """
     deadline = time.time() + timeout
+    started_by = time.time() + ROLLOUT_START_GRACE
+    started = False
+    stable = 0
     while time.time() < deadline:
         body = must("GET", f"project/{project_id}/status")
-        status = body["status"]
-        print(f"  deployment {status['state']} ({status.get('ready_replicas')}/{status.get('replicas')}) task {body.get('task_id')}", flush=True)
-        if (
-            (task_id is None or body.get("task_id") == task_id)
-            and status["state"] == "running"
-            and status.get("ready_replicas") == status.get("replicas") == replicas
-        ):
-            return
+        status = body.get("status") or {}
+        state = status.get("state")
+        ready = status.get("ready_replicas")
+        print(f"  deployment {state} ({ready}/{status.get('replicas')})", flush=True)
+        if state != "running":
+            started, stable = True, 0
+        elif not started and time.time() >= started_by:
+            # No rollout seen: either it was quicker than one poll or the
+            # platform had nothing to change. Fall through to the stability check.
+            print(f"  no rollout observed within {ROLLOUT_START_GRACE}s; checking the current deployment is stable")
+            started = True
+        if started and state == "running" and ready == status.get("replicas") == replicas:
+            stable += 1
+            if stable >= STABLE_POLLS:
+                return
+        elif started:
+            stable = 0
         time.sleep(10)
-    sys.exit(f"deployment not running with {replicas} ready replicas within {timeout}s")
+    sys.exit(f"deployment not stably running with {replicas} ready replicas within {timeout}s")
 
 
 def cmd_up(project_dir: Path, *flags: str) -> int:
@@ -249,6 +270,7 @@ def cmd_up(project_dir: Path, *flags: str) -> int:
         if prep["cache_hit"]:
             print("no changes: reusing existing build")
             cloud_build_id = prep["cloud_build_id"]
+            expected_build_id = prep.get("build_id")
         else:
             print("uploading bundle")
             upload(prep["upload_url"], bundle.read_bytes())
@@ -258,14 +280,23 @@ def cmd_up(project_dir: Path, *flags: str) -> int:
                 "bundle_hash": digest,
             })
             cloud_build_id = built["cloud_build_id"]
+            expected_build_id = built.get("build_id")
         wait_for_build(cloud_build_id)
 
     print("updating deployment")
     result = must("PATCH", "deployment", body)
     if result.get("result") != "ok":
         sys.exit(f"deployment update failed: {json.dumps(result)[:300]}")
-    wait_for_running(identity["project_id"], body["replicas"], result.get("task_id"))
-    print(f"deployed: task {result['task_id']} build {result['build_id']}")
+    # The PATCH carries no build reference, so confirm the server deployed the
+    # build we just waited on (matters for a rollback, whose identical bundle
+    # hits the cache and should get the OLD build back).
+    if expected_build_id and result.get("build_id") != expected_build_id:
+        sys.exit(
+            f"the deployment update was applied, but with build {result.get('build_id')}, not the "
+            f"expected {expected_build_id}: check what is live before retrying"
+        )
+    wait_for_running(identity["project_id"], body["replicas"])
+    print(f"deployed: task {result.get('task_id')} build {result.get('build_id')} (cloud build {cloud_build_id})")
     return 0
 
 

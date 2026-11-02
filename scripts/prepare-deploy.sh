@@ -304,8 +304,8 @@ find "$DEPLOY_DIR" -name __pycache__ -type d -exec rm -rf {} +
 rm -rf "$DEPLOY_DIR/.venv"
 
 # ── Stamp the build with the git commit it came from ────────────────────────
-# Lets a running agent report (and a human verify) which version is live, and
-# is what a rollback to a deploy/<project>/<timestamp>-<sha> tag restores.
+# Records which commit's code is in the bundle, so a human inspecting a bundle
+# (or the deploy logs) can tell which version it is. Nothing at runtime reads it.
 # DEPLOY_VERSION overrides for CI; "-dirty" flags uncommitted local changes.
 if [[ -n "${DEPLOY_VERSION:-}" ]]; then
   VERSION="$DEPLOY_VERSION"
