@@ -25,6 +25,7 @@ def test_the_prompt_carries_the_organization_the_excerpts_and_the_question():
     assert call["model"] == "gpt-test" and call["max_completion_tokens"] == 150
     system, user = (message["content"] for message in call["messages"])
     assert "Career Learning Academy" in system and "NO_ANSWER" in system
+    assert "clearly imply" in system and "Never guess" in system
     assert "[1] Books are sold at the bookstore." in user and "[2] Digital copies exist." in user
     assert user.endswith("Where are books?")
 

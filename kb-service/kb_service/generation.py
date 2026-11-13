@@ -6,7 +6,9 @@ from kb_service.answering import NO_ANSWER
 
 _SYSTEM_PROMPT = (
     "You answer questions from callers of {organization} on the phone. "
-    "Use only the excerpts you are given. "
+    "Use only the excerpts you are given, and answer whenever they state or clearly imply "
+    "the answer (a program described as non-credit, for example, is not for college credit). "
+    "Never guess beyond them. "
     "Reply in one to three short spoken sentences in plain language, with no lists, "
     "markdown or links. Never mention excerpts, documents or a knowledge base. "
     "If the excerpts do not contain the answer, reply with exactly " + NO_ANSWER + ". "
