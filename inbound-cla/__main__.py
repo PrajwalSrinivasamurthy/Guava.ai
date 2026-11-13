@@ -176,6 +176,7 @@ def on_route_complete(call: guava.Call):
 @agent.on_task_complete("assist")
 def on_assist_complete(call: guava.Call):
     outcome = call.get_field("outcome")
+    logger.info("Assist task complete (session: %s) outcome=%r", call.id, outcome)
 
     if outcome == assist.TEXT_MESSAGE:
         _send_text_and_hang_up(call)
