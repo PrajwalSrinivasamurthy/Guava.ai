@@ -76,6 +76,17 @@ def test_the_text_option_is_dropped_when_no_link_is_configured(app, kb, monkeypa
     assert "text message" not in _greeting(call)
 
 
+def test_the_outcome_is_optional_and_the_agent_is_told_not_to_ask_for_it(app, kb):
+    for hours in ("open", "after"):
+        call = _start(app, hours)
+        field = _outcome_field(call)
+
+        assert field.required is False
+        assert "Never ask the caller for this" in field.description
+        assert "without asking whether they have more questions" in field.description
+        assert any("don't ask whether they have more questions" in str(item) for item in _task(call).action_items)
+
+
 def test_the_virtual_assistant_is_never_offered_as_a_destination(app, kb):
     for hours in ("open", "after"):
         call = _start(app, hours)

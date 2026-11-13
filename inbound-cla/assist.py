@@ -36,26 +36,30 @@ def outcome_field(open_now: bool, offer_text: bool) -> guava.Field:
             key="outcome",
             field_type="multiple_choice",
             choices=[TRANSFER, DONE],
+            required=False,
             description=(
-                "The caller may ask any number of questions; answer each one before asking "
-                f"anything else. Pick '{TRANSFER}' as soon as they ask to speak with a person, "
-                f"the support center or a representative. Pick '{DONE}' once they say they "
-                "have nothing else to ask. Don't offer these as a menu."
+                "Never ask the caller for this. They may ask any number of questions: answer "
+                "each one and let them lead, without asking whether they have more questions "
+                f"afterwards. Record '{TRANSFER}' only when they ask to speak with a person, "
+                f"the support center or a representative. Record '{DONE}' only when they say "
+                "they are finished, such as 'that's all' or 'goodbye'. Don't offer these as a menu."
             ),
         )
 
     choices = [VOICEMAIL, DONE]
-    wants = f"Pick '{VOICEMAIL}' if they want to leave a message or speak with a person"
+    wants = f"Record '{VOICEMAIL}' only if they want to leave a message or speak with a person"
     if offer_text:
         choices.insert(1, TEXT_MESSAGE)
-        wants += f", and '{TEXT_MESSAGE}' if they want a link texted to them"
+        wants += f", and '{TEXT_MESSAGE}' only if they ask for a link by text"
     return guava.Field(
         key="outcome",
         field_type="multiple_choice",
         choices=choices,
+        required=False,
         description=(
-            "Our live team isn't available right now. The caller may ask any number of "
-            f"questions; answer each one before asking anything else. {wants}. Pick "
-            f"'{DONE}' once they say they have nothing else to ask. Don't offer these as a menu."
+            "Never ask the caller for this. Our live team isn't available right now. They may "
+            "ask any number of questions: answer each one and let them lead, without asking "
+            f"whether they have more questions afterwards. {wants}. Record '{DONE}' only when "
+            "they say they are finished, such as 'that's all' or 'goodbye'. Don't offer these as a menu."
         ),
     )

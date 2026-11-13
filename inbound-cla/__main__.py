@@ -156,9 +156,10 @@ def _start_assist_task(call: guava.Call):
         checklist=[
             guava.Say(assist.greeting(open_now, None if open_now else holiday_name(), offer_text), key="greeting"),
             assist.outcome_field(open_now, offer_text),
-            "This task is now complete once you know whether the caller wants a person or has no more questions.",
+            "Keep answering questions. This task is complete only once the caller asks for a person "
+            "or says they're finished; don't ask whether they have more questions after each answer.",
         ],
-        completion_criteria="Complete once outcome is known.",
+        completion_criteria="Complete once the caller has said they want a person or are finished.",
     )
 
 
