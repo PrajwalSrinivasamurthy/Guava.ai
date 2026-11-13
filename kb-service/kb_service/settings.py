@@ -13,6 +13,9 @@ from dataclasses import dataclass, field
 from typing import Callable, Mapping
 
 
+_MAX_INDEXED_DIMENSIONS = 2000
+
+
 class ConfigError(Exception):
     """One or more environment variables are missing or invalid."""
 
@@ -23,6 +26,7 @@ class Settings:
     database_url: str = field(repr=False)
     chat_model: str = "gpt-4o-mini"
     embedding_model: str = "text-embedding-3-small"
+    embedding_dimensions: int = 1536
     chunk_size: int = 1200
     chunk_overlap: int = 150
     retrieval_limit: int = 4
@@ -60,6 +64,7 @@ class Settings:
             database_url=text("DATABASE_URL"),
             chat_model=text("OPENAI_CHAT_MODEL", cls.chat_model),
             embedding_model=text("OPENAI_EMBEDDING_MODEL", cls.embedding_model),
+            embedding_dimensions=int(number("OPENAI_EMBEDDING_DIMENSIONS", cls.embedding_dimensions, int)),
             chunk_size=int(number("KB_CHUNK_SIZE", cls.chunk_size, int)),
             chunk_overlap=int(number("KB_CHUNK_OVERLAP", cls.chunk_overlap, int)),
             retrieval_limit=int(number("KB_RETRIEVAL_LIMIT", cls.retrieval_limit, int)),
@@ -68,6 +73,11 @@ class Settings:
 
         if settings.chunk_overlap >= settings.chunk_size:
             problems.append("KB_CHUNK_OVERLAP must be smaller than KB_CHUNK_SIZE")
+        if settings.embedding_dimensions > _MAX_INDEXED_DIMENSIONS:
+            problems.append(
+                f"OPENAI_EMBEDDING_DIMENSIONS must be at most {_MAX_INDEXED_DIMENSIONS} "
+                "(the limit of pgvector's HNSW index)"
+            )
 
         if problems:
             raise ConfigError("; ".join(problems))

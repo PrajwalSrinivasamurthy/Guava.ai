@@ -53,6 +53,13 @@ def test_overlap_must_be_smaller_than_the_chunk_size():
         Settings.from_env({**_REQUIRED, "KB_CHUNK_SIZE": "100", "KB_CHUNK_OVERLAP": "100"})
 
 
+def test_embedding_dimensions_default_and_limit():
+    assert Settings.from_env(_REQUIRED).embedding_dimensions == 1536
+
+    with pytest.raises(ConfigError, match="OPENAI_EMBEDDING_DIMENSIONS"):
+        Settings.from_env({**_REQUIRED, "OPENAI_EMBEDDING_DIMENSIONS": "3072"})
+
+
 def test_secrets_never_appear_in_repr():
     shown = repr(Settings.from_env(_REQUIRED))
 
