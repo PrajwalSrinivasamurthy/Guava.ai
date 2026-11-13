@@ -37,7 +37,7 @@ class KbClient:
         self,
         base_url: str,
         api_key: str,
-        timeout_seconds: float = 4.0,
+        timeout_seconds: float = 8.0,
         max_question_chars: int = 500,
         session: requests.Session | None = None,
     ):

@@ -68,7 +68,7 @@ CLA_AH_TEXT_URL = os.environ.get("CLA_AH_TEXT_URL", "")
 KB_SERVICE_URL = os.environ.get("KB_SERVICE_URL", "")
 KB_API_KEY = os.environ.get("KB_API_KEY", "")
 KB_ENABLED = os.environ.get("KB_ENABLED", "true").lower() != "false"
-KB_TIMEOUT_SECONDS = float(os.environ.get("KB_TIMEOUT_SECONDS", "4"))
+KB_TIMEOUT_SECONDS = float(os.environ.get("KB_TIMEOUT_SECONDS", "8"))
 
 # Said when the knowledge service has no answer or can't be reached.
 KB_FALLBACK_MESSAGE = (
