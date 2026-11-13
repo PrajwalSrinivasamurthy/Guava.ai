@@ -66,4 +66,4 @@ destination with no number configured ends the call with a follow-up message.
 Questions: the service's answer is spoken when it has one. When it has none, or can't be
 reached in time, the agent says: "I'm sorry, I don't have an answer for that. I can
 transfer you to our support center, or you can ask me something else." Question text is
-never logged.
+never logged: the agent doesn't log it, and `privacy.py` redacts the line the Guava SDK writes.

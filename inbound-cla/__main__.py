@@ -25,10 +25,12 @@ live_config.init()
 import assist
 import destinations
 import kb_client
+import privacy
 import sms
 from utils import holiday_name, is_open
 
 logger = logging.getLogger("texas_tech.inbound_cla")
+privacy.install()
 
 # .env/.env.example name this GUAVA_LOCAL_API_KEY; the SDK's Client (constructed below,
 # inside guava.Agent.__init__) only ever reads GUAVA_API_KEY — mirror it across first.
