@@ -1,9 +1,13 @@
 """Answering a question from the knowledge base."""
 
+import logging
 import re
+import time
 
 from kb_service.domain import Answer
 from kb_service.interfaces import Generator, Retriever
+
+logger = logging.getLogger("kb_service.answering")
 
 # The generator is told to reply with exactly this when the passages don't contain the
 # answer. The service turns it into Answer.not_found(), and the caller (the voice agent)
@@ -18,10 +22,16 @@ class RagAnswerer:
         self._retrieval_limit = retrieval_limit
 
     def answer(self, question: str) -> Answer:
+        started = time.monotonic()
         passages = self._retriever.search(question, self._retrieval_limit)
+        searched = time.monotonic()
         if not passages:
+            logger.info("timing search_ms=%d", (searched - started) * 1000)
             return Answer.not_found()
         text = self._generator.generate(question, passages).strip()
+        logger.info(
+            "timing search_ms=%d generate_ms=%d", (searched - started) * 1000, (time.monotonic() - searched) * 1000
+        )
         if not text or _is_no_answer(text):
             return Answer.not_found()
         return Answer(found=True, text=text)

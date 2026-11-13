@@ -52,3 +52,13 @@ def test_an_answer_that_merely_contains_the_marker_text_is_kept():
     reply = "There is no answer fee for that."
 
     assert RagAnswerer(_Retriever(["x"]), _Generator(reply), 3).answer("q").found is True
+
+
+def test_stage_timings_are_logged_without_the_question(caplog):
+    import logging
+
+    with caplog.at_level(logging.INFO, logger="kb_service.answering"):
+        RagAnswerer(_Retriever(["x"]), _Generator("An answer."), 3).answer("my private question 8675309")
+
+    assert "search_ms=" in caplog.text and "generate_ms=" in caplog.text
+    assert "8675309" not in caplog.text
