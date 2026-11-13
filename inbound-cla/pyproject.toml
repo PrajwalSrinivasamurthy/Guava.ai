@@ -8,6 +8,7 @@ dependencies = [
     "websockets",
     "gsheets",
     "chat_notify",
+    "kb_client",
     "python-dotenv",
 ]
 
@@ -20,6 +21,7 @@ dev = [
 [tool.uv.sources]
 gsheets = { path = "../patterns/gsheets" }
 chat_notify = { path = "../patterns/chat_notify" }
+kb_client = { path = "../patterns/kb_client" }
 agent_testing = { path = "../patterns/agent_testing", editable = true }
 
 [tool.pytest.ini_options]

@@ -60,6 +60,8 @@ def test_transfer_message_carries_an_immediacy_directive(app, call, continue_wit
     xfer = _transfers(call)[-1]
     assert xfer.soft_transfer is True
     assert _ends_with_transfer_directive(xfer.transfer_message), xfer.transfer_message
+    assert expected.spoken in xfer.transfer_message
+    assert "Career Learning Academy" not in xfer.transfer_message
 
 
 def _continue_field(call):

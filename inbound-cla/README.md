@@ -8,6 +8,15 @@ voicemail (after hours) — then hands off accordingly.
 Set `LIVE_NUMBER`, `ELEVENLABS_NUMBER` and `CLA_AH_TEXT_URL` in `.env` (see
 `.env.example`). Any that are unset end the call politely instead of transferring.
 
+## Knowledge service
+
+With `KB_SERVICE_URL` and `KB_API_KEY` set (see `.env.example`), the agent answers callers'
+questions itself through `kb-service` and no longer offers the virtual assistant (Ava).
+Callers can ask any number of questions, ask for a person (transfer to the support center),
+or finish. If the service has no answer or can't be reached within `KB_TIMEOUT_SECONDS`,
+the caller hears `settings.KB_FALLBACK_MESSAGE`. Without those settings, or with
+`KB_ENABLED=false`, the agent behaves as before.
+
 ## Setup
 
 ```bash

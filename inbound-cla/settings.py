@@ -62,6 +62,20 @@ SMS_ENABLED = os.environ.get("SMS_ENABLED", "true").lower() != "false"
 # After-hours text-message link. Empty disables it (degrades to a spoken apology).
 CLA_AH_TEXT_URL = os.environ.get("CLA_AH_TEXT_URL", "")
 
+# Knowledge service (kb-service) that answers callers' questions. When the URL and key are
+# set and KB_ENABLED isn't "false", the agent answers questions itself and drops the
+# virtual-assistant (Ava) choice; otherwise it behaves as it did before the service existed.
+KB_SERVICE_URL = os.environ.get("KB_SERVICE_URL", "")
+KB_API_KEY = os.environ.get("KB_API_KEY", "")
+KB_ENABLED = os.environ.get("KB_ENABLED", "true").lower() != "false"
+KB_TIMEOUT_SECONDS = float(os.environ.get("KB_TIMEOUT_SECONDS", "8"))
+
+# Said when the knowledge service has no answer or can't be reached.
+KB_FALLBACK_MESSAGE = (
+    "I'm sorry, I don't have an answer for that. I can transfer you to our support "
+    "center, or you can ask me something else."
+)
+
 # FAQ content for on_question / DocumentQA, loaded via config_sheet.py.
 # Empty by default — no committed seed exists yet since no content existed prior to a
 # real Sheet. Set this once one exists.
