@@ -12,6 +12,8 @@ import time
 from typing import Any
 
 from fastapi import Depends, FastAPI, Header, HTTPException
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 
 from kb_service.auth import ApiKeyVerifier
@@ -48,6 +50,11 @@ def create_app(
     def require_capacity() -> None:
         if not limiter.allow():
             raise HTTPException(429, "too many requests", headers={"Retry-After": str(int(limiter.window_seconds))})
+
+    @app.exception_handler(RequestValidationError)
+    def invalid_request(_request: Any, _error: RequestValidationError) -> JSONResponse:
+        # The default response echoes the offending input back, which here is a caller's question.
+        return JSONResponse({"detail": "invalid request"}, status_code=422)
 
     @app.get("/health")
     def health() -> dict[str, str]:

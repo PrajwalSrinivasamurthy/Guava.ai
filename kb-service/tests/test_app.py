@@ -71,6 +71,14 @@ def test_an_invalid_question_is_rejected(body):
     response = _client(max_chars=10).post("/answer", json=body, headers=_AUTH)
 
     assert response.status_code == 422
+    assert response.json() == {"detail": "invalid request"}
+
+
+def test_a_rejected_question_is_not_echoed_back():
+    response = _client(max_chars=10).post("/answer", json={"question": _QUESTION}, headers=_AUTH)
+
+    assert response.status_code == 422
+    assert _QUESTION not in response.text
 
 
 def test_requests_over_the_rate_limit_get_429():

@@ -3,6 +3,7 @@
     uvicorn --factory kb_service.server:create --host 0.0.0.0 --port 8120
 """
 
+import logging
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
@@ -15,6 +16,7 @@ from kb_service.settings import ConfigError, Settings
 
 
 def create() -> FastAPI:
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
     settings = Settings.from_env()
     if not settings.api_key_hashes:
         raise ConfigError("KB_API_KEY_HASHES is not set; the service would accept no requests")
