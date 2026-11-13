@@ -22,6 +22,12 @@ class _Session:
     def __init__(self, response=None, error=None):
         self.response, self.error, self.calls = response, error, []
 
+    def get(self, url, timeout):
+        self.calls.append({"url": url, "timeout": timeout, "method": "GET"})
+        if self.error:
+            raise self.error
+        return self.response
+
     def post(self, url, json, headers, timeout):
         self.calls.append({"url": url, "json": json, "headers": headers, "timeout": timeout})
         if self.error:
@@ -94,3 +100,15 @@ def test_network_failures_are_unavailable_and_never_mention_the_question(error):
 
     assert type(error).__name__ in str(raised.value)
     assert _QUESTION not in str(raised.value) and "8675309" not in repr(raised.value.__cause__)
+
+
+def test_warm_opens_the_connection_with_a_health_request_and_sends_no_question():
+    session = _Session(_Response(body={"status": "ok"}))
+
+    _client(session, timeout_seconds=3).warm()
+
+    assert session.calls == [{"url": "https://kb.example/cla-kb/health", "timeout": 3, "method": "GET"}]
+
+
+def test_warm_never_raises():
+    _client(_Session(error=requests.ConnectionError("refused"))).warm()

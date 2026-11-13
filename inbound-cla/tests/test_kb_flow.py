@@ -2,6 +2,7 @@
 callers to the virtual assistant. Offline: the knowledge service is a fake."""
 
 import logging
+import threading
 
 import pytest
 from guava.testing import MockCall
@@ -15,6 +16,10 @@ _QUESTION = "my very private question 8675309"
 class _FakeKb:
     def __init__(self, answer=None, error=None):
         self.answer, self.error, self.questions = answer, error, []
+        self.warmed = threading.Event()
+
+    def warm(self):
+        self.warmed.set()
 
     def ask(self, question):
         self.questions.append(question)
@@ -57,6 +62,12 @@ def test_call_start_sets_the_assist_task_not_the_route_task(app, kb):
     call = _start(app, "open")
 
     assert _task(call).task_id == "assist"
+
+
+def test_call_start_warms_the_connection_to_the_knowledge_service(app, kb):
+    _start(app, "open")
+
+    assert kb.warmed.wait(2)
 
 
 def test_open_hours_offers_a_person_or_no_more_questions(app, kb):

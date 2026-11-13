@@ -6,6 +6,8 @@ Primary API:
         Sends the question and returns KbAnswer(found, text). Raises KbUnavailable on
         any failure (timeout, network error, bad status, malformed reply) so the caller
         has one thing to catch and can fall back to a fixed message.
+    KbClient.warm()
+        Opens the connection early so the first question doesn't pay for the handshake.
 
 Question text is never included in exceptions or logs from this module.
 """
@@ -45,10 +47,19 @@ class KbClient:
         rather than rejected. The session is reused so repeat questions on a call skip the
         TLS handshake."""
         self._url = base_url.rstrip("/") + "/answer"
+        self._health_url = base_url.rstrip("/") + "/health"
         self._headers = {"Authorization": f"Bearer {api_key}"}
         self._timeout = timeout_seconds
         self._max_question_chars = max_question_chars
         self._session = session or requests.Session()
+
+    def warm(self) -> None:
+        """Opens the connection ahead of the first question, e.g. while the greeting plays.
+        Failures are ignored: the question itself reports them."""
+        try:
+            self._session.get(self._health_url, timeout=self._timeout)
+        except requests.RequestException:
+            pass
 
     def ask(self, question: str) -> KbAnswer:
         try:

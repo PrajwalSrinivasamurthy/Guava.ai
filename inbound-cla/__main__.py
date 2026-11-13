@@ -2,6 +2,7 @@ import json
 import logging
 import os
 import sys
+import threading
 import time
 from datetime import datetime
 
@@ -69,6 +70,8 @@ def on_call_start(call: guava.Call):
     )
 
     if kb is not None:
+        # Open the connection to the knowledge service while the greeting plays.
+        threading.Thread(target=kb.warm, name="kb-warm", daemon=True).start()
         _start_assist_task(call)
         return
 
