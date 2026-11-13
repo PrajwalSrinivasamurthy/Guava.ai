@@ -3,12 +3,15 @@ name = "kb-service"
 version = "0.1.0"
 requires-python = "==3.14.*"
 dependencies = [
+    "fastapi",
     "openai",
     "psycopg[binary,pool]",
+    "uvicorn",
 ]
 
 [dependency-groups]
 dev = [
+    "httpx",
     "pytest",
 ]
 
