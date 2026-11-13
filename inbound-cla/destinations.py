@@ -13,19 +13,24 @@ from dataclasses import dataclass
 class Destination:
     grace_outcome: str  # Grace's own outcome_name, for traceability
     number: str
-    label: str  # spoken/log-facing label
+    label: str  # log-facing label
+    spoken: str  # how the agent names the destination aloud while transferring
 
 
 def _routes(numbers: dict[str, str]) -> dict[str, Destination]:
     return {
         "Be connected to our virtual assistant": Destination(
-            "End - Route to CLA ElevenLabs", numbers["ELEVENLABS_NUMBER"], "CLA ElevenLabs (Ava)"
+            "End - Route to CLA ElevenLabs", numbers["ELEVENLABS_NUMBER"], "CLA ElevenLabs (Ava)",
+            "our virtual assistant",
         ),
         "Be transferred to a queue to talk to a person": Destination(
-            "End - Route to CLA", numbers["LIVE_NUMBER"], "CLA live queue"
+            "End - Route to CLA", numbers["LIVE_NUMBER"], "CLA live queue", "our support center"
+        ),
+        "Transfer to a person": Destination(
+            "End - Route to CLA", numbers["LIVE_NUMBER"], "CLA live queue", "our support center"
         ),
         "Leave a voicemail": Destination(
-            "End - Route to CLA (voicemail)", numbers["LIVE_NUMBER"], "CLA live queue"
+            "End - Route to CLA (voicemail)", numbers["LIVE_NUMBER"], "CLA live queue", "our support center"
         ),
     }
 
@@ -35,7 +40,7 @@ def fallback(numbers: dict[str, str]) -> Destination:
     unexpected value the model returned outside the field's fixed choices. Default to the
     live queue (a human) rather than raising or guessing at the caller's intent."""
     return Destination(
-        "End - Route to CLA (fallback)", numbers["LIVE_NUMBER"], "CLA live queue"
+        "End - Route to CLA (fallback)", numbers["LIVE_NUMBER"], "CLA live queue", "our support center"
     )
 
 
