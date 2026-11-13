@@ -33,6 +33,7 @@ class Settings:
     retrieval_limit: int = 4
     answer_max_tokens: int = 200
     openai_timeout_seconds: float = 8.0
+    warm_interval_seconds: float = 30.0
     organization_name: str = "Career Learning Academy"
     max_question_chars: int = 500
     rate_limit_per_minute: int = 60
@@ -76,6 +77,7 @@ class Settings:
             retrieval_limit=int(number("KB_RETRIEVAL_LIMIT", cls.retrieval_limit, int)),
             answer_max_tokens=int(number("KB_ANSWER_MAX_TOKENS", cls.answer_max_tokens, int)),
             openai_timeout_seconds=number("OPENAI_TIMEOUT_SECONDS", cls.openai_timeout_seconds, float),
+            warm_interval_seconds=number("KB_WARM_INTERVAL_SECONDS", cls.warm_interval_seconds, float),
             organization_name=text("ORGANIZATION_NAME", cls.organization_name),
             max_question_chars=int(number("KB_MAX_QUESTION_CHARS", cls.max_question_chars, int)),
             rate_limit_per_minute=int(number("KB_RATE_LIMIT_PER_MINUTE", cls.rate_limit_per_minute, int)),

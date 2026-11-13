@@ -23,14 +23,18 @@ def create() -> FastAPI:
 
     pool = wiring.open_pool(settings)
     pool.open(wait=True, timeout=15)
+    client = wiring.build_openai_client(settings, max_retries=1)
+    warm = wiring.build_warmup(client, settings)
 
     @asynccontextmanager
     async def lifespan(_app: FastAPI):
+        warm.start()
         yield
+        warm.stop()
         pool.close()
 
     return create_app(
-        wiring.build_answerer(pool, settings),
+        wiring.build_answerer(pool, settings, client),
         ApiKeyVerifier(settings.api_key_hashes),
         RateLimiter(settings.rate_limit_per_minute),
         max_question_chars=settings.max_question_chars,

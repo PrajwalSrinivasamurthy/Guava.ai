@@ -82,6 +82,13 @@ def test_service_defaults():
     assert (settings.max_question_chars, settings.rate_limit_per_minute) == (500, 60)
 
 
+def test_the_warm_up_interval_defaults_to_30_seconds_and_must_be_positive():
+    assert Settings.from_env(_REQUIRED).warm_interval_seconds == 30.0
+
+    with pytest.raises(ConfigError, match="KB_WARM_INTERVAL_SECONDS"):
+        Settings.from_env({**_REQUIRED, "KB_WARM_INTERVAL_SECONDS": "0"})
+
+
 def test_secrets_never_appear_in_repr():
     shown = repr(Settings.from_env(_REQUIRED))
 
