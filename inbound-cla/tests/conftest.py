@@ -20,6 +20,9 @@ sys.path.insert(0, str(_ROOT))
 # a real key.
 os.environ.setdefault("GUAVA_API_KEY", os.environ.get("GUAVA_LOCAL_API_KEY") or "test-key")
 os.environ.setdefault("GUAVA_AGENT_NUMBER", "+18065533554")
+# A real .env may configure the knowledge service; the suite starts from the flow without
+# it, and tests that want the knowledge-service flow set app.kb themselves.
+os.environ["KB_ENABLED"] = "false"
 
 # These default to "" in settings.py; set fakes on the module (not via env vars, which
 # would override the sheet cache) so routing is exercisable.

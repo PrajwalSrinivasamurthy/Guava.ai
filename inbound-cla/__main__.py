@@ -21,7 +21,9 @@ import settings
 # settings.CONFIG_POLL_SECONDS so later sheet edits show up without a redeploy.
 live_config.init()
 
+import assist
 import destinations
+import kb_client
 import sms
 from utils import holiday_name, is_open
 
@@ -32,10 +34,21 @@ logger = logging.getLogger("texas_tech.inbound_cla")
 if os.environ.get("GUAVA_LOCAL_API_KEY") and not os.environ.get("GUAVA_API_KEY"):
     os.environ["GUAVA_API_KEY"] = os.environ["GUAVA_LOCAL_API_KEY"]
 
+# Present when the knowledge service is configured: the agent then answers questions
+# itself instead of handing callers to the virtual assistant.
+kb = (
+    kb_client.KbClient(settings.KB_SERVICE_URL, settings.KB_API_KEY, settings.KB_TIMEOUT_SECONDS)
+    if settings.KB_ENABLED and settings.KB_SERVICE_URL and settings.KB_API_KEY
+    else None
+)
+
 agent = guava.Agent(
     name=settings.AGENT_NAME,
     organization=settings.ORGANIZATION_NAME,
     purpose=(
+        f"You are the phone assistant for {settings.ORGANIZATION_NAME}. Answer callers' "
+        "questions about it, and connect them to our support center when they ask for a person."
+        if kb is not None else
         f"You are the phone agent for {settings.ORGANIZATION_NAME}. Help callers "
         "reach the right place — either connect them to our virtual assistant or "
         "to a live team member."
@@ -54,6 +67,10 @@ def on_call_start(call: guava.Call):
         "Knowledge base scope",
         "Lookups cover general Career Learning Academy topics.",
     )
+
+    if kb is not None:
+        _start_assist_task(call)
+        return
 
     open_now = is_open()
 
@@ -126,27 +143,66 @@ def on_call_start(call: guava.Call):
     )
 
 
+def _start_assist_task(call: guava.Call):
+    open_now = is_open()
+    offer_text = bool(settings.CLA_AH_TEXT_URL)
+
+    call.set_task(
+        "assist",
+        objective=(
+            f"Answer the caller's questions about {settings.ORGANIZATION_NAME}. If they want "
+            "a person, hand off; if they have no more questions, wrap up."
+        ),
+        checklist=[
+            guava.Say(assist.greeting(open_now, None if open_now else holiday_name(), offer_text), key="greeting"),
+            assist.outcome_field(open_now, offer_text),
+            "This task is now complete once you know whether the caller wants a person or has no more questions.",
+        ],
+        completion_criteria="Complete once outcome is known.",
+    )
+
+
 @agent.on_task_complete("route")
 def on_route_complete(call: guava.Call):
     continue_with = call.get_field("continue_with")
 
     if continue_with == "Receive a text message":
-        from_number = getattr(call.call_info, "from_number", None)
-        sent = sms.send_link(
-            from_number, settings.CLA_AH_TEXT_URL,
-            f"{settings.ORGANIZATION_NAME} — more information:",
-        )
-        logger.info("Text-message hand-off (session: %s) sent=%s", call.id, sent)
-        call.hangup(final_instructions=(
-            "Let them know you've sent the text with the link, then "
-            "say goodbye."
-            if sent else
-            "Apologize that the text couldn't be sent right now, let them know someone will "
-            "follow up, then say goodbye."
-        ))
+        _send_text_and_hang_up(call)
         return
 
-    dest = destinations.resolve(live_config.get().numbers, continue_with)
+    _transfer(call, continue_with)
+
+
+@agent.on_task_complete("assist")
+def on_assist_complete(call: guava.Call):
+    outcome = call.get_field("outcome")
+
+    if outcome == assist.TEXT_MESSAGE:
+        _send_text_and_hang_up(call)
+    elif outcome == assist.DONE:
+        call.hangup(final_instructions=f"Thank them for calling {settings.ORGANIZATION_NAME} and say goodbye.")
+    else:
+        _transfer(call, outcome)
+
+
+def _send_text_and_hang_up(call: guava.Call):
+    from_number = getattr(call.call_info, "from_number", None)
+    sent = sms.send_link(
+        from_number, settings.CLA_AH_TEXT_URL,
+        f"{settings.ORGANIZATION_NAME} — more information:",
+    )
+    logger.info("Text-message hand-off (session: %s) sent=%s", call.id, sent)
+    call.hangup(final_instructions=(
+        "Let them know you've sent the text with the link, then "
+        "say goodbye."
+        if sent else
+        "Apologize that the text couldn't be sent right now, let them know someone will "
+        "follow up, then say goodbye."
+    ))
+
+
+def _transfer(call: guava.Call, choice: str | None):
+    dest = destinations.resolve(live_config.get().numbers, choice)
     if not dest.number:
         logger.warning("No number configured for %s (session: %s); not transferring.", dest.label, call.id)
         call.hangup(final_instructions=(
@@ -156,18 +212,20 @@ def on_route_complete(call: guava.Call):
         return
 
     logger.info(
-        "Routing call (session: %s) continue_with=%r -> %s (%s)",
-        call.id, continue_with, dest.number, dest.grace_outcome,
+        "Routing call (session: %s) choice=%r -> %s (%s)",
+        call.id, choice, dest.number, dest.grace_outcome,
     )
     call.transfer(
         dest.number,
-        instructions=f"Let the caller know you're connecting them to {settings.ORGANIZATION_NAME} now, then transfer.",
+        instructions=f"Let the caller know you're connecting them to {dest.spoken} now, then transfer.",
     )
 
 
 @agent.on_question
 def on_question(call: guava.Call, question: str) -> str:
-    logger.info("Question received: %s", question)
+    if kb is not None:
+        return _answer_from_kb(question)
+
     document_qa = live_config.get().document_qa
     if document_qa is not None:
         return document_qa.ask(question)
@@ -177,17 +235,28 @@ def on_question(call: guava.Call, question: str) -> str:
     )
 
 
+def _answer_from_kb(question: str) -> str:
+    try:
+        answer = kb.ask(question)
+    except kb_client.KbUnavailable as error:
+        logger.warning("Knowledge service unavailable: %s", error)
+        return settings.KB_FALLBACK_MESSAGE
+    logger.info("Knowledge service answered found=%s", answer.found)
+    return answer.text if answer.found else settings.KB_FALLBACK_MESSAGE
+
+
 @agent.on_session_end
 def on_session_end(call: guava.Call, event: BotSessionEnded):
     transferred = event.termination_reason == "bot-transfer"
-    dest = destinations.resolve(live_config.get().numbers, call.get_field("continue_with")) if transferred else None
+    choice = call.get_field("continue_with") or call.get_field("outcome")
+    dest = destinations.resolve(live_config.get().numbers, choice) if transferred else None
 
     result = {
         "timestamp": datetime.now().isoformat(),
         "session_id": call.id,
         "termination_reason": event.termination_reason,
         "dnc": event.dnc,
-        "continue_with": call.get_field("continue_with"),
+        "choice": choice,
         "transfer_number": dest.number if dest else None,
         "transfer_destination": dest.label if dest else None,
     }
@@ -195,9 +264,9 @@ def on_session_end(call: guava.Call, event: BotSessionEnded):
     print(json.dumps(result, indent=2, default=str))
 
     logger.info(
-        "Routing complete (session: %s) — continue_with=%r termination=%s "
+        "Routing complete (session: %s) — choice=%r termination=%s "
         "transfer_destination=%r",
-        call.id, result["continue_with"], event.termination_reason,
+        call.id, choice, event.termination_reason,
         result["transfer_destination"],
     )
 
