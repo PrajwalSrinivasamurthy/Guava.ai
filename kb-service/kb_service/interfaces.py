@@ -23,6 +23,12 @@ class Embedder(Protocol):
     def embed(self, texts: list[str]) -> list[list[float]]: ...
 
 
+class Generator(Protocol):
+    """Writes a spoken answer to a question from the given passages."""
+
+    def generate(self, question: str, passages: list[str]) -> str: ...
+
+
 class VectorIndex(Protocol):
     """Stores document passages with their vectors and finds the closest to a vector.
 

@@ -9,6 +9,7 @@ The numeric defaults are starting points to be tuned against real questions.
 """
 
 import os
+import re
 from dataclasses import dataclass, field
 from typing import Callable, Mapping
 
@@ -30,7 +31,12 @@ class Settings:
     chunk_size: int = 1200
     chunk_overlap: int = 150
     retrieval_limit: int = 4
+    answer_max_tokens: int = 200
     openai_timeout_seconds: float = 8.0
+    organization_name: str = "Career Learning Academy"
+    max_question_chars: int = 500
+    rate_limit_per_minute: int = 60
+    api_key_hashes: tuple[str, ...] = ()
 
     @classmethod
     def from_env(cls, env: Mapping[str, str] = os.environ) -> "Settings":
@@ -68,7 +74,12 @@ class Settings:
             chunk_size=int(number("KB_CHUNK_SIZE", cls.chunk_size, int)),
             chunk_overlap=int(number("KB_CHUNK_OVERLAP", cls.chunk_overlap, int)),
             retrieval_limit=int(number("KB_RETRIEVAL_LIMIT", cls.retrieval_limit, int)),
+            answer_max_tokens=int(number("KB_ANSWER_MAX_TOKENS", cls.answer_max_tokens, int)),
             openai_timeout_seconds=number("OPENAI_TIMEOUT_SECONDS", cls.openai_timeout_seconds, float),
+            organization_name=text("ORGANIZATION_NAME", cls.organization_name),
+            max_question_chars=int(number("KB_MAX_QUESTION_CHARS", cls.max_question_chars, int)),
+            rate_limit_per_minute=int(number("KB_RATE_LIMIT_PER_MINUTE", cls.rate_limit_per_minute, int)),
+            api_key_hashes=_hashes(env.get("KB_API_KEY_HASHES", ""), problems),
         )
 
         if settings.chunk_overlap >= settings.chunk_size:
@@ -82,3 +93,11 @@ class Settings:
         if problems:
             raise ConfigError("; ".join(problems))
         return settings
+
+
+def _hashes(raw: str, problems: list[str]) -> tuple[str, ...]:
+    hashes = tuple(item.strip().lower() for item in raw.split(",") if item.strip())
+    if any(not re.fullmatch(r"[0-9a-f]{64}", item) for item in hashes):
+        problems.append("KB_API_KEY_HASHES must be comma-separated SHA-256 hex digests")
+        return ()
+    return hashes
