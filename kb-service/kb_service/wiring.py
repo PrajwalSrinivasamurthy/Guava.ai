@@ -23,10 +23,14 @@ _KEEPALIVE_SECONDS = 300.0
 
 
 def build_openai_client(settings: Settings, max_retries: int) -> Any:
-    import httpx
-    from openai import OpenAI
+    # The openai package bundles its own copy of httpx, so use its public client and limits
+    # types rather than importing httpx, which the service image doesn't install.
+    from openai import DEFAULT_CONNECTION_LIMITS, DefaultHttpxClient, OpenAI
 
-    http_client = httpx.Client(limits=httpx.Limits(max_keepalive_connections=10, keepalive_expiry=_KEEPALIVE_SECONDS))
+    limits = type(DEFAULT_CONNECTION_LIMITS)(
+        max_connections=100, max_keepalive_connections=10, keepalive_expiry=_KEEPALIVE_SECONDS
+    )
+    http_client = DefaultHttpxClient(limits=limits)
     return OpenAI(
         api_key=settings.openai_api_key,
         timeout=settings.openai_timeout_seconds,
